@@ -1,0 +1,101 @@
+! .xpilotrc
+! For Dvorak keyboards
+! Ankur Dave
+! http://ankurdave.com
+
+xpilot.name: Ankur Dave
+xpilot.user: ankurdave
+xpilot.host: ankur-laptop.ankurdave.com
+!xpilot.sound: no
+
+! Powerful cluster mine
+xpilot.modifierBank1:   CB1Z3V3
+! Powerful multiple cluster mine
+xpilot.modifierBank2:   CB1Z3V3X4
+! Powerful nuke
+xpilot.modifierBank3:   NCB1Z3V3
+! Nuclear missiles
+xpilot.modifierBank4:   NCB3Z3V1X4
+
+xpilot.turnSpeed:       8
+
+xpilot.keyTurnLeft: Left
+xpilot.keyTurnRight: Right
+xpilot.keyThrust: Up
+xpilot.keyShield:
+
+xpilot.keyFireShot: Shift_L
+
+! LEFT RING: MISC
+xpilot.keyFireLaser: o
+xpilot.keyRefuel: comma
+xpilot.keyTransporter: q
+
+! LEFT MIDDLE: MISSILES
+xpilot.keyFireHeat: period
+xpilot.keyFireMissile: e
+xpilot.keyFireTorpedo: j
+
+! LEFT PINKY: MISC
+xpilot.keyCloak: apostrophe
+xpilot.keyEcm: a
+xpilot.keyDeflector: semicolon
+
+
+
+! LEFT INDEX: MINES
+xpilot.keyDropMine: u
+xpilot.keyDetachMine: p
+xpilot.keyDetonateMines: k
+
+xpilot.keyTalk: Return
+
+xpilot.keyEmergencyShield: space
+xpilot.keyPhasing: Alt_L
+xpilot.keyEmergencyThrust: BackSpace
+xpilot.keySelfDestruct: End
+
+! MOUSE
+xpilot.pointerButton1:  keyFireShot
+xpilot.pointerButton2:  keyLockClose
+xpilot.pointerButton3:  keyThrust
+xpilot.pointerButton4:  keyLockPrev
+xpilot.pointerButton5:  keyLockNext
+
+! NO OPS
+xpilot.keyLockClose:
+xpilot.keyLockNext:
+xpilot.keyLockPrev:
+xpilot.keyToggleNuclear:
+xpilot.keyToggleCluster:
+xpilot.keyToggleImplosion:
+xpilot.keyToggleVelocity:
+xpilot.keyToggleMini:
+xpilot.keyToggleSpread:
+
+xpilot.keyIdMode:       
+xpilot.keyConnector:
+xpilot.keyDropBall:
+xpilot.keyTankNext:
+xpilot.keyTogglePower:
+xpilot.keyTankPrev:     
+xpilot.keyTankDetach:   
+xpilot.keyIncreasePower:        
+xpilot.keyDecreasePower:        
+xpilot.keyIncreaseTurnspeed:    
+xpilot.keyDecreaseTurnspeed:    
+xpilot.keyTransporter:
+xpilot.keyHyperJump:
+xpilot.keyToggleNuclear:        
+xpilot.keyToggleCluster:        
+xpilot.keyToggleImplosion:      
+xpilot.keyToggleVelocity:       
+xpilot.keyToggleMini:   
+xpilot.keyToggleSpread: 
+xpilot.keyToggleCompass:
+xpilot.keyToggleAutopilot:
+xpilot.keyToggleLaser:  
+xpilot.keyTractorBeam:
+xpilot.keyPressorBeam:
+xpilot.keySelectItem:
+xpilot.keyLoseItem:

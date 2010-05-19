@@ -1,0 +1,22 @@
+defscrollback 1024
+
+# The following config is from http://nicolas.barcet.com/drupal/screen-by-default
+
+# Allow scrolling in xterm
+termcapinfo xterm ti@:te@
+
+# if activity is detected on an affected window switched into the background
+# you  will  receive the activity notification message in the status line
+# the window will also be marked with an ‘@’ in the window-status display
+defmonitor on
+
+# When  any activity occurs in a background window that is being monitored
+# screen displays a notification in the message line
+activity "activity -> %n%f %t" # window number , flags of the window , window title
+
+# Keybindings
+# Map shift-tab to go to next window
+bindkey "\033[Z" next
+
+# Always show a status bar
+#caption always "%{= kw}%-w%{= BW}%n %t%{-}%+w %-= @%H - %LD %d %LM - %c"

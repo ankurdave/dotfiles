@@ -1,0 +1,18 @@
+# This file is read by ~/bin/backup-home
+# It tells rsync which files in ~ not to back up
+
+# Dirs that are too big to transfer
+# bin/
+# music/
+
+# Dirs that just shouldn't be backed up
+private/
+backup/
+.local/share/Trash/
+.mozilla/**/Cache
+.cache/
+.dbus/
+.thumbnails/
+
+# Any directory named "tmp"
+*/tmp/
