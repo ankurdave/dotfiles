@@ -4,5 +4,6 @@ employer-packet = /home/ankur/docs/employer-packet
 jainfoundation = /var/www/jainfoundation
 distboggle = /home/ankur/programming/distboggle
 drksdave = /home/ankur/docs/drksdave
-ankurdave.com = /home/ankur/docs/ankurdave.com
+ankurdave.com = /var/www
 latex = /home/ankur/latex
+config = /home/ankur/config

@@ -66,6 +66,9 @@ fi
 # set location of TeX files
 export TEXINPUTS=.:$HOME/latex//:$HOME/.texmf-config//:
 
+# set editor
+export EDITOR=emacs
+
 # make del a safer rm
 alias del='gvfs-trash'
 
