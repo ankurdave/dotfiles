@@ -1,0 +1,67 @@
+xpilot.name:	ankur
+xpilot.user:	ankur
+xpilot.host:	ankurdave.com
+
+xpilot.modifierBank1:	CB3Z1V1I
+xpilot.modifierBank2:	CX4B3Z1V1I
+xpilot.modifierBank3:	NCB3Z1V1I
+
+xpilot.turnSpeed:	8
+
+xpilot.keyTurnLeft:	Left
+xpilot.keyTurnRight:	Right
+xpilot.keyThrust:	Up
+xpilot.keyShield:	
+xpilot.keyFireShot:	space
+xpilot.keyFireMissile:	z
+xpilot.keyFireTorpedo:	x
+xpilot.keyFireHeat:	c
+xpilot.keyFireLaser:	v
+xpilot.keyDropMine:	d
+xpilot.keyDetachMine:	f
+xpilot.keyDetonateMines:	q
+xpilot.keyLockClose:	period
+xpilot.keyLockNextClose:	
+xpilot.keyLockNext:	slash
+xpilot.keyLockPrev:	comma
+xpilot.keyRefuel:	r
+xpilot.keyRepair:	t
+xpilot.keyCloak:	y
+xpilot.keyEcm:	a
+xpilot.keySelfDestruct:	s
+xpilot.keyIdMode:	
+xpilot.keyConnector:	minus
+xpilot.keyDropBall:	equal
+xpilot.keyTankNext:	
+xpilot.keyTankPrev:	
+xpilot.keyTankDetach:	
+xpilot.keyIncreasePower:	
+xpilot.keyDecreasePower:	
+xpilot.keyIncreaseTurnspeed:	
+xpilot.keyDecreaseTurnspeed:	
+xpilot.keyTransporter:	u
+xpilot.keyDeflector:	i
+xpilot.keyHyperJump:	o
+xpilot.keyPhasing:	p
+xpilot.keyTalk:	apostrophe
+xpilot.keyToggleNuclear:	
+xpilot.keyToggleCluster:	
+xpilot.keyToggleImplosion:	
+xpilot.keyToggleVelocity:	
+xpilot.keyToggleMini:	
+xpilot.keyToggleSpread:	
+xpilot.keyToggleCompass:	
+xpilot.keyToggleAutopilot:	backslash
+xpilot.keyToggleLaser:	
+xpilot.keyEmergencyThrust:	BackSpace
+xpilot.keyEmergencyShield:	grave
+xpilot.keyTractorBeam:	9
+xpilot.keyPressorBeam:	0
+xpilot.keySelectItem:	bracketleft
+xpilot.keyLoseItem:	bracketright
+
+xpilot.pointerButton1:	keyFireShot
+xpilot.pointerButton2:	keyFireHeat
+xpilot.pointerButton3:	keyThrust
+xpilot.pointerButton4:	keyLockPrev
+xpilot.pointerButton5:	keyLockNext

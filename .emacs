@@ -45,7 +45,6 @@
 
 (add-to-list 'load-path "~/.emacs.d")
 (require 'mercurial)
-(require 'smarttabs)
 (require 'php-mode)
 (require 'undo-tree)
 
