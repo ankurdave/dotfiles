@@ -47,6 +47,7 @@
 (require 'mercurial)
 (require 'php-mode)
 (require 'undo-tree)
+(load-file "~/.emacs.d/cs61a.el")
 
 ;; Utility functions
 (defun indent-buffer ()
@@ -54,3 +55,4 @@
   (interactive)
   (delete-trailing-whitespace)
   (indent-region (point-min) (point-max) nil))
+
