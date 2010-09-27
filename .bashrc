@@ -66,6 +66,10 @@ fi
 # set location of TeX files
 export TEXINPUTS=.:$HOME/latex//:$HOME/.texmf-config//:
 
+# set location of Scala files
+export SCALA_HOME=$HOME/bin/scala-2.8.0.final/
+export PATH=$PATH:$HOME/bin/scala-2.8.0.final/bin/
+
 # set editor
 export EDITOR=emacs
 
