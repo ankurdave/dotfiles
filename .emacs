@@ -49,7 +49,7 @@
 (require 'undo-tree)
 (load-file "~/.emacs.d/cs61a.el")
 (add-to-list 'load-path "~/.emacs.d/scala")
-(require 'scala-mode-auto
+(require 'scala-mode-auto)
 
 ;; Utility functions
 (defun indent-buffer ()
