@@ -1,59 +1,60 @@
 ! .xpilotrc
-! For Dvorak keyboards
+! For Qwerty keyboards
 ! Ankur Dave
 ! http://ankurdave.com
 
 xpilot.name: Ankur Dave
 xpilot.user: ankurdave
-xpilot.host: ankur-laptop.ankurdave.com
+xpilot.host: ankurdave.com
 !xpilot.sound: no
 
-! Powerful cluster mine
-xpilot.modifierBank1:   CB1Z3V3
 ! Powerful multiple cluster mine
-xpilot.modifierBank2:   CB1Z3V3X4
+xpilot.modifierBank1:   CB1Z3V3X4
 ! Powerful nuke
-xpilot.modifierBank3:   NCB1Z3V3
+xpilot.modifierBank2:   NCB1Z3V3
 ! Nuclear missiles
-xpilot.modifierBank4:   NCB3Z3V1X4
+xpilot.modifierBank3:   NCB3Z3V1X4
+! Powerful full nuclear cluster mine
+xpilot.modifierBank4:   FNCB1Z3V3
 
 xpilot.turnSpeed:       8
 
 xpilot.keyTurnLeft: Left
 xpilot.keyTurnRight: Right
 xpilot.keyThrust: Up
-xpilot.keyShield:
+xpilot.keyEmergencyShield: Down
 
-xpilot.keyFireShot: Shift_L
-
-! LEFT RING: MISC
-xpilot.keyFireLaser: o
-xpilot.keyRefuel: comma
-xpilot.keyTransporter: q
-
-! LEFT MIDDLE: MISSILES
-xpilot.keyFireHeat: period
-xpilot.keyFireMissile: e
-xpilot.keyFireTorpedo: j
-
-! LEFT PINKY: MISC
-xpilot.keyCloak: apostrophe
-xpilot.keyEcm: a
-xpilot.keyDeflector: semicolon
-
-
+xpilot.keyFireShot: space
+xpilot.keyFireLaser: space
 
 ! LEFT INDEX: MINES
-xpilot.keyDropMine: u
-xpilot.keyDetachMine: p
-xpilot.keyDetonateMines: k
+xpilot.keyDropMine: f
+xpilot.keyDetachMine: r
+xpilot.keyDetonateMines: v
+
+! LEFT MIDDLE: MISSILES
+xpilot.keyFireHeat: e
+xpilot.keyFireMissile: d
+xpilot.keyFireTorpedo: c
+
+! LEFT RING: MISC
+xpilot.keyRefuel: w
+xpilot.keyCloak: s
+xpilot.keyTransporter: x
+
+! LEFT PINKY: MISC
+xpilot.keyEcm: q
+xpilot.keyPhasing: a
+xpilot.keyDeflector: z
 
 xpilot.keyTalk: Return
 
-xpilot.keyEmergencyShield: space
-xpilot.keyPhasing: Alt_L
+xpilot.keyShield: Shift_R
 xpilot.keyEmergencyThrust: BackSpace
 xpilot.keySelfDestruct: End
+xpilot.keyLockClose: Delete
+xpilot.keyLockNext: Next
+xpilot.keyLockPrev: Prior
 
 ! MOUSE
 xpilot.pointerButton1:  keyFireShot
@@ -63,9 +64,6 @@ xpilot.pointerButton4:  keyLockPrev
 xpilot.pointerButton5:  keyLockNext
 
 ! NO OPS
-xpilot.keyLockClose:
-xpilot.keyLockNext:
-xpilot.keyLockPrev:
 xpilot.keyToggleNuclear:
 xpilot.keyToggleCluster:
 xpilot.keyToggleImplosion:
