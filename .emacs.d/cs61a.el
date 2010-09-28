@@ -21,30 +21,6 @@
 
 ;; Additional local key and menu definitions in Scheme mode.
 
-(define-key scheme-mode-map [menu-bar scheme]
-  (cons "Scheme" (make-sparse-keymap "Scheme")))
-
-(define-key (lookup-key scheme-mode-map [menu-bar scheme])
-  [scheme-load-file-and-go] '("Send Scheme File & Go" . scheme-load-file-and-go))
-(define-key (lookup-key scheme-mode-map [menu-bar scheme])
-  [scheme-load-file] '("Send Scheme File" . scheme-load-file))
-(define-key (lookup-key scheme-mode-map [menu-bar scheme])
-  [scheme-send-region-and-go] '("Send Region & Go". scheme-send-region-and-go))
-(define-key (lookup-key scheme-mode-map [menu-bar scheme])
-  [scheme-send-region] '("Send Region" . scheme-send-region))
-(define-key (lookup-key scheme-mode-map [menu-bar scheme])
-  [scheme-send-defn-and-go]
-  '("Send Definition & Go" . scheme-send-definition-and-go))
-(define-key (lookup-key scheme-mode-map [menu-bar scheme])
-  [scheme-send-defn] '("Send Definition" . scheme-send-definition))
-(define-key (lookup-key scheme-mode-map [menu-bar scheme])
-  [scheme-indent-sexp] '("Indent S-expression" . scheme-indent-sexp))
-(setq menu-bar-final-items (cons 'scheme menu-bar-final-items))
-
-
-(define-key scheme-mode-map "\C-c\M-l" 'scheme-load-file-and-go)
-(define-key scheme-mode-map "\r" 'newline-and-indent)
-
 (defun scheme-load-file-and-go (file-name)
   "Load Scheme file FILE-NAME into the inferior Scheme process and then 
 go to Scheme buffer."
