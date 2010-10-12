@@ -58,3 +58,4 @@
   (delete-trailing-whitespace)
   (indent-region (point-min) (point-max) nil))
 
+(server-start)
