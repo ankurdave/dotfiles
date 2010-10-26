@@ -1,3 +1,4 @@
+(load "cmuscheme")
 (setq scheme-program-name "stk-simply")
 (defun run-stk () "
    Remove the *scheme* buffer unless it is running Stk.  If there is no
