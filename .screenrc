@@ -7,6 +7,12 @@ vbell off
 # Stop Ctrl-S from causing problems
 defflow off
 
+# Use Ctrl-Z instead of Ctrl-A for escape key
+escape ^Zz
+
+# Don't show "New screen..."
+startup_message off
+
 ## The following config is from http://nicolas.barcet.com/drupal/screen-by-default
 # Allow scrolling in xterm
 termcapinfo xterm ti@:te@
