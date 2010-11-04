@@ -1,5 +1,7 @@
 defscrollback 1024
 
+vbell off
+
 # The following config is from http://nicolas.barcet.com/drupal/screen-by-default
 
 # Allow scrolling in xterm
