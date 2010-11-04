@@ -10,6 +10,9 @@ defflow off
 # Use Ctrl-Z instead of Ctrl-A for escape key
 escape ^Zz
 
+# Use space for windowlist instead of "
+bind ' ' windowlist -b
+
 # Don't show "New screen..."
 startup_message off
 
