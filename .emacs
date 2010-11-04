@@ -1,36 +1,24 @@
 (custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- '(backward-delete-char-untabify-method nil)
- '(c-basic-offset 4)
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(inhibit-startup-screen t)
- '(js2-auto-indent-flag nil)
- '(js2-basic-offset 4)
  '(mouse-wheel-progressive-speed nil)
  '(mouse-wheel-scroll-amount (quote (3 ((shift) . 1) ((control)))))
- '(sgml-basic-offset 4)
- '(tab-stop-list (quote (4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80 84 88 92 96 100 104 108 112 116 120)))
  '(word-wrap t))
-(custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 87 :width normal :foundry "unknown" :family "DejaVu Sans Mono")))))
 
 (transient-mark-mode t)
 (setq-default scroll-conservatively 5)
 
 ;; Indentation
-(setq-default tab-width 4
-	  backward-delete-function nil
-	  indent-tabs-mode t)
-(setq indent-line-function 'insert-tab)
+(setq tab-width 4)
+(setq indent-tabs-mode nil)
+(setq c-basic-offset 4)
+(setq sgml-basic-offset 4)
 
 (setq browse-url-generic-program (executable-find "google-chrome")
-	browse-url-browser-function 'browse-url-generic)
+      browse-url-browser-function 'browse-url-generic)
 
 (require 'cc-mode)
 (setq-default c-default-style "k&r")
