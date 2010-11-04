@@ -38,15 +38,15 @@
 (c-set-offset 'defun-close '-)
 (c-set-offset 'arglist-close 0)
 
-(require 'css-mode)
+;; (require 'css-mode)
 (setq cssm-indent-level 4)
 (setq cssm-newline-before-closing-bracket t)
 (setq cssm-indent-function #'cssm-c-style-indenter)
 
 (add-to-list 'load-path "~/.emacs.d")
 (require 'mercurial)
-(require 'php-mode)
-(require 'undo-tree)
+;; (require 'php-mode)
+;; (require 'undo-tree)
 (load-file "~/.emacs.d/cs61a.el")
 (add-to-list 'load-path "~/.emacs.d/scala")
 (require 'scala-mode-auto)
