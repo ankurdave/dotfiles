@@ -37,5 +37,3 @@
 ;; Site-local config
 (when (file-exists-p "~/.emacs.d/site-local.el")
   (load-file "~/.emacs.d/site-local.el"))
-
-(server-start)

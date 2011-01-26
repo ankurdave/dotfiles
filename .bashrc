@@ -29,11 +29,23 @@ if [ -d "$HOME/bin" ] ; then
 fi
 
 # Use Emacs as a server
-emacs --daemon >/dev/null 2>&1
-export EDITOR='emacsclient -a emacs -c'
-alias e="$EDITOR"
+if [[ -n "`emacs --help | grep -- --daemon`" ]]
+then
+    emacs --daemon >/dev/null 2>&1
+    export EDITOR='emacsclient -a emacs -c'
+    alias e="$EDITOR"
+else
+    export EDITOR='emacs'
+    alias e="$EDITOR"
+fi
+
 
 # Include site-local config
 if [ -f ~/.bash_sitelocal ]; then
     . ~/.bash_sitelocal
+fi
+
+# Finally, start screen (unless already in screen)
+if [ -z "$STY" ]; then
+    screen -xRR
 fi
