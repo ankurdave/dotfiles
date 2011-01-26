@@ -1,0 +1,15 @@
+#!/bin/bash
+
+find . -maxdepth 1 -not \
+    \( -iname '*~' -or -iname '*#*' -or -iname '.' \
+    -or -iname '.hg' -or -iname 'setup' \) \
+    -exec bash -c \
+    "if [[ -e ~/{} && ! -L ~/{} ]]
+     then
+         mkdir -p ~/config-old/
+         mv ~/{} ~/config-old/{}
+     fi
+     if [[ ! -L ~/{} ]]
+     then
+         ln -s $PWD/{} ~/{}
+     fi" \;
