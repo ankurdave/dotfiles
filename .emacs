@@ -10,6 +10,7 @@
  '(inhibit-startup-screen t)
  '(mouse-wheel-progressive-speed nil)
  '(mouse-wheel-scroll-amount (quote (3 ((shift) . 1) ((control)))))
+ '(scroll-bar-mode (quote right))
  '(scroll-conservatively 5)
  '(show-paren-mode t)
  '(tab-stop-list (quote (4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80 84 88 92 96 100 104 108 112 116 120)))
@@ -22,7 +23,8 @@
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
- )
+ '(diff-added ((t (:inherit diff-changed :foreground "#65b042"))))
+ '(diff-removed ((t (:inherit diff-changed :foreground "#cf6a4c")))))
 
 ;; Utility functions
 (defun indent-buffer ()
@@ -35,6 +37,11 @@
 (add-to-list 'load-path "~/.emacs.d/scala")
 (require 'mercurial)
 (require 'scala-mode-auto)
+(require 'color-theme)
+(require 'color-theme-sunburst)
+(color-theme-tm)
+(require 'lcomp)
+(lcomp-mode 1)
 
 ;; Site-local config
 (when (file-exists-p "~/.emacs-site-local")
