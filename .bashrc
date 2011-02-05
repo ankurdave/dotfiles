@@ -45,7 +45,7 @@ if [ -f ~/.bash_sitelocal ]; then
     . ~/.bash_sitelocal
 fi
 
-# Finally, start screen (unless already in screen)
-if [ -z "$STY" ]; then
-    screen -xRR
-fi
+# # Finally, start screen (unless already in screen)
+# if [ -z "$STY" ]; then
+#     screen -xRR
+# fi
