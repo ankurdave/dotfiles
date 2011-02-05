@@ -39,9 +39,10 @@
 (require 'scala-mode-auto)
 (require 'color-theme)
 (require 'color-theme-sunburst)
+
 (color-theme-tm)
-(require 'lcomp)
-(lcomp-mode 1)
+(setq term-default-bg-color "#000")
+(setq term-default-fg-color "#fff")
 
 ;; Site-local config
 (when (file-exists-p "~/.emacs-site-local")

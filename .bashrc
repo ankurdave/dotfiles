@@ -1,19 +1,27 @@
 [ -z "$PS1" ] && return
 
+mkdir -p $HOME/history
 export HISTCONTROL=ignoreboth
-shopt -s checkwinsize
+export HISTTIMEFORMAT='%Y-%m-%d %H:%M:%S - '
+export FQDN=$(hostname --long)
+export HISTDATE=$(date +%Y%m%dT%H%M%S)
+export HISTFILE=$HOME/history/$HISTDATE-$FQDN
+unset HISTFILESIZE
+unset HISTSIZE
+shopt -s checkwinsize histappend cdspell checkjobs
+
 [ -x /usr/bin/lesspipe ] && eval "$(lesspipe)"
 
 # Colors
+PS1='\u@\h:\w\$ '
 case "$TERM" in
     xterm*|rxvt*|eterm-color|screen)
-        # prompt
         PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
         case $(uname) in
             Darwin)
                 alias ls='ls -G'
                 ;;
-            *)
+            Linux)
                 eval "`dircolors -b`"
                 alias ls='ls --color=auto'
                 ;;
