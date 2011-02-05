@@ -3,6 +3,7 @@
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
+ '(c-basic-offset 4)
  '(c-default-style "k&r")
  '(delete-selection-mode t)
  '(indent-tabs-mode nil)
@@ -13,6 +14,7 @@
  '(show-paren-mode t)
  '(tab-stop-list (quote (4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80 84 88 92 96 100 104 108 112 116 120)))
  '(tab-width 4)
+ '(tool-bar-mode nil)
  '(transient-mark-mode t)
  '(word-wrap t))
 (custom-set-faces
