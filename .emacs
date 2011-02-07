@@ -3,6 +3,7 @@
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
+ '(ansi-color-for-comint-mode t)
  '(c-basic-offset 4)
  '(c-default-style "k&r")
  '(delete-selection-mode t)
@@ -25,6 +26,9 @@
   ;; If there is more than one, they won't work right.
  '(diff-added ((t (:inherit diff-changed :foreground "#65b042"))))
  '(diff-removed ((t (:inherit diff-changed :foreground "#cf6a4c")))))
+
+(global-unset-key "\C-z")
+(global-set-key "\M-/" 'hippie-expand)
 
 ;; Utility functions
 (defun indent-buffer ()
