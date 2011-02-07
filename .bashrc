@@ -1,6 +1,24 @@
 [ -z "$PS1" ] && return
 
-mkdir -p $HOME/history
+# History
+_hgcommit_history() {
+    history -a
+    hg -R $HOME/history add
+    hg -R $HOME/history commit -m 'Automated history commit from .bashrc'
+    hg -R $HOME/history push
+}
+
+_read_old_history() {
+    export HISTSIZE=5
+    for file in $(ls $HISTDIR/*-$FQDN | tail -n 5)
+    do
+        history -r $file
+    done
+    unset HISTSIZE
+}
+
+export HISTDIR=$HOME/history
+mkdir -p $HISTDIR
 export HISTCONTROL=ignoreboth
 export HISTTIMEFORMAT='%Y-%m-%d %H:%M:%S - '
 export FQDN=$(hostname --long)
@@ -9,6 +27,7 @@ export HISTFILE=$HOME/history/$HISTDATE-$FQDN
 unset HISTFILESIZE
 unset HISTSIZE
 shopt -s checkwinsize histappend cdspell checkjobs
+trap _hgcommit_history EXIT
 
 [ -x /usr/bin/lesspipe ] && eval "$(lesspipe)"
 
