@@ -3,9 +3,15 @@
 # History
 _hgcommit_history() {
     history -a
-    hg -R $HOME/history add
-    hg -R $HOME/history commit -m 'Automated history commit from .bashrc'
-    hg -R $HOME/history push
+    (
+        hg -R $HISTDIR pull
+        hg -R $HISTDIR merge
+        hg -R $HISTDIR commit -m "Automated merge from $USER@$FQDN"
+        hg -R $HISTDIR add
+        hg -R $HISTDIR commit -m "Automated history commit from $USER@$FQDN"
+        hg -R $HISTDIR push
+    ) &
+    disown -h
 }
 
 _read_old_history() {
@@ -23,7 +29,7 @@ export HISTCONTROL=ignoreboth
 export HISTTIMEFORMAT='%Y-%m-%d %H:%M:%S - '
 export FQDN=$(hostname --long)
 export HISTDATE=$(date +%Y%m%dT%H%M%S)
-export HISTFILE=$HOME/history/$HISTDATE-$FQDN
+export HISTFILE=$HISTDIR/$HISTDATE-$FQDN
 unset HISTFILESIZE
 unset HISTSIZE
 shopt -s checkwinsize histappend cdspell checkjobs
@@ -60,10 +66,17 @@ if [[ -n "`emacs --help | grep -- --daemon`" ]]
 then
     emacs --daemon >/dev/null 2>&1
     export EDITOR='emacsclient -a emacs -c'
-    alias e="$EDITOR"
+    e() {
+        if [[ -n $DISPLAY ]]
+        then $EDITOR -n $@
+        else $EDITOR -nw $@
+        fi
+    }
 else
     export EDITOR='emacs'
-    alias e="$EDITOR"
+    e() {
+        $EDITOR $@
+    }
 fi
 
 
