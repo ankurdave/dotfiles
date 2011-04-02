@@ -3,3 +3,6 @@ syntax: glob
 *.elc
 *.orig
 .latest-build
+.emacs.d/undo-tree
+.emacs.d/tramp
+.emacs.d/dtrt-indent

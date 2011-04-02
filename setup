@@ -1,5 +1,18 @@
 #!/bin/bash
 
+pushd ~/config/.emacs.d
+git clone http://www.dr-qubit.org/git/undo-tree.git
+pushd undo-tree
+git pull
+popd
+
+git clone http://git.savannah.gnu.org/r/dtrt-indent.git
+pushd dtrt-indent
+git pull
+popd
+popd
+
+pushd ~/config
 find . -maxdepth 1 -not \
     \( -iname '*~' -or -iname '*#*' -or -iname '.' \
     -or -iname '.hg' -or -iname 'setup' \) \
@@ -13,3 +26,4 @@ find . -maxdepth 1 -not \
      then
          ln -s $PWD/{} ~/{}
      fi" \;
+popd

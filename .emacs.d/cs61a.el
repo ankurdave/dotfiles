@@ -50,3 +50,5 @@ go to Scheme buffer."
 (global-set-key "\M-s"          'run-half-scheme)
 (define-key esc-map "\C-q"	'scheme-indent-sexp)
 (global-set-key "\C-c\M-l" 'scheme-load-file-and-go)
+
+(provide 'cs61a)
