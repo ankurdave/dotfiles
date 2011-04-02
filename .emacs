@@ -1,3 +1,14 @@
+(add-to-list 'load-path "~/.emacs.d")
+(add-to-list 'load-path "~/.emacs.d/scala")
+(add-to-list 'load-path "~/.emacs.d/undo-tree")
+(add-to-list 'load-path "~/.emacs.d/dtrt-indent")
+(require 'mercurial)
+(require 'scala-mode-auto)
+(require 'undo-tree)
+(require 'js2-mode)
+(load "~/.emacs.d/nxhtml/autostart.el")
+(require 'dtrt-indent)
+
 (custom-set-variables
   ;; custom-set-variables was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
@@ -13,6 +24,7 @@
  '(inhibit-startup-screen t)
  '(mouse-wheel-progressive-speed nil)
  '(mouse-wheel-scroll-amount (quote (3 ((shift) . 1) ((control)))))
+ '(mumamo-chunk-coloring 2)
  '(scroll-bar-mode (quote right))
  '(scroll-conservatively 5)
  '(show-paren-mode t)
@@ -20,6 +32,7 @@
  '(tab-width 4)
  '(tool-bar-mode nil)
  '(transient-mark-mode t)
+ '(vc-follow-symlinks t)
  '(word-wrap t))
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
@@ -68,17 +81,6 @@
   "Loads cs61a utilities."
   (interactive)
   (require 'cs61a))
-
-(add-to-list 'load-path "~/.emacs.d")
-(add-to-list 'load-path "~/.emacs.d/scala")
-(add-to-list 'load-path "~/.emacs.d/undo-tree")
-(add-to-list 'load-path "~/.emacs.d/dtrt-indent")
-(require 'mercurial)
-(require 'scala-mode-auto)
-(require 'undo-tree)
-(require 'js2-mode)
-(load "~/.emacs.d/nxhtml/autostart.el")
-(require 'dtrt-indent)
 
 ;; Site-local config
 (when (file-exists-p "~/.emacs-site-local")
