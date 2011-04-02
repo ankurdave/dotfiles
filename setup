@@ -12,6 +12,10 @@ git pull
 popd
 popd
 
+pushd ~
+hg clone ssh://bitbucket.org/ankurdave/history
+popd
+
 pushd ~/config
 find . -maxdepth 1 -not \
     \( -iname '*~' -or -iname '*#*' -or -iname '.' \
