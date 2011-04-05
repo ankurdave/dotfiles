@@ -7,21 +7,21 @@ vbell off
 # Stop Ctrl-S from causing problems
 defflow off
 
-# Use Ctrl-B instead of Ctrl-A for escape key
-escape ^Bb
-
 # Use space for windowlist as well as "
 bind ' ' windowlist -b
+
+# Use C-b for escape key
+escape ^bb
 
 # Don't show "New screen..."
 startup_message off
 
+hardstatus alwayslastline
+hardstatus string '%H [ %-w%{+b}%n %t%{-b}%+w ]'
+
 deflog on
-logfile $HOME/history/screenlog-%Y%m%d-%n-%H
+logfile $HOME/history/screen/screenlog-%Y%m%d-%n-%H
 
 ignorecase on
 
-shelltitle '$ |bash:'
-
-# Allow scrolling in xterm
-termcapinfo xterm ti@:te@
+shelltitle '$ |bash'
