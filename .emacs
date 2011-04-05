@@ -20,6 +20,7 @@
  '(c-default-style "k&r")
  '(delete-selection-mode t)
  '(dtrt-indent-mode t nil (dtrt-indent))
+ '(global-undo-tree-mode t)
  '(indent-tabs-mode nil)
  '(inhibit-startup-screen t)
  '(mouse-wheel-progressive-speed nil)
