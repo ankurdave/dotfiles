@@ -24,7 +24,6 @@ _read_old_history() {
 }
 
 export HISTDIR=$HOME/history
-mkdir -p $HISTDIR
 export HISTCONTROL=ignoreboth
 export HISTTIMEFORMAT='%Y-%m-%d %H:%M:%S - '
 export FQDN=$(hostname --long)
@@ -38,10 +37,10 @@ trap _hgcommit_history EXIT
 [ -x /usr/bin/lesspipe ] && eval "$(lesspipe)"
 
 # Colors
-PS1='\u@\h:\w\$ '
 case "$TERM" in
     xterm*|rxvt*|eterm-color|screen)
         PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+
         case $(uname) in
             Darwin)
                 alias ls='ls -G'
@@ -53,6 +52,13 @@ case "$TERM" in
         esac
         ;;
     *)
+        PS1='\u@\h:\w\$ '
+        ;;
+esac
+
+case "$TERM" in
+    screen)
+        PS1='\[\033k\033\\\]'$PS1
         ;;
 esac
 
@@ -64,8 +70,7 @@ fi
 # Use Emacs as a server
 if [[ -n "`emacs --help | grep -- --daemon`" ]]
 then
-    emacs --daemon >/dev/null 2>&1
-    export EDITOR='emacsclient -a emacs -c'
+    export EDITOR='emacsclient -a "" -c'
     e() {
         if [[ -n $DISPLAY ]]
         then $EDITOR -n $@
@@ -86,6 +91,6 @@ if [ -f ~/.bash_sitelocal ]; then
 fi
 
 # # Finally, start screen (unless already in screen)
-# if [ -z "$STY" ]; then
-#     screen -xRR
-# fi
+if [ -z "$STY" ]; then
+    screen -xRR
+fi

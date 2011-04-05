@@ -1,5 +1,5 @@
 # Longer scroll history
-defscrollback 1024
+defscrollback 32768
 
 # No annoying window flashes
 vbell off
@@ -7,27 +7,21 @@ vbell off
 # Stop Ctrl-S from causing problems
 defflow off
 
-# Use Ctrl-Z instead of Ctrl-A for escape key
-escape ^Zz
+# Use Ctrl-B instead of Ctrl-A for escape key
+escape ^Bb
 
-# Use space for windowlist instead of "
+# Use space for windowlist as well as "
 bind ' ' windowlist -b
 
 # Don't show "New screen..."
 startup_message off
 
-## The following config is from http://nicolas.barcet.com/drupal/screen-by-default
+deflog on
+logfile $HOME/history/screenlog-%Y%m%d-%n-%H
+
+ignorecase on
+
+shelltitle '$ |bash:'
+
 # Allow scrolling in xterm
 termcapinfo xterm ti@:te@
-# if activity is detected on an affected window switched into the background
-# you  will  receive the activity notification message in the status line
-# the window will also be marked with an ‘@’ in the window-status display
-defmonitor on
-# When  any activity occurs in a background window that is being monitored
-# screen displays a notification in the message line
-activity "activity -> %n%f %t" # window number , flags of the window , window title
-# Keybindings
-# Map shift-tab to go to next window
-bindkey "\033[Z" next
-# Always show a status bar
-#caption always "%{= kw}%-w%{= BW}%n %t%{-}%+w %-= @%H - %LD %d %LM - %c"
