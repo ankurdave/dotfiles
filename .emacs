@@ -1,13 +1,20 @@
 (add-to-list 'load-path "~/.emacs.d")
-(add-to-list 'load-path "~/.emacs.d/scala")
-(add-to-list 'load-path "~/.emacs.d/undo-tree")
-(add-to-list 'load-path "~/.emacs.d/dtrt-indent")
 (require 'mercurial)
-(require 'scala-mode-auto)
-(require 'undo-tree)
 (require 'js2-mode)
-(load "~/.emacs.d/nxhtml/autostart.el")
+
+(add-to-list 'load-path "~/.emacs.d/scala")
+(add-to-list 'load-path "~/.emacs.d/ensime/elisp")
+(require 'scala-mode-auto)
+(require 'ensime)
+(add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
+
+(add-to-list 'load-path "~/.emacs.d/undo-tree")
+(require 'undo-tree)
+
+(add-to-list 'load-path "~/.emacs.d/dtrt-indent")
 (require 'dtrt-indent)
+
+(load "~/.emacs.d/nxhtml/autostart.el")
 
 (custom-set-variables
   ;; custom-set-variables was added by Custom.
