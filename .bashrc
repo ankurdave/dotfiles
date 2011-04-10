@@ -1,28 +1,6 @@
 [ -z "$PS1" ] && return
 
 # History
-_hgcommit_history() {
-    history -a
-    (
-        hg -R $HISTDIR pull
-        hg -R $HISTDIR merge
-        hg -R $HISTDIR commit -m "Automated merge from $USER@$FQDN"
-        hg -R $HISTDIR add
-        hg -R $HISTDIR commit -m "Automated history commit from $USER@$FQDN"
-        hg -R $HISTDIR push
-    ) &
-    disown -h
-}
-
-_read_old_history() {
-    export HISTSIZE=5
-    for file in $(ls $HISTDIR/*-$FQDN | tail -n 5)
-    do
-        history -r $file
-    done
-    unset HISTSIZE
-}
-
 export HISTDIR=$HOME/history
 export HISTCONTROL=ignoreboth
 export HISTTIMEFORMAT='%Y-%m-%d %H:%M:%S - '
@@ -32,7 +10,6 @@ export HISTFILE=$HISTDIR/$HISTDATE-$FQDN
 unset HISTFILESIZE
 unset HISTSIZE
 shopt -s checkwinsize histappend cdspell checkjobs
-trap _hgcommit_history EXIT
 
 [ -x /usr/bin/lesspipe ] && eval "$(lesspipe)"
 
