@@ -1,3 +1,8 @@
+# Add ~/bin to path if it exists
+if [ -d "$HOME/bin" ] ; then
+    PATH="$HOME/bin:$PATH"
+fi
+
 [ -z "$PS1" ] && return
 
 # History
@@ -38,11 +43,6 @@ case "$TERM" in
         PS1='\[\033k\033\\\]'$PS1
         ;;
 esac
-
-# Add ~/bin to path if it exists
-if [ -d "$HOME/bin" ] ; then
-    PATH="$HOME/bin:$PATH"
-fi
 
 # Use Emacs as a server
 if [[ -n "`emacs --help | grep -- --daemon`" ]]
