@@ -28,6 +28,9 @@
  '(delete-selection-mode t)
  '(dtrt-indent-mode t nil (dtrt-indent))
  '(global-undo-tree-mode t)
+ '(ido-enable-flex-matching t)
+ '(ido-everywhere t)
+ '(ido-mode (quote both) nil (ido))
  '(indent-tabs-mode nil)
  '(inhibit-startup-screen t)
  '(mouse-wheel-progressive-speed nil)
@@ -89,6 +92,17 @@
   "Loads cs61a utilities."
   (interactive)
   (require 'cs61a))
+
+;; Use ido-mode for completing M-x
+(global-set-key
+ "\M-x"
+ (lambda ()
+   (interactive)
+   (call-interactively
+    (intern
+     (ido-completing-read
+      "M-x "
+      (all-completions "" obarray 'commandp))))))
 
 ;; Site-local config
 (when (file-exists-p "~/.emacs-site-local")
