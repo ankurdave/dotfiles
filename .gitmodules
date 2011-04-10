@@ -1,0 +1,6 @@
+[submodule ".emacs.d/undo-tree"]
+	path = .emacs.d/undo-tree
+	url = http://www.dr-qubit.org/git/undo-tree.git
+[submodule ".emacs.d/dtrt-indent"]
+	path = .emacs.d/dtrt-indent
+	url = http://git.savannah.gnu.org/r/dtrt-indent.git

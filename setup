@@ -1,25 +1,13 @@
 #!/bin/bash
 
-pushd ~/config/.emacs.d
-git clone http://www.dr-qubit.org/git/undo-tree.git
-pushd undo-tree
-git pull
-popd
-
-git clone http://git.savannah.gnu.org/r/dtrt-indent.git
-pushd dtrt-indent
-git pull
-popd
-popd
-
 pushd ~
-hg clone ssh://bitbucket.org/ankurdave/history
+git init history
 popd
 
 pushd ~/config
 find . -maxdepth 1 -not \
     \( -iname '*~' -or -iname '*#*' -or -iname '.' \
-    -or -iname '.hg' -or -iname 'setup' \) \
+    -or -iname '.hg' -or -iname '.git' -or -iname 'setup' \) \
     -exec bash -c \
     "if [[ -e ~/{} && ! -L ~/{} ]]
      then
