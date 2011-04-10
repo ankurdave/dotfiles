@@ -1,0 +1,11 @@
+[user]
+	name = Ankur Dave
+	email = ankurdave@gmail.com
+[alias]
+	st = status
+[url "ssh://github.com/ankurdave/"]
+	insteadOf = "github:"
+[url "ssh://www2.ankurdave.com/home/ankur/git/"]
+	insteadOf = "dave-server:"
+[color]
+	diff = auto
