@@ -9,3 +9,5 @@
 	insteadOf = "dave-server:"
 [color]
 	ui = auto
+[core]
+	pager = less -+$LESS -FRX
