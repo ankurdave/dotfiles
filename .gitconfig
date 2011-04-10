@@ -8,4 +8,4 @@
 [url "ssh://www2.ankurdave.com/home/ankur/git/"]
 	insteadOf = "dave-server:"
 [color]
-	diff = auto
+	ui = auto
