@@ -14,7 +14,8 @@
 (add-to-list 'load-path "~/.emacs.d/dtrt-indent")
 (require 'dtrt-indent)
 
-(load "~/.emacs.d/nxhtml/autostart.el")
+(if (string-match "GNU Emacs 23" (emacs-version))
+    (load "~/.emacs.d/nxhtml/autostart.el"))
 
 (custom-set-variables
   ;; custom-set-variables was added by Custom.
