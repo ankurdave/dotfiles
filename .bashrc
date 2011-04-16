@@ -43,14 +43,21 @@ case "$TERM" in
         ;;
 esac
 
-# Automatically set screen title to command:shortened_pwd:hostname
+# Automatically set screen title to short_cmd:short_pwd:hostname
+short_cmd() {
+    if [[ ${1%% *} == "ssh" ]]; then
+        echo ${1##* }
+    else
+        echo ${1%% *}
+    fi
+}
 short_pwd() {
     pwd | perl -pe 's#'$HOME'#~#; until (length() < 15 || $_ eq $prev) { print $_; $prev = $_; s#^(\.\.\./)?([^/]+/)(.*)$#$3# }'
 }
 case "$TERM" in
     screen)
-        PROMPT_COMMAND='echo -ne "\033k$(short_pwd):$HOSTNAME\033\\"'
-        trap 'echo -ne "\033k${BASH_COMMAND%% *}:$(short_pwd):$HOSTNAME\033\\"' DEBUG
+        PROMPT_COMMAND='echo -ne "\033k$(short_pwd):$(hostname)\033\\"'
+        trap 'echo -ne "\033k$(short_cmd $BASH_COMMAND):$(short_pwd):$(hostname)\033\\"' DEBUG
         ;;
 esac
 
