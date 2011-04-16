@@ -15,7 +15,13 @@ export HISTDATE=$(date +%Y%m%dT%H%M%S)
 export HISTFILE=$HISTDIR/$HISTDATE-$FQDN
 unset HISTFILESIZE
 unset HISTSIZE
-shopt -s checkwinsize histappend cdspell checkjobs
+
+# Set various shell options
+shopt -s checkwinsize histappend cdspell
+if [ ${BASH_VERSINFO[0]} -ge 4 ]
+then
+    shopt -s checkjobs
+fi
 
 # Use colored prompt and ls
 case "$TERM" in
