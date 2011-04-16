@@ -7,9 +7,6 @@ vbell off
 # Stop Ctrl-S from causing problems
 defflow off
 
-# Use space for windowlist as well as "
-bind ' ' windowlist -b
-
 # Use C-b for escape key
 escape ^bb
 
@@ -23,5 +20,3 @@ deflog off
 logfile $HOME/history/screen/screenlog-%Y%m%d-%n-%H
 
 ignorecase on
-
-shelltitle '$ |bash'
