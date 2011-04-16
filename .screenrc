@@ -14,7 +14,7 @@ escape ^bb
 startup_message off
 
 hardstatus alwayslastline
-hardstatus string '%H [ %-w%{+b}%n %t%{-b}%+w ]'
+hardstatus string '%-w%{+b}%n %t%{-b}%+w'
 
 deflog off
 logfile $HOME/history/screen/screenlog-%Y%m%d-%n-%H

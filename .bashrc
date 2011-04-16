@@ -57,12 +57,12 @@ short_cmd() {
     esac
 }
 short_pwd() {
-    pwd | perl -pe 's#'$HOME'#~#; until (length() < 15 || $_ eq $prev) { $prev = $_; s#^(\.\.\./)?([^/]+/)(.*)$#$3# }'
+    pwd | perl -pe 's#'$HOME'#~#; until (length() < 20 || $_ eq $prev) { $prev = $_; s#^(\.\.\./)?([^/]+/)(.*)$#$3# }'
 }
 case "$TERM" in
     screen)
-        PROMPT_COMMAND='echo -ne "\033k$(short_pwd):$(hostname -s)\033\\"'
-        trap 'echo -ne "\033k$(short_cmd $BASH_COMMAND)$(short_pwd):$(hostname -s)\033\\"' DEBUG
+        PROMPT_COMMAND='echo -ne "\033k$(short_pwd):${HOSTNAME:0:3}\033\\"'
+        trap 'echo -ne "\033k$(short_cmd $BASH_COMMAND)$(short_pwd):${HOSTNAME:0:3}\033\\"' DEBUG
         ;;
 esac
 
