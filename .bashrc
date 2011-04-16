@@ -57,7 +57,7 @@ short_cmd() {
     esac
 }
 short_pwd() {
-    pwd | perl -pe 's#'$HOME'#~#; until (length() < 15 || $_ eq $prev) { print $_; $prev = $_; s#^(\.\.\./)?([^/]+/)(.*)$#$3# }'
+    pwd | perl -pe 's#'$HOME'#~#; until (length() < 15 || $_ eq $prev) { $prev = $_; s#^(\.\.\./)?([^/]+/)(.*)$#$3# }'
 }
 case "$TERM" in
     screen)
