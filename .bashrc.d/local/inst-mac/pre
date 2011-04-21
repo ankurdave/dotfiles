@@ -1,0 +1,13 @@
+#!/bin/bash
+
+[[ -z ${MASTER} ]] && export MASTER=${LOGNAME%-*}
+[[ -z ${MASTERDIR} ]] && export MASTERDIR=$(eval echo ~${MASTER})
+[[ -e ${MASTERDIR}/adm/class.bash_profile ]] && . ${MASTERDIR}/adm/class.bash_profile
+
+# Set path again because the above commands have clobbered it
+if [ -d "$HOME/bin" ] ; then
+    PATH="$HOME/bin:$PATH"
+fi
+if [ -f ~/.bashrc.d/local-config ]; then
+    . ~/.bashrc.d/local-config path
+fi

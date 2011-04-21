@@ -1,0 +1,24 @@
+#!/bin/bash
+
+case $(echo $HOSTNAME | tr '[A-Z]' '[a-z]') in
+    *.cs.berkeley.edu)
+        case $(uname) in
+            Darwin)
+                CONFIGDIR=inst-mac
+                ;;
+            Linux)
+                CONFIGDIR=inst-linux
+                ;;
+            *)
+                CONFIGDIR=inst
+                ;;
+        esac
+        ;;
+    *)
+        ;;
+esac
+
+ACTION=$1
+if [[ -e ~/.bashrc.d/local/$CONFIGDIR/$ACTION ]]; then
+    . ~/.bashrc.d/local/$CONFIGDIR/$ACTION
+fi

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+if [ -e "$HOME/bin/inst-mac" ]; then
+   PATH="$HOME/bin/inst-mac:$PATH"
+fi

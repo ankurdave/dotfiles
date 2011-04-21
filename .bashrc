@@ -3,8 +3,18 @@ if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
 fi
 
+# Include local path config
+if [ -f ~/.bashrc.d/local-config ]; then
+    . ~/.bashrc.d/local-config path
+fi
+
 # Do nothing else if non-interactive
 [ -z "$PS1" ] && return
+
+# Include pre-bashrc local config
+if [ -f ~/.bashrc.d/local-config ]; then
+    . ~/.bashrc.d/local-config pre
+fi
 
 # Keep history forever
 export HISTDIR=$HOME/history
@@ -86,9 +96,9 @@ fi
 # Enhance less
 [ -x /usr/bin/lesspipe ] && eval "$(lesspipe)"
 
-# Include site-local config
-if [ -f ~/.bash_sitelocal ]; then
-    . ~/.bash_sitelocal
+# Include post-bashrc local config
+if [ -f ~/.bashrc.d/local-config ]; then
+    . ~/.bashrc.d/local-config post
 fi
 
 # # Finally, start screen (unless already in screen)
