@@ -8,7 +8,7 @@ vbell off
 defflow off
 
 # Use C-b for escape key
-escape ``
+escape ^bb
 
 # Don't show "New screen..."
 startup_message off
