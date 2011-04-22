@@ -4,6 +4,9 @@ case $(hostname -f | tr '[A-Z]' '[a-z]') in
     ankur-laptop)
         CONFIGDIR=ankur-laptop
         ;;
+    dave-server)
+        CONFIGDIR=dave-server
+        ;;
     *.cs.berkeley.edu)
         case $(uname) in
             Darwin)

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+if [ -e "$HOME/bin/dave-server" ]; then
+   PATH="$HOME/bin/dave-server:$PATH"
+fi
