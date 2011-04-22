@@ -7,6 +7,11 @@ then
 fi
 popd
 
+pushd $(dirname $0)
+git submodule init
+git submodule update
+popd
+
 find $(cd $(dirname $0) && pwd) -mindepth 1 -maxdepth 1 -not \( -iname '*~' -or -iname '*#*' -or -iname '.hg' -or -iname '.git' -or -iname '.gitmodules' -or -iname 'setup' \) -exec bash -c \
     "TARGET=~/\$(basename {})
      echo \"Looking at \$TARGET\"
