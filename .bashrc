@@ -76,22 +76,8 @@ case "$TERM" in
         ;;
 esac
 
-# Launch emacsclient by typing e
-if [[ -n "`which emacsclient`" ]]
-then
-    export EDITOR='emacsclient -a "" -c'
-    e() {
-        if [[ -n $DISPLAY ]]
-        then $EDITOR -n $@
-        else $EDITOR -nw $@
-        fi
-    }
-else
-    export EDITOR='emacs'
-    e() {
-        $EDITOR $@
-    }
-fi
+# Use the emacsclient wrapper at ~/bin/e
+export EDITOR='e'
 
 # Enhance less
 [ -x /usr/bin/lesspipe ] && eval "$(lesspipe)"
