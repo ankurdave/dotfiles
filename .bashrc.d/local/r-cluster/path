@@ -1,0 +1,5 @@
+#!/bin/bash
+
+if [ -e "$HOME/bin/r-cluster" ]; then
+   PATH="$HOME/bin/r-cluster:$PATH"
+fi

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-case $(echo $HOSTNAME | tr '[A-Z]' '[a-z]') in
+case $(hostname -f | tr '[A-Z]' '[a-z]') in
     *.cs.berkeley.edu)
         case $(uname) in
             Darwin)
@@ -13,6 +13,9 @@ case $(echo $HOSTNAME | tr '[A-Z]' '[a-z]') in
                 CONFIGDIR=inst
                 ;;
         esac
+        ;;
+    r*.millennium.berkeley.edu)
+        CONFIGDIR=r-cluster
         ;;
     *)
         ;;
