@@ -1,6 +1,9 @@
 #!/bin/bash
 
 case $(hostname -f | tr '[A-Z]' '[a-z]') in
+    ankur-laptop)
+        CONFIGDIR=ankur-laptop
+        ;;
     *.cs.berkeley.edu)
         case $(uname) in
             Darwin)

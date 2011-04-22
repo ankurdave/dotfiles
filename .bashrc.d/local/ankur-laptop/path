@@ -1,0 +1,5 @@
+#!/bin/bash
+
+if [ -e "$HOME/bin/ankur-laptop" ]; then
+   PATH="$HOME/bin/ankur-laptop:$PATH"
+fi
