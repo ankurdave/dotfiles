@@ -77,7 +77,7 @@ case "$TERM" in
 esac
 
 # Use the emacsclient wrapper at ~/bin/e
-export EDITOR='e'
+export EDITOR='e --wait'
 
 # Enhance less
 [ -x /usr/bin/lesspipe ] && eval "$(lesspipe)"
