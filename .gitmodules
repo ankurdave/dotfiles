@@ -4,3 +4,6 @@
 [submodule ".emacs.d/dtrt-indent"]
 	path = .emacs.d/dtrt-indent
 	url = http://git.savannah.gnu.org/r/dtrt-indent.git
+[submodule ".emacs.d/smex"]
+	path = .emacs.d/smex
+	url = git://github.com/nonsequitur/smex.git

@@ -14,6 +14,9 @@
 (add-to-list 'load-path "~/.emacs.d/dtrt-indent")
 (require 'dtrt-indent)
 
+(add-to-list 'load-path "~/.emacs.d/smex")
+(require 'smex)
+
 (if (string-match "GNU Emacs 23" (emacs-version))
     (load "~/.emacs.d/nxhtml/autostart.el"))
 
@@ -94,16 +97,11 @@
   (interactive)
   (require 'cs61a))
 
-;; Use ido-mode for completing M-x
-(global-set-key
- "\M-x"
- (lambda ()
-   (interactive)
-   (call-interactively
-    (intern
-     (ido-completing-read
-      "M-x "
-      (all-completions "" obarray 'commandp))))))
+;; Use smex for completing M-x
+(smex-initialize)
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
 ;; Site-local config
 (when (file-exists-p "~/.emacs-site-local")
