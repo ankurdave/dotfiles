@@ -40,6 +40,7 @@
  '(mouse-wheel-progressive-speed nil)
  '(mouse-wheel-scroll-amount (quote (3 ((shift) . 1) ((control)))))
  '(mumamo-chunk-coloring 2)
+ '(require-final-newline t)
  '(scroll-bar-mode (quote right))
  '(scroll-conservatively 5)
  '(show-paren-mode t)
