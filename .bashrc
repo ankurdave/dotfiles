@@ -71,8 +71,8 @@ short_pwd() {
 }
 case "$TERM" in
     screen)
-        PROMPT_COMMAND='echo -ne "\033k$(short_pwd):${HOSTNAME:0:3}\033\\"'
-        trap 'echo -ne "\033k$(short_cmd $BASH_COMMAND)$(short_pwd):${HOSTNAME:0:3}\033\\"' DEBUG
+        PROMPT_COMMAND='echo -ne "\033k$(short_pwd):$HOSTNAME\033\\"'
+        trap 'echo -ne "\033k$(short_cmd $BASH_COMMAND)$(short_pwd):$HOSTNAME\033\\"' DEBUG
         ;;
 esac
 
