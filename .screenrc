@@ -3,6 +3,7 @@ defscrollback 32768
 
 # No annoying window flashes
 vbell off
+bell_msg ""
 
 # Stop Ctrl-S from causing problems
 defflow off
@@ -14,6 +15,7 @@ escape ^bb
 startup_message off
 
 #caption always '%-w%{+b}%n %t%{-b}%+w'
+caption splitonly
 
 deflog off
 logfile $HOME/history/screen/screenlog-%Y%m%d-%n-%H
