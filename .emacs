@@ -1,6 +1,11 @@
 (add-to-list 'load-path "~/.emacs.d")
 (require 'mercurial)
 (require 'js2-mode)
+(autoload 'thrift-mode "thrift" nil t nil)
+(setq auto-mode-alist (append '(("\\.thrift$" . thrift-mode))
+                              auto-mode-alist))
+(require 'highlight-80+)
+(add-hook 'c++-mode-hook (lambda () (highlight-80+-mode t)))
 
 (add-to-list 'load-path "~/.emacs.d/scala")
 (add-to-list 'load-path "~/.emacs.d/ensime/elisp")
@@ -77,6 +82,9 @@
 (add-hook 'LaTeX-mode-hook 'larger)
 (add-hook 'BibTeX-mode-hook 'variable-pitch)
 
+;; Use Python mode for TARGETS files
+(setq auto-mode-alist (cons '("\\/TARGETS$" . python-mode) auto-mode-alist))
+
 ;; Utility functions
 (defun indent-buffer ()
   "indent whole buffer"
@@ -103,6 +111,26 @@
 (global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+
+;; Highlight and remove trailing whitespace
+(set-face-background 'trailing-whitespace "#900000")
+(setq-default show-trailing-whitespace t)
+(if (fboundp 'delete-trailing-whitespace)
+    (add-hook 'write-file-hooks 'delete-trailing-whitespace))
+
+;; Split into as many vertical windows as possible
+(defun smart-split ()
+  "Split the frame into 80-column sub-windows, and make sure no window has
+   fewer than 80 columns."
+  (interactive)
+  (defun smart-split-helper (w)
+    "Helper function to split a given window into two, the first of which has
+     100 columns."
+    (if (> (window-width w) (* 2 81))
+    (let ((w2 (split-window w 82 t)))
+      (smart-split-helper w2))))
+  (smart-split-helper nil)
+  (balance-windows))
 
 ;; Site-local config
 (when (file-exists-p "~/.emacs-site-local")
