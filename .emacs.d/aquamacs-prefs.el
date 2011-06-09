@@ -8,3 +8,4 @@
 (global-set-key (kbd "<C-tab>") 'next-tab-or-buffer)
 (global-set-key (kbd "<C-S-tab>") 'previous-tab-or-buffer)
 (global-set-key (kbd "C--") 'undo-tree-undo)
+(setq-default ns-use-mac-modifier-symbols nil)
