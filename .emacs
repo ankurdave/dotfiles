@@ -98,7 +98,8 @@
         (error (if (cdr windows)
                    (progn (delete-window (cadr windows))
                           (resize-windows-destructively (cons (car windows) (cddr windows))))
-                 (delete-window (car windows)))))))
+                 (ignore-errors
+                   (delete-window (car windows))))))))
   (defun subsplit (w)
     "If the given window can be split into multiple 80-column windows, do it."
     (when (> (window-width w) (* 2 81))
