@@ -89,6 +89,9 @@
 ;; Use Python mode for TARGETS files
 (setq auto-mode-alist (cons '("\\/TARGETS$" . python-mode) auto-mode-alist))
 
+;; Use C++ mode for .h files
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+
 ;; Utility functions
 (defun indent-buffer ()
   "indent whole buffer"
