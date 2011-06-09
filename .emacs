@@ -112,12 +112,6 @@
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
-;; Highlight and remove trailing whitespace
-(set-face-background 'trailing-whitespace "#900000")
-(setq-default show-trailing-whitespace t)
-(if (fboundp 'delete-trailing-whitespace)
-    (add-hook 'write-file-hooks 'delete-trailing-whitespace))
-
 ;; Split into as many vertical windows as possible
 (defun smart-split ()
   "Split the frame into 80-column sub-windows, and make sure no window has
