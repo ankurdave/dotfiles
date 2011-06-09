@@ -121,16 +121,28 @@
 
 ;; Split into as many vertical windows as possible
 (defun smart-split ()
-  "Split the frame into 80-column sub-windows, and make sure no window has
-   fewer than 80 columns."
+  "Split the frame into exactly as many 80-column sub-windows as possible."
   (interactive)
-  (defun smart-split-helper (w)
-    "Helper function to split a given window into two, the first of which has
-     100 columns."
-    (if (> (window-width w) (* 2 81))
-    (let ((w2 (split-window w 82 t)))
-      (smart-split-helper w2))))
-  (smart-split-helper nil)
+  (defun ordered-window-list ()
+    "Get the list of windows in the select frame, starting from the one at the top left."
+    (window-list (selected-frame) 'no-minibuf (frame-first-window)))
+  (defun resize-windows-destructively (windows)
+    "Resize each window in the list to be 80 characters wide. If there's not enough space to do that, delete the appropriate window until there is space."
+    (when windows
+      (condition-case nil
+          (progn (adjust-window-trailing-edge (first windows) (- 80 (window-width (first windows))) t)
+                 (resize-windows-destructively (cdr windows)))
+        (error (if (cdr windows)
+                   (progn (delete-window (cadr windows))
+                          (resize-windows-destructively (cons (car windows) (cddr windows))))
+                 (delete-window (car windows)))))))
+  (defun subsplit (w)
+    "If the given window can be split into multiple 80-column windows, do it."
+    (when (> (window-width w) (* 2 81))
+      (split-window w 82 t)
+      (subsplit w)))
+  (resize-windows-destructively (ordered-window-list))
+  (walk-windows 'subsplit)
   (balance-windows))
 
 ;; Prompt before quitting
