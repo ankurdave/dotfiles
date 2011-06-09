@@ -6,6 +6,10 @@
                               auto-mode-alist))
 (require 'highlight-80+)
 (add-hook 'c++-mode-hook (lambda () (highlight-80+-mode t)))
+(autoload 'markdown-mode "markdown-mode.el"
+  "Major mode for editing Markdown files" t)
+(setq auto-mode-alist
+      (cons '("\\.text" . markdown-mode) auto-mode-alist))
 
 (add-to-list 'load-path "~/.emacs.d/scala")
 (add-to-list 'load-path "~/.emacs.d/ensime/elisp")
