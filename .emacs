@@ -133,6 +133,18 @@
   (smart-split-helper nil)
   (balance-windows))
 
+;; Prompt before quitting
+(defun prompt-quit-emacs ()
+  "Prompt before quitting Emacs"
+  (interactive)
+  (if (y-or-n-p (format "Really quit Emacs? "))
+      (if (< emacs-major-version 22)
+          (save-buffers-kill-terminal)
+        (save-buffers-kill-emacs))
+    (message "Canceled exit")))
+(when window-system
+  (global-set-key (kbd "C-x C-c") 'prompt-quit-emacs))
+
 ;; Site-local config
 (when (file-exists-p "~/.emacs-site-local")
   (load-file "~/.emacs-site-local"))
