@@ -76,6 +76,11 @@
   (interactive)
   (require 'cs61a))
 
+(defun isearch-visible-buffers ()
+  "Interactively search all visible buffers."
+  (interactive)
+  (multi-isearch-buffers (mapcar 'window-buffer (window-list))))
+
 ;; Use smex for completing M-x
 (smex-initialize)
 (global-set-key (kbd "M-x") 'smex)
