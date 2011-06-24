@@ -1,33 +1,21 @@
-(add-to-list 'load-path "~/.emacs.d")
-(require 'mercurial)
-(require 'js2-mode)
-(autoload 'thrift-mode "thrift" nil t nil)
-(setq auto-mode-alist (append '(("\\.thrift$" . thrift-mode))
-                              auto-mode-alist))
-(require 'highlight-80+)
-(add-hook 'c++-mode-hook (lambda () (highlight-80+-mode t)))
-(autoload 'markdown-mode "markdown-mode.el"
-  "Major mode for editing Markdown files" t)
-(setq auto-mode-alist
-      (cons '("\\.text" . markdown-mode) auto-mode-alist))
+;; Use el-get (https://github.com/dimitri/el-get)
+(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
+(require 'el-get)
 
-(add-to-list 'load-path "~/.emacs.d/scala")
-(add-to-list 'load-path "~/.emacs.d/ensime/elisp")
-(require 'scala-mode-auto)
-(require 'ensime)
-(add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
+(setq el-get-sources
+      '((:name thrift-mode
+               :type http
+               :url "http://svn.apache.org/repos/asf/thrift/trunk/contrib/thrift.el"
+               :after (lambda () (add-to-list 'auto-mode-alist '("\\.thrift$" . thrift-mode))))
+        (:name highlight-80+-mode
+               :type http
+               :url "http://nschum.de/src/emacs/highlight-80+/highlight-80+.el"
+               :after (lambda () (add-hook 'c++-mode-hook (lambda () (highlight-80+-mode t)))))))
 
-(add-to-list 'load-path "~/.emacs.d/undo-tree")
-(require 'undo-tree)
+(setq my-packages
+      '(el-get js2-mode thrift-mode highlight-80+-mode markdown-mode switch-window scala-mode undo-tree dtrt-indent smex nxhtml magit maxframe))
 
-(add-to-list 'load-path "~/.emacs.d/dtrt-indent")
-(require 'dtrt-indent)
-
-(add-to-list 'load-path "~/.emacs.d/smex")
-(require 'smex)
-
-(if (string-match "GNU Emacs 23" (emacs-version))
-    (load "~/.emacs.d/nxhtml/autostart.el"))
+(el-get 'sync my-packages)
 
 (load "~/.emacs.d/customizations.el")
 
@@ -82,7 +70,6 @@
   (multi-isearch-buffers (mapcar 'window-buffer (window-list))))
 
 ;; Use smex for completing M-x
-(smex-initialize)
 (global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
