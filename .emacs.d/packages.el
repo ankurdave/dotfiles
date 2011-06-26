@@ -13,7 +13,7 @@
                :after (lambda () (add-hook 'c++-mode-hook (lambda () (highlight-80+-mode t)))))))
 
 (setq my-packages
-      '(el-get js2-mode thrift-mode highlight-80+-mode markdown-mode switch-window scala-mode undo-tree dtrt-indent smex nxhtml magit maxframe))
+      '(el-get js2-mode thrift-mode highlight-80+-mode markdown-mode switch-window scala-mode undo-tree dtrt-indent smex nxhtml magit maxframe ensime))
 
 (el-get 'sync my-packages)
 
