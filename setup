@@ -1,17 +1,8 @@
 #!/bin/bash
 
-pushd ~
-if [[ ! -e history ]]
-then
-    git init history
-fi
-popd
+mkdir -p ~/history/screen
 
-pushd $(dirname $0)
-git submodule init
-git submodule update
-popd
-
+# Link dotfiles into ~ and back up the old dotfiles into ~/config-old
 find $(cd $(dirname $0) && pwd) -mindepth 1 -maxdepth 1 -not \( -iname '*~' -or -iname '*#*' -or -iname '.hg' -or -iname '.git' -or -iname '.gitmodules' -or -iname 'setup' \) -exec bash -c \
     "TARGET=~/\$(basename {})
      echo \"Looking at \$TARGET\"
