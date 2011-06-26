@@ -5,21 +5,28 @@ defscrollback 32768
 vbell off
 bell_msg ""
 
-# Stop Ctrl-S from causing problems
+# No flow control when you accidentally press C-s
 defflow off
 
-# Use C-b for escape key
+# Use C-b as escape key instead of C-a
 escape ^bb
 
-# Don't show "New screen..."
+# No "New screen..." message at startup
 startup_message off
 
-#caption always '%-w%{+b}%n %t%{-b}%+w'
+# No status line
 caption splitonly
+# But if we did show one, make it nice
+#caption always '%-w%{+b}%n %t%{-b}%+w'
 
-deflog off
+# Log sessions into a consistent place when logging is enabled
+# Note that you have to mkdir -p $HOME/history/screen/
 logfile $HOME/history/screen/screenlog-%Y%m%d-%n-%H
 
+# Case insensitive searches in copy mode
 ignorecase on
 
+# Allow terminal scrolling
+# It's not perfect (gets messed up when you switch screen windows) but it's
+# faster than going into copy mode all the time
 termcapinfo xterm* ti@:te@
