@@ -8,3 +8,6 @@
 
 ;; Use C++ mode for .h files
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+
+;; Jump to words within CamelCase identifiers
+(add-hook 'c-mode-common-hook (lambda () (subword-mode 1)))
