@@ -1,10 +1,5 @@
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
-(unless (require 'el-get nil t)
-  (let ((s (url-retrieve-synchronously "https://github.com/dimitri/el-get/raw/master/el-get-install.el")))
-    (save-current-buffer
-      (set-buffer s)
-      (end-of-buffer)
-      (eval-print-last-sexp))))
+(require 'el-get)
 
 (setq el-get-sources
       '((:name thrift-mode
@@ -18,9 +13,9 @@
 	(:name ensime-prebuilt
 	       :type http-tar
 	       :url "https://github.com/downloads/aemoncannon/ensime/ensime_2.8.1-0.5.0.tar.gz"
-	       :options "-xzf"
+	       :options ("-xz" "--strip-components=1" "-f")
+	       :load-path "elisp"
 	       :after (lambda ()
-			(add-to-list 'load-path "~/.emacs.d/el-get-ensime/elisp/")
 			(require 'ensime)))))
 
 (setq my-packages
