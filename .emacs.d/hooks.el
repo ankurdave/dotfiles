@@ -11,3 +11,6 @@
 
 ;; Jump to words within CamelCase identifiers
 (add-hook 'c-mode-common-hook (lambda () (subword-mode 1)))
+
+;; sudo+ssh for TRAMP
+(set-default 'tramp-default-proxies-alist (quote ((".*" "\\`root\\'" "/ssh:%h:"))))
