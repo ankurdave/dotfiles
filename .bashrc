@@ -53,29 +53,6 @@ case "$TERM" in
         ;;
 esac
 
-# Automatically set screen title to short_cmd:short_pwd:hostname
-short_cmd() {
-    case ${1%% *} in
-        ssh)
-            echo ${1##* }:
-            ;;
-        screen)
-            ;;
-        *)
-            echo ${1%% *}:
-            ;;
-    esac
-}
-short_pwd() {
-    pwd | perl -pe 's#'$HOME'#~#; until (length() < 20 || $_ eq $prev) { $prev = $_; s#^(\.\.\./)?([^/]+/)(.*)$#$3# }'
-}
-case "$TERM" in
-    screen)
-        PROMPT_COMMAND='echo -ne "\033k$(short_pwd):$HOSTNAME\033\\"'
-        trap 'echo -ne "\033k$(short_cmd $BASH_COMMAND)$(short_pwd):$HOSTNAME\033\\"' DEBUG
-        ;;
-esac
-
 # Use the emacsclient wrapper at ~/bin/e
 export EDITOR='e --wait'
 
