@@ -3,10 +3,6 @@
 	email = ankurdave@gmail.com
 [alias]
 	st = status
-[url "ssh://github.com/ankurdave/"]
-	insteadOf = "github:"
-[url "ssh://www2.ankurdave.com/home/ankur/"]
-	insteadOf = "dave-server:"
 [color]
 	ui = auto
 [core]
