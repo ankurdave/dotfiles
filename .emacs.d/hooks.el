@@ -13,4 +13,5 @@
 (add-hook 'c-mode-common-hook (lambda () (subword-mode 1)))
 
 ;; sudo+ssh for TRAMP
-(set-default 'tramp-default-proxies-alist (quote ((".*" "\\`root\\'" "/ssh:%h:"))))
+(set-default 'tramp-default-proxies-alist '((".*" "\\`root\\'" "/ssh:%h:")
+                                            ("dave-server" "www-data" "/ssh:%h:")))
