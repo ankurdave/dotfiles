@@ -48,7 +48,10 @@
   (defun subsplit (w)
     "If the given window can be split into multiple 80-column windows, do it."
     (when (> (window-width w) (* 2 81))
-      (split-window w 82 t)
+      (let ((w2 (split-window w 82 t)))
+        (save-excursion
+          (select-window w2)
+          (switch-to-buffer (other-buffer (window-buffer w)))))
       (subsplit w)))
   (resize-windows-destructively (ordered-window-list))
   (walk-windows 'subsplit)
