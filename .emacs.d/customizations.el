@@ -12,7 +12,7 @@
  '(c-default-style "k&r")
  '(cursor-type (quote (bar . 2)) t)
  '(debug-on-error nil)
- '(default-frame-alist (quote ((cursor-type . box) (internal-border-width . 0) (modeline . t) (fringe) (mouse-color . "black") (background-mode . light) (tool-bar-lines . 0) (menu-bar-lines . 1) (right-fringe . 0) (left-fringe . 6) (cursor-color . "Red") (background-color . "White") (foreground-color . "Black") (font . "-apple-Monaco-medium-normal-normal-*-12-*-*-*-m-0-iso10646-1") (fontsize . 0) (font-backend ns))))
+ '(default-frame-alist (quote ((cursor-type . box) (internal-border-width . 0) (modeline . t) (fringe) (mouse-color . "black") (background-mode . light) (tool-bar-lines . 0) (menu-bar-lines . 1) (right-fringe . 0) (left-fringe . 6) (cursor-color . "Red") (foreground-color . "Black") (font . "-apple-Monaco-medium-normal-normal-*-12-*-*-*-m-0-iso10646-1"))))
  '(delete-selection-mode t)
  '(dtrt-indent-mode t nil (dtrt-indent))
  '(global-hl-line-mode t)
@@ -55,7 +55,7 @@
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "White" :foreground "Black" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "apple" :family "Monaco"))))
+ '(default ((t (:height 120 :foundry "apple" :family "Monaco"))))
  '(diff-added ((t (:inherit diff-changed :foreground "#65b042"))))
  '(diff-removed ((t (:inherit diff-changed :foreground "#cf6a4c"))))
  '(echo-area ((((type ns)) nil)))
