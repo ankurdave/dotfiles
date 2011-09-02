@@ -30,3 +30,5 @@ ignorecase on
 # It's not perfect (gets messed up when you switch screen windows) but it's
 # faster than going into copy mode all the time
 termcapinfo xterm* ti@:te@
+
+term xterm-256color
