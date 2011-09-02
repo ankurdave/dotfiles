@@ -30,7 +30,7 @@
                         (require 'apache-mode)))))
 
 (setq my-packages
-      '(el-get js2-mode thrift-mode highlight-80+-mode markdown-mode switch-window scala-mode undo-tree dtrt-indent smex nxhtml magit maxframe ensime-prebuilt xcscope-ankurdave apache-mode))
+      '(el-get js2-mode thrift-mode highlight-80+-mode markdown-mode switch-window scala-mode undo-tree dtrt-indent smex nxhtml maxframe ensime-prebuilt xcscope-ankurdave apache-mode))
 
 (el-get 'wait my-packages)
 
