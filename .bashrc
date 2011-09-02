@@ -36,6 +36,14 @@ fi
 # Use colored prompt and ls
 case "$TERM" in
     xterm*|rxvt*|eterm-color|screen)
+        SMART_TERM=yes
+        ;;
+    *)
+        ;;
+esac
+
+case "$SMART_TERM" in
+    yes)
         PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 
         case $(uname) in
@@ -65,6 +73,6 @@ if [ -f ~/.bashrc.d/local-config ]; then
 fi
 
 # # Finally, start screen (unless already in screen)
-if [ -z "$STY" ]; then
+if [ -z "$STY" -a -n "$SMART_TERM" ]; then
     screen -xRR
 fi
