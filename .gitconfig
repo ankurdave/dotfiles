@@ -1,9 +1,13 @@
 [user]
-	name = Ankur Dave
-	email = ankurdave@gmail.com
+    name = Ankur Dave
+    email = ankurdave@gmail.com
 [alias]
-	st = status
+    st = status
+    glog = log --oneline --decorate --graph --all
+    slog = log --oneline --decorate --graph --all --simplify-by-decoration
 [color]
-	ui = auto
+    ui = auto
 [core]
-	pager = less -+$LESS -FRX
+    pager = less -+$LESS -FRX
+[rerere]
+    enabled = 1
