@@ -14,10 +14,8 @@ escape ^bb
 # No "New screen..." message at startup
 startup_message off
 
-# No status line
-caption splitonly
 # But if we did show one, make it nice
-#caption always '%-w%{+b}%n %t%{-b}%+w'
+caption always '%-w%{+b}%n %t%{-b}%+w'
 
 # Log sessions into a consistent place when logging is enabled
 # Note that you have to mkdir -p $HOME/history/screen/

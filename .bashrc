@@ -25,6 +25,7 @@ export HISTDATE=$(date +%Y%m%dT%H%M%S)
 export HISTFILE=$HISTDIR/$HISTDATE-$FQDN
 unset HISTFILESIZE
 unset HISTSIZE
+export PROMPT_COMMAND='history -a'
 
 # Set various shell options
 shopt -s checkwinsize histappend cdspell
@@ -72,7 +73,7 @@ if [ -f ~/.bashrc.d/local-config ]; then
     . ~/.bashrc.d/local-config post
 fi
 
-# # Finally, start screen (unless already in screen)
+# Finally, start screen (unless already in screen)
 if [ -z "$STY" -a -n "$SMART_TERM" ]; then
     screen -xRR
 fi
