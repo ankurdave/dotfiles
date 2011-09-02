@@ -28,6 +28,8 @@
  '(ns-command-modifier (quote meta))
  '(ns-tool-bar-display-mode (quote both) t)
  '(ns-tool-bar-size-mode (quote regular) t)
+ '(org-startup-folded nil)
+ '(org-startup-truncated nil)
  '(osx-key-mode nil)
  '(pop-up-windows nil)
  '(py-indent-offset 2)

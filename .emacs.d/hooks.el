@@ -2,6 +2,8 @@
 (add-hook 'LaTeX-mode-hook 'visual-line-mode)
 (add-hook 'LaTeX-mode-hook 'larger)
 (add-hook 'BibTeX-mode-hook 'variable-pitch)
+(add-hook 'org-mode-hook 'visual-line-mode)
+(add-hook 'org-mode-hook 'org-indent-mode)
 
 ;; Use Python mode for TARGETS files
 (setq auto-mode-alist (cons '("\\/TARGETS$" . python-mode) auto-mode-alist))
