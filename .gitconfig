@@ -11,3 +11,5 @@
     pager = less -+$LESS -FRX
 [rerere]
     enabled = 1
+[receive]
+	denyCurrentBranch = warn

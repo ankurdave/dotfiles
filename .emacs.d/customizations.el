@@ -4,6 +4,7 @@
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
  '(TeX-PDF-mode t)
+ '(TeX-save-query nil)
  '(ansi-color-for-comint-mode t)
  '(aquamacs-additional-fontsets nil t)
  '(aquamacs-customization-version-id 211 t)
@@ -12,8 +13,8 @@
  '(c-default-style "k&r")
  '(cursor-type (quote (bar . 2)) t)
  '(debug-on-error nil)
- '(default-frame-alist (quote ((cursor-type . box) (internal-border-width . 0) (modeline . t) (fringe) (mouse-color . "black") (background-mode . light) (tool-bar-lines . 0) (menu-bar-lines . 1) (right-fringe . 0) (left-fringe . 6) (cursor-color . "Red") (foreground-color . "Black") (font . "-apple-Monaco-medium-normal-normal-*-12-*-*-*-m-0-iso10646-1"))))
  '(delete-selection-mode t)
+ '(doc-view-continuous t)
  '(dtrt-indent-mode t nil (dtrt-indent))
  '(global-hl-line-mode t)
  '(global-undo-tree-mode t)
@@ -62,4 +63,5 @@
  '(diff-removed ((t (:inherit diff-changed :foreground "#cf6a4c"))))
  '(echo-area ((((type ns)) nil)))
  '(hl-line ((t (:background "gray95"))))
+ '(tex-verbatim ((t (:family "Bitstream Vera Sans Mono"))))
  '(variable-pitch ((t (:family "Georgia")))))
