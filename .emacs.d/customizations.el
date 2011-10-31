@@ -11,6 +11,7 @@
  '(aquamacs-tool-bar-user-customization nil t)
  '(c-basic-offset 4)
  '(c-default-style "k&r")
+ '(column-number-mode t)
  '(cursor-type (quote (bar . 2)) t)
  '(debug-on-error nil)
  '(delete-selection-mode t)
