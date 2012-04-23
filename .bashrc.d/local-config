@@ -30,6 +30,9 @@ case $(hostname -f | tr '[A-Z]' '[a-z]') in
     r*.millennium.berkeley.edu)
         CONFIGDIR=r-cluster
         ;;
+    ip-*.ec2.internal)
+        CONFIGDIR=ec2
+        ;;
     *)
         ;;
 esac

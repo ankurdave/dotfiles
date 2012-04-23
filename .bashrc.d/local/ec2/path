@@ -1,0 +1,3 @@
+export JAVA_HOME=/usr/lib/jvm/java-1.6.0
+export SCALA_HOME=/root/scala-2.9.1.final
+export PATH=$PATH:$SCALA_HOME/bin
