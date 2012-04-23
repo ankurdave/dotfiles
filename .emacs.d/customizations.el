@@ -1,27 +1,37 @@
 (custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(TeX-PDF-mode t)
  '(TeX-save-query nil)
  '(ansi-color-for-comint-mode t)
+ '(ansi-color-names-vector ["#2e3436" "#a40000" "#4e9a06" "#c4a000" "#204a87" "#5c3566" "#729fcf" "#eeeeec"])
  '(aquamacs-additional-fontsets nil t)
  '(aquamacs-customization-version-id 211 t)
  '(aquamacs-tool-bar-user-customization nil t)
+ '(blink-cursor-mode nil)
  '(c-basic-offset 4)
  '(c-default-style "k&r")
  '(column-number-mode t)
+ '(cs164-basic-offset 2)
+ '(cs164-indent-automatically t)
  '(cursor-type (quote (bar . 2)) t)
+ '(custom-enabled-themes nil)
+ '(custom-safe-themes (quote ("69349beba557a65bb06f89b28b8fd2890c742f07" "1440d751f5ef51f9245f8910113daee99848e2c0" "485737acc3bedc0318a567f1c0f5e7ed2dfde3fb" default)))
  '(debug-on-error nil)
  '(delete-selection-mode t)
  '(doc-view-continuous t)
  '(dtrt-indent-mode t nil (dtrt-indent))
- '(global-hl-line-mode t)
+ '(ffap-machine-p-known (quote reject))
  '(global-undo-tree-mode t)
  '(ido-enable-flex-matching t)
  '(ido-everywhere t)
+ '(ido-max-file-prompt-width 0.6)
  '(ido-mode (quote both) nil (ido))
+ '(ido-use-filename-at-point nil)
+ '(ido-use-url-at-point t)
+ '(ido-use-virtual-buffers t)
  '(indent-tabs-mode nil)
  '(inhibit-startup-screen t)
  '(mouse-wheel-progressive-speed nil)
@@ -45,9 +55,10 @@
  '(tab-stop-list (quote (4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80 84 88 92 96 100 104 108 112 116 120)))
  '(tab-width 4)
  '(tool-bar-mode nil)
- '(tramp-default-method "scp")
+ '(tramp-default-method "ssh")
  '(tramp-verbose 2)
  '(transient-mark-mode t)
+ '(uniquify-buffer-name-style (quote forward) nil (uniquify))
  '(vc-follow-symlinks t)
  '(vc-handled-backends nil)
  '(visual-line-mode nil t)
@@ -55,14 +66,14 @@
  '(word-wrap t)
  '(x-select-enable-clipboard t))
 (custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- '(default ((t (:height 120 :foundry "apple" :family "Monaco"))))
- '(diff-added ((t (:inherit diff-changed :foreground "#65b042"))))
- '(diff-removed ((t (:inherit diff-changed :foreground "#cf6a4c"))))
- '(echo-area ((((type ns)) nil)))
- '(hl-line ((t (:background "gray95"))))
- '(tex-verbatim ((t (:family "Bitstream Vera Sans Mono"))))
- '(variable-pitch ((t (:family "Georgia")))))
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:stipple nil :background "White" :foreground "Black" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 140 :width normal :foundry "apple" :family "Menlo"))))
+ '(diff-added ((t (:inherit diff-changed :foreground "#006600"))))
+ '(diff-removed ((t (:inherit diff-changed :foreground "#990000"))))
+ '(echo-area ((((type ns)) nil)) t)
+ '(highlight ((t (:background "#EEEEEE"))))
+ '(magit-diff-add ((t (:inherit diff-added))))
+ '(tex-verbatim ((t (:family "Bitstream Vera Sans Mono"))) t))

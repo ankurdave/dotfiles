@@ -1,0 +1,4 @@
+export PATH=/usr/local/Cellar/emacs/HEAD/bin:~/scala-2.9.1.final/bin:/opt/local/bin:$PATH
+export PYTHONPATH=/opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages
+
+export TEXMFHOME=~/repos/latex

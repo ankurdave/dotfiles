@@ -1,8 +1,15 @@
 #!/bin/bash
 
 case $(hostname -f | tr '[A-Z]' '[a-z]') in
-    ankur-laptop)
-        CONFIGDIR=ankur-laptop
+    ankur*)
+        case $(uname) in
+            Darwin)
+                CONFIGDIR=ankur-laptop-mac
+                ;;
+            Linux)
+		CONFIGDIR=ankur-laptop
+                ;;
+        esac
         ;;
     dave-server)
         CONFIGDIR=dave-server

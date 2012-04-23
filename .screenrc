@@ -43,6 +43,11 @@ term xterm-256color
 bindkey ^[[5;5~ prev
 bindkey ^[[6;5~ next
 
+# Scroll up and down with Shift-PageUp/PageDown
+bindkey "^[[5;2~" eval "copy" "stuff ^u"
+bindkey -m "^[[5;2~" stuff ^u
+bindkey -m "^[[6;2~" stuff ^d
+
 # Scroll up
 bindkey -d "^[[5S" eval copy "stuff 5\025"
 bindkey -m "^[[5S" stuff 5\025
