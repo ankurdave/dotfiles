@@ -66,6 +66,7 @@ export EDITOR='emacsclient'
 
 # Enhance less
 [ -x /usr/bin/lesspipe ] && eval "$(lesspipe)"
+export LESS="$LESS -FSX"
 
 # Include post-bashrc local config
 if [ -f ~/.bashrc.d/local-config ]; then

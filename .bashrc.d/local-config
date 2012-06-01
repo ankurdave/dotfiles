@@ -33,6 +33,9 @@ case $(hostname -f | tr '[A-Z]' '[a-z]') in
     ip-*.ec2.internal)
         CONFIGDIR=ec2
         ;;
+    *.corp.google.com)
+        CONFIGDIR=google
+        ;;
     *)
         ;;
 esac
