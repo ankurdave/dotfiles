@@ -65,3 +65,9 @@
         (output-end (process-mark (get-buffer-process (current-buffer)))))
     (put-text-property comint-last-output-start output-end 'read-only t)))
 (add-hook 'comint-output-filter-functions 'make-my-shell-output-read-only)
+
+;; All backups in temp dir
+(setq backup-directory-alist
+      `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
