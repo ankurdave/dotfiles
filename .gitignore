@@ -1,4 +1,9 @@
 *~
 \#*\#
-.emacs.d/tramp
-.emacs.d/el-get
+.\#*
+.ensime
+.DS_Store
+*.class
+*.pyc
+*.aux
+.emacs.d/elpa

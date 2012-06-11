@@ -14,4 +14,4 @@
 (require 'undo-tree)
 (load "auctex.el")
 (load "preview-latex.el")
-
+(load "scala-mode-auto.el")

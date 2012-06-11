@@ -68,6 +68,10 @@ export EDITOR='emacsclient'
 [ -x /usr/bin/lesspipe ] && eval "$(lesspipe)"
 export LESS="$LESS -FSX"
 
+if [ -f /opt/local/etc/bash_completion ]; then
+    . /opt/local/etc/bash_completion
+fi
+
 # Include post-bashrc local config
 if [ -f ~/.bashrc.d/local-config ]; then
     . ~/.bashrc.d/local-config post

@@ -12,10 +12,10 @@
 (global-set-key (kbd "C-?") 'undo-tree-redo)
 
 ;; Swap C-x C-b and C-x b
-(let ((switch-buffers (key-binding (kbd "C-x b")))
-      (list-buffers (key-binding (kbd "C-x C-b"))))
-  (global-set-key (kbd "C-x C-b") switch-buffers)
-  (global-set-key (kbd "C-x b") list-buffers))
+;; (let ((switch-buffers (key-binding (kbd "C-x b")))
+;;       (list-buffers (key-binding (kbd "C-x C-b"))))
+;;   (global-set-key (kbd "C-x C-b") switch-buffers)
+;;   (global-set-key (kbd "C-x b") list-buffers))
 
 (defun get-2nd-mru-window ()
   (let (best-window best-time time)
