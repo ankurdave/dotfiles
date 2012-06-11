@@ -7,7 +7,8 @@
   (package-install 'undo-tree)
   (package-install 'maxframe)
   (package-install 'dtrt-indent)
-  (package-install 'auctex))
+  (package-install 'auctex)
+  (package-install 'csv-mode))
 
 (package-initialize)
 

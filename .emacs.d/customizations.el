@@ -75,3 +75,4 @@
  '(default ((t (:height 140 :foundry "apple" :family "Menlo"))))
  '(magit-diff-add ((t (:inherit diff-added))))
  '(tex-verbatim ((t (:family "Bitstream Vera Sans Mono"))) t))
+(put 'narrow-to-region 'disabled nil)

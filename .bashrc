@@ -20,11 +20,10 @@ fi
 export HISTDIR=$HOME/history
 export HISTCONTROL=ignoreboth
 export HISTTIMEFORMAT='%Y-%m-%d %H:%M:%S - '
-export FQDN=$(hostname)
-export HISTDATE=$(date +%Y%m%dT%H%M%S)
-export HISTFILE=$HISTDIR/$HISTDATE-$FQDN
-unset HISTFILESIZE
-unset HISTSIZE
+export HISTFILE=$HISTDIR/$HOSTNAME
+export HISTIGNORE=ls:exit
+export HISTFILESIZE=
+export HISTSIZE=
 export PROMPT_COMMAND='history -a'
 
 # Set various shell options
