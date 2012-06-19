@@ -9,7 +9,7 @@ bell_msg ""
 defflow off
 
 # Use C-b as escape key instead of C-a
-escape ^bb
+escape ^oo
 
 # No "New screen..." message at startup
 startup_message off
