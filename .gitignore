@@ -6,4 +6,8 @@
 *.class
 *.pyc
 *.aux
+.emacs.d/ac-comphist.dat
 .emacs.d/elpa
+.emacs.d/eshell
+.emacs.d/tramp
+.emacs.d/url
