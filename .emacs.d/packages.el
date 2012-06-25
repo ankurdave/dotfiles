@@ -8,7 +8,8 @@
   (package-install 'maxframe)
   (package-install 'dtrt-indent)
   (package-install 'auctex)
-  (package-install 'csv-mode))
+  (package-install 'csv-mode)
+  (package-install 'molokai-theme))
 
 (package-initialize)
 
