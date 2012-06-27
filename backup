@@ -2,9 +2,7 @@
 
 cd ~/repos
 
-for repo in $(find . -mindepth 2 -maxdepth 2 -type d -name .git)
-do
-    reponame=$(echo $repo | sed 's/\/\.git$//' | sed 's/^\.\///')
-    push="jgit --git-dir=$repo push --force --all amazon-s3://.jgit@ankurdave-backup/$reponame"
-    $push
+for repo in $(find . -mindepth 2 -maxdepth 2 -type d -name .git); do
+    reponame=$(echo "$repo" | sed 's/\/\.git$//' | sed 's/^\.\///')
+    jgit --git-dir="$repo" push --force --all amazon-s3://.jgit@ankurdave-backup/"$reponame"
 done

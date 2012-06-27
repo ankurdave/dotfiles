@@ -1,9 +1,18 @@
 #!/bin/bash
 
-mkdir -p ~/history/screen
+mkdir -p ~/history/
 
 # Link dotfiles into ~ and back up the old dotfiles into ~/config-old
-find $(cd $(dirname $0) && pwd) -mindepth 1 -maxdepth 1 -not \( -iname '*~' -or -iname '*#*' -or -iname '.hg' -or -iname '.git' -or -iname '.gitmodules' -or -iname 'setup' -or -iname 'backup' \) -exec bash -c \
+find $(cd $(dirname $0) && pwd) -mindepth 1 -maxdepth 1 -not \( \
+    -iname '*~' -or \
+    -iname '*#*' -or \
+    -iname '.hg' -or \
+    -iname '.git' -or \
+    -iname '.gitmodules' -or \
+    -iname 'setup' -or \
+    -iname 'backup' -or \
+    -iname 'restore' \
+    \) -exec bash -c \
     "TARGET=~/\$(basename {})
      echo \"Looking at \$TARGET\"
      if [[ -e \$TARGET && ! -L \$TARGET ]]

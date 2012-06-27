@@ -1,0 +1,10 @@
+#!/bin/bash
+
+cd ~/repos
+
+for remote in $(s3cmd ls s3://ankurdave-backup/ | egrep '^ *DIR' | awk '{print $2}' | sed 's/s3:\/\//amazon-s3:\/\/.jgit@/'); do
+    reponame=$(basename "$remote")
+    if [ ! -e "$reponame" ]; then
+        jgit clone "$remote"
+    fi
+done
