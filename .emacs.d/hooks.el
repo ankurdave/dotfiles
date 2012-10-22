@@ -19,6 +19,7 @@
 (defun toggle-truncate-lines-on ()
   (toggle-truncate-lines 1))
 (add-hook 'scala-mode-hook 'toggle-truncate-lines-on)
+(add-hook 'scala-mode-hook (lambda () (setq fill-column 100)))
 
 ;; Jump to words within CamelCase identifiers
 (add-hook 'c-mode-common-hook (lambda () (subword-mode 1)))
@@ -71,3 +72,4 @@
       `((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
+(setq tramp-auto-save-directory temporary-file-directory)

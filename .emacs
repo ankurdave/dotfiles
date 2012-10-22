@@ -10,3 +10,5 @@
 (load "~/.emacs.d/hooks.el")
 (setq custom-file "~/.emacs.d/customizations.el")
 (load "~/.emacs.d/customizations.el")
+(put 'narrow-to-region 'disabled nil)
+(put 'ido-exit-minibuffer 'disabled nil)
