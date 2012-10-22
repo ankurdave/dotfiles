@@ -1,4 +1,7 @@
-export PATH=~/bin:/usr/local/Cellar/emacs/HEAD/bin:~/scala-2.9.1.final/bin:/opt/local/bin:$PATH
+export PATH=$HOME/bin:$HOME/scala-2.9.1.final/bin:/opt/local/bin:/opt/local/sbin:$PATH
 export PYTHONPATH=/opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages
-
-export TEXMFHOME=~/repos/latex
+export JAVA_HOME=$(/usr/libexec/java_home)
+export HADOOP_HOME=$HOME/hadoop/
+export MAHOUT_HOME=$HOME/mahout/
+export SCALA_HOME=$HOME/scala-2.9.1.final/
+export TEXMFHOME=$HOME/repos/latex
