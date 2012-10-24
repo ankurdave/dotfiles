@@ -9,8 +9,7 @@
     ui = auto
 [core]
     pager = less -+$LESS -FRX
-    editor = /usr/local/Cellar/emacs/HEAD/bin/emacsclient
-    excludesfile = /Users/ankurdave/.gitignore
+    excludesfile = ~/.gitignore
 [rerere]
     enabled = 1
 [receive]
