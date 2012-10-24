@@ -35,7 +35,7 @@
  '(ido-everywhere t)
  '(ido-max-file-prompt-width 0.6)
  '(ido-mode (quote both) nil (ido))
- '(ido-use-filename-at-point nil)
+ '(ido-use-filename-at-point (quote guess))
  '(ido-use-url-at-point t)
  '(ido-use-virtual-buffers t)
  '(indent-tabs-mode nil)
