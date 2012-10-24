@@ -11,9 +11,10 @@
   (package-install 'csv-mode)
   (package-install 'molokai-theme))
 
-(package-initialize)
+(when (fboundp 'package-initialize)
+  (package-initialize))
 
-(require 'undo-tree)
-(load "auctex.el")
-(load "preview-latex.el")
-(load "scala-mode-auto.el")
+(require 'undo-tree nil t)
+(load "auctex" t)
+(load "preview-latex" t)
+(load "scala-mode-auto" t)

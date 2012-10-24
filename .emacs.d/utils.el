@@ -23,11 +23,6 @@
         (revert-buffer t t t) )))
   (message "Refreshed open files.") )
 
-(defun isearch-visible-buffers ()
-  "Interactively search all visible buffers."
-  (interactive)
-  (multi-isearch-buffers (mapcar 'window-buffer (window-list))))
-
 (defun smart-split ()
   "Split the frame into exactly as many 80-column sub-windows as possible."
   (interactive)
@@ -90,3 +85,43 @@
       (rename-buffer new-name)
       (set-visited-file-name new-name)
       (set-buffer-modified-p nil))))))
+
+(defun switch-to-other-buffer ()
+  "Switches to the most recently used buffer."
+  (interactive)
+  (defun get-2nd-mru-window ()
+  (let (best-window best-time time)
+    (dolist (window (window-list-1 nil 'nomini nil))
+      (when (not (equalp window (selected-window)))
+        (setq time (window-use-time window))
+        (when (or (not best-time) (> time best-time))
+          (setq best-time time)
+          (setq best-window window))))
+    best-window))
+  (cond
+   ((equalp (count-windows) 1) (switch-to-buffer (other-buffer)))
+   ((equalp (count-windows) 2) (other-window 1))
+   (t (get-mru-window) (select-window (get-2nd-mru-window)))))
+
+(defun new-shell (&optional name)
+  "Switches to or opens a new shell buffer in the current
+directory with a name based on NAME (which defaults to the
+current directory). If given a prefix argument, prompts for
+NAME."
+  (interactive
+   (list
+    (if current-prefix-arg
+        (read-string "Shell name: ")
+      default-directory)))
+  (shell (format "*shell-%s*" name))
+  (delete-region (point-min) (point-max))
+  (rename-shell name))
+
+(defun rename-shell (&optional name)
+  "Renames the current shell buffer to a name based on NAME and
+modifies the prompt accordingly."
+  (interactive "sShell name: ")
+  (rename-buffer (format "*shell-%s*" name))
+  (comint-simple-send
+   (get-buffer-process (current-buffer))
+   (format "export PS1=\"\033[33m%s\033[0m:\033[35m\\W\033[0m$ \"" name)))
