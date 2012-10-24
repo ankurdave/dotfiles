@@ -75,8 +75,3 @@ fi
 if [ -f ~/.bashrc.d/local-config ]; then
     . ~/.bashrc.d/local-config post
 fi
-
-# Finally, start screen (unless already in screen)
-# if [ -z "$STY" -a -n "$SMART_TERM" ]; then
-#     screen -xRR
-# fi
