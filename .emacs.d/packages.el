@@ -18,7 +18,16 @@
 (load "auctex" t)
 (load "preview-latex" t)
 (load "scala-mode-auto" t)
+(load "smex" t)
+(load "auto-complete" t)
+(load "auto-complete-config" t)
 (require 'eshell nil t)
 (require 'em-smart nil t)
 (eval-after-load 'em-smart
   '(eshell-smart-initialize))
+(eval-after-load 'dtrt-indent
+  '(dtrt-indent-mode t))
+(eval-after-load 'auto-complete
+  '(global-auto-complete-mode))
+(eval-after-load 'auto-complete-config
+  '(ac-config-default))
