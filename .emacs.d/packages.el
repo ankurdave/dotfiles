@@ -18,3 +18,7 @@
 (load "auctex" t)
 (load "preview-latex" t)
 (load "scala-mode-auto" t)
+(require 'eshell nil t)
+(require 'em-smart nil t)
+(eval-after-load 'em-smart
+  '(eshell-smart-initialize))

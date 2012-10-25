@@ -103,6 +103,19 @@
    ((equalp (count-windows) 2) (other-window 1))
    (t (get-mru-window) (select-window (get-2nd-mru-window)))))
 
+(defun new-eshell (&optional name)
+  "Switches to or opens a new eshell buffer in the current
+directory with a name based on NAME (which defaults to the
+current directory). If given a prefix argument, prompts for
+NAME."
+  (interactive
+   (list
+    (if current-prefix-arg
+        (read-string "Shell name: ")
+      (abbreviate-file-name default-directory))))
+  (let ((eshell-buffer-name (format "*eshell %s*" name)))
+    (eshell)))
+
 (defun new-shell (&optional name)
   "Switches to or opens a new shell buffer in the current
 directory with a name based on NAME (which defaults to the
@@ -112,7 +125,7 @@ NAME."
    (list
     (if current-prefix-arg
         (read-string "Shell name: ")
-      default-directory)))
+      (abbreviate-file-name default-directory))))
   (shell (format "*shell-%s*" name))
   (delete-region (point-min) (point-max))
   (rename-shell name))

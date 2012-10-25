@@ -73,3 +73,15 @@
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 (setq tramp-auto-save-directory temporary-file-directory)
+
+;; auto-complete for eshell
+;; TODO: Try https://gist.github.com/878213
+;; (eval-after-load 'auto-complete-config
+;;   '(progn
+;;      (add-to-list 'ac-modes 'eshell-mode)
+;;      (ac-define-source pcomplete
+;;        '((candidates . pcomplete-completions)))
+;;      (add-hook
+;;       'eshell-mode-hook
+;;       (lambda ()
+;;         (setq ac-sources '(ac-source-pcomplete))))))
