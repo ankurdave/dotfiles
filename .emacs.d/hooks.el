@@ -1,13 +1,15 @@
 ;(add-hook 'LaTeX-mode-hook 'visual-line-mode)
 ;(add-hook 'org-mode-hook 'visual-line-mode)
 (add-hook 'org-mode-hook 'org-indent-mode)
-(add-hook 'org-mode-hook 'auto-fill-mode)
 (defun save-and-compile ()
   (interactive)
   (save-buffer)
   (TeX-command "LaTeX" 'TeX-master-file -1))
 
 (add-hook 'LaTeX-mode-hook (lambda () (local-set-key (kbd "C-x C-s") 'save-and-compile)))
+
+;; Use adaptive wrap for LaTeX, to keep the indentation level of long lines
+(add-hook 'LaTeX-mode-hook 'adaptive-wrap-prefix-mode)
 
 ;; Use Python mode for TARGETS files
 (setq auto-mode-alist (cons '("\\/TARGETS$" . python-mode) auto-mode-alist))
@@ -85,3 +87,9 @@
 ;;       'eshell-mode-hook
 ;;       (lambda ()
 ;;         (setq ac-sources '(ac-source-pcomplete))))))
+
+;; Oxford brackets for TeX input method
+;; (mapc (lambda (pair)
+;;             (quail-defrule (car pair) (cadr pair) "TeX"))
+;;        '(("\\llbracket" "⟦")
+;;          ("\\rrbracket" "⟧")))
