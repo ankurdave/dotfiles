@@ -1,0 +1,9 @@
+#!/bin/bash
+
+cd ~/repos
+
+for repo in $(find . -mindepth 2 -maxdepth 2 -type d -name .git); do
+    reponame=$(echo "$repo" | sed 's/\/\.git$//' | sed 's/^\.\///')
+    echo $reponame
+    git --git-dir="$repo" --work-tree="$reponame" -c color.ui=always status
+done
