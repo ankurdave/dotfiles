@@ -6,6 +6,11 @@
 *.class
 *.pyc
 *.aux
+*.log
+*.out
+*.bbl
+*.blg
+*.toc
 .emacs.d/ac-comphist.dat
 .emacs.d/elpa
 .emacs.d/eshell
