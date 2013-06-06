@@ -31,3 +31,6 @@
   '(global-auto-complete-mode))
 (eval-after-load 'auto-complete-config
   '(ac-config-default))
+
+(add-to-list 'load-path "~/.emacs.d")
+(autoload 'typing-test "typing-test" nil t)
