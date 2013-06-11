@@ -16,5 +16,4 @@
     denyCurrentBranch = warn
 [web]
 	browser = open
-[push]
-	default = simple
+
