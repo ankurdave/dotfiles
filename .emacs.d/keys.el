@@ -18,6 +18,9 @@
      (global-set-key (kbd "C--") 'undo-tree-undo)
      (global-set-key (kbd "C-?") 'undo-tree-redo)))
 
+(autoload 'zap-up-to-char "misc")
+(global-set-key "\M-z" 'zap-up-to-char)
+
 ;; Swap C-x C-b and C-x b
 ;; (let ((switch-buffers (key-binding (kbd "C-x b")))
 ;;       (list-buffers (key-binding (kbd "C-x C-b"))))

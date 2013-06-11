@@ -11,6 +11,10 @@
 ;; Use adaptive wrap for LaTeX, to keep the indentation level of long lines
 (add-hook 'LaTeX-mode-hook 'adaptive-wrap-prefix-mode)
 
+;; HTML mode
+(add-hook 'html-mode-hook 'adaptive-wrap-prefix-mode)
+(add-hook 'html-mode-hook (lambda () (toggle-word-wrap 0)))
+
 ;; Use Python mode for TARGETS files
 (setq auto-mode-alist (cons '("\\/TARGETS$" . python-mode) auto-mode-alist))
 
@@ -75,6 +79,9 @@
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 (setq tramp-auto-save-directory temporary-file-directory)
+
+;; ERC
+(erc :server "irc.freenode.net" :port 6667 :nick "ankurdave")
 
 ;; auto-complete for eshell
 ;; TODO: Try https://gist.github.com/878213
