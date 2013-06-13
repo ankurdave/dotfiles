@@ -16,4 +16,3 @@
     denyCurrentBranch = warn
 [web]
 	browser = open
-

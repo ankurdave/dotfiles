@@ -1,27 +1,8 @@
-(defun variable-pitch ()
-  "Go into text editing style."
-  (interactive)
-  (variable-pitch-mode t))
-
-(defun larger ()
-  "Increase the text size by one step over default."
-  (interactive)
-  (text-scale-increase 1))
-
 (defun indent-buffer ()
   "indent whole buffer"
   (interactive)
   (delete-trailing-whitespace)
   (indent-region (point-min) (point-max) nil))
-
-(defun revert-all-buffers ()
-  "Refreshes all open buffers from their respective files."
-  (interactive)
-  (dolist (buf (buffer-list))
-    (with-current-buffer buf
-      (when (and (buffer-file-name) (not (buffer-modified-p)))
-        (revert-buffer t t t) )))
-  (message "Refreshed open files.") )
 
 (defun smart-split ()
   "Split the frame into exactly as many 80-column sub-windows as possible."
@@ -60,6 +41,8 @@
           (save-buffers-kill-terminal)
         (save-buffers-kill-emacs))
     (message "Canceled exit")))
+(when window-system
+  (global-set-key (kbd "C-x C-c") 'prompt-quit-emacs))
 
 (defun run-line-in-scala ()
   "Runs the current line in an inferior Scala shell."
@@ -102,6 +85,7 @@
    ((equalp (count-windows) 1) (switch-to-buffer (other-buffer)))
    ((equalp (count-windows) 2) (other-window 1))
    (t (get-mru-window) (select-window (get-2nd-mru-window)))))
+(global-set-key (kbd "C-x C-x") 'switch-to-other-buffer)
 
 (defun new-eshell (&optional name)
   "Switches to or opens a new eshell buffer in the current

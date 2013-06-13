@@ -15,6 +15,9 @@
 (add-hook 'html-mode-hook 'adaptive-wrap-prefix-mode)
 (add-hook 'html-mode-hook (lambda () (toggle-word-wrap 0)))
 
+;; Emacs Lisp mode
+(add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
+
 ;; Use Python mode for TARGETS files
 (setq auto-mode-alist (cons '("\\/TARGETS$" . python-mode) auto-mode-alist))
 
@@ -79,9 +82,6 @@
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 (setq tramp-auto-save-directory temporary-file-directory)
-
-;; ERC
-(erc :server "irc.freenode.net" :port 6667 :nick "ankurdave")
 
 ;; auto-complete for eshell
 ;; TODO: Try https://gist.github.com/878213
