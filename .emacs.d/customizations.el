@@ -50,7 +50,7 @@
  '(org-startup-folded nil)
  '(org-startup-truncated nil)
  '(osx-key-mode nil)
- '(package-archives (quote (("gnu" . "http://elpa.gnu.org/packages/") ("marmalade" . "http://marmalade-repo.org/packages/") ("melpa" . "http://melpa.milkbox.net/packages/"))))
+ '(package-archives (quote (("gnu" . "http://elpa.gnu.org/packages/") ("melpa" . "http://melpa.milkbox.net/packages/"))))
  '(pop-up-windows nil)
  '(py-indent-offset 2)
  '(python-indent 2)
