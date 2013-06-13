@@ -1,8 +1,8 @@
 (when (fboundp 'ns-set-resource)
   (ns-set-resource nil "ApplePressAndHoldEnabled" "NO"))
 
-(when (file-exists-p "~/.emacs-site-local")
-  (load "~/.emacs-site-local"))
+(when (file-exists-p "~/.emacs.d/site-local.el")
+  (load "~/.emacs.d/site-local.el"))
 
 (load "~/.emacs.d/packages.el")
 (load "~/.emacs.d/utils.el")
