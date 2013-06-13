@@ -83,7 +83,5 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:height 140 :foundry "apple" :family "Menlo"))))
- '(magit-diff-add ((t (:inherit diff-added))))
- '(tex-verbatim ((t (:family "Bitstream Vera Sans Mono"))) t))
+ '(magit-diff-add ((t (:inherit diff-added)))))
 (put 'narrow-to-region 'disabled nil)
