@@ -36,9 +36,12 @@ case $(hostname -f | tr '[A-Z]' '[a-z]') in
     *.corp.google.com)
         CONFIGDIR=google
         ;;
-    *.amazon.com)
-	CONFIGDIR=amazon
-	;;
+    *.desktop.amazon.com)
+        CONFIGDIR=amazon-rhel5
+        ;;
+    *.ant.amazon.com)
+        CONFIGDIR=amazon-ubuntu
+        ;;
     *)
         ;;
 esac
