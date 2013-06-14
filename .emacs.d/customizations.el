@@ -26,6 +26,7 @@
  '(delete-by-moving-to-trash t)
  '(delete-selection-mode t)
  '(doc-view-continuous t)
+ '(dtrt-indent-mode t nil (dtrt-indent))
  '(eshell-buffer-shorthand nil)
  '(eshell-cmpl-cycle-completions nil)
  '(eshell-review-quick-commands (quote not-even-short-output))
