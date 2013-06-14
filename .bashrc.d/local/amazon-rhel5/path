@@ -1,0 +1,5 @@
+#!/bin/bash
+
+source /apollo/env/envImprovement/var/bashrc
+
+PATH="$HOME/emacs-24.3/src:$HOME/emacs-24.3/lib-src:$PATH"
