@@ -71,6 +71,9 @@ if [ -f /opt/local/etc/bash_completion ]; then
     . /opt/local/etc/bash_completion
 fi
 
+stty werase undef
+bind '"\C-w": backward-kill-word'
+
 # Include post-bashrc local config
 if [ -f ~/.bashrc.d/local-config ]; then
     . ~/.bashrc.d/local-config post
