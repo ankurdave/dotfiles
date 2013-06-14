@@ -16,7 +16,8 @@
            smex
            auto-complete
            adaptive-wrap
-           ido-ubiquitous)))
+           ido-ubiquitous
+           paredit)))
     (dolist (pkg-name packages-to-install)
       (unless (package-installed-p pkg-name)
         (package-install pkg-name)))))
@@ -36,7 +37,7 @@
   (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command))
 
 (when (fboundp 'ido-mode)
-  (ido-mode 1))
+  (ido-mode 1))         ; must run before enabling ido-ubiquitous-mode
 
 (when (fboundp 'ido-ubiquitous-mode)
   (ido-ubiquitous-mode))
