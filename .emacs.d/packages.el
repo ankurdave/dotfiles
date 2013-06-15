@@ -26,6 +26,9 @@
 (when (require 'auto-complete-config nil t)
   (ac-config-default))
 
+(when (fboundp 'dtrt-indent-mode)
+  (dtrt-indent-mode t))
+
 (when (fboundp 'global-undo-tree-mode)
   (global-undo-tree-mode)
   (global-set-key (kbd "C--") 'undo-tree-undo)
