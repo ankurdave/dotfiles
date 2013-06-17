@@ -69,6 +69,8 @@
  '(tramp-default-method "ssh")
  '(tramp-verbose 2)
  '(transient-mark-mode t)
+ '(undo-tree-auto-save-history t)
+ '(undo-tree-history-directory-alist (quote (("." . "~/.emacs.d/undo-history/"))))
  '(uniquify-buffer-name-style (quote forward) nil (uniquify))
  '(vc-follow-symlinks t)
  '(vc-handled-backends nil)
