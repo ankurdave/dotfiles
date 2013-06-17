@@ -13,7 +13,7 @@
 *.toc
 .emacs.d/ac-comphist.dat
 .emacs.d/elpa
-.emacs.d/eshell
+.emacs.d/eshell/history
 .emacs.d/tramp
 .emacs.d/url
 .emacs.d/site-local.el
