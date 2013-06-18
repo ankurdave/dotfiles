@@ -124,3 +124,15 @@ argument, prompt for NAME."
   (comint-simple-send
    (get-buffer-process (current-buffer))
    (format "export PS1=\"\033[33m%s\033[0m:\033[35m\\W\033[0m$ \"" name)))
+
+(defun add-to-env-path (variable &rest values)
+  "Add each string in VALUES to the colon-separated VARIABLE.
+
+Deduplicate values in VARIABLE, and return the new value of
+VARIABLE."
+  (setenv variable
+          (mapconcat
+           'identity
+           (delete-dups
+            (append values (split-string (getenv variable) ":" t)))
+           ":")))
