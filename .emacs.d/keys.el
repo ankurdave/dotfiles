@@ -4,26 +4,20 @@
 (autoload 'zap-up-to-char "misc")
 (global-set-key "\M-z" 'zap-up-to-char)
 
-;;; C-w for backward-kill-word
-(defun rebind-backward-kill-word (&optional locally)
-  "Rebind C-w to backward-kill-word, and C-c C-k to
-kill-region. If LOCALLY is non-nil, do the rebinding in the
-buffer's local key map."
+(defun kill-region-or-backward-word ()
+  "Kill the region if active, otherwise kill the previous word."
   (interactive)
-  (let ((set-key-function (if locally 'local-set-key 'global-set-key)))
-    (global-unset-key (kbd "M-DEL"))
-    (global-unset-key (kbd "<C-backspace>"))
-    (funcall set-key-function "\C-w" 'backward-kill-word)
-    (funcall set-key-function "\C-c\C-k" 'kill-region)))
-(rebind-backward-kill-word)
-(add-hook 'eshell-mode-hook (lambda () (rebind-backward-kill-word t)))
-;;; C-w for kill-region
-(defun undo-rebind-backward-kill-word ()
-  "Undo the effects of rebind-backward-kill-word."
+  (if (region-active-p)
+      (kill-region (region-beginning) (region-end))
+    (backward-kill-word 1)))
+(global-set-key "\C-w" 'kill-region-or-backward-word)
+
+(defun paredit-kill-region-or-backward-word ()
   (interactive)
-  (global-set-key (kbd "M-DEL") 'kill-region)
-  (global-set-key (kbd "C-<backspace>") 'backward-kill-word)
-  (global-set-key "\C-w" 'kill-region))
+  (if (region-active-p)
+      (kill-region (region-beginning) (region-end))
+    (paredit-backward-kill-word)))
+(define-key paredit-mode-map (kbd "C-w") 'paredit-kill-region-or-backward-word)
 
 (global-set-key (kbd "M-r") 'isearch-backward-regexp)
 (global-set-key (kbd "M-s") 'isearch-forward-regexp)
