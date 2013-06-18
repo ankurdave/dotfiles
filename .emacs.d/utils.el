@@ -1,17 +1,20 @@
 (defun indent-buffer ()
-  "indent whole buffer"
+  "Indent the whole buffer."
   (interactive)
   (delete-trailing-whitespace)
   (indent-region (point-min) (point-max) nil))
 
 (defun smart-split ()
-  "Split the frame into exactly as many 80-column sub-windows as possible."
+  "Split the frame into as many 80-column sub-windows as possible."
   (interactive)
   (defun ordered-window-list ()
-    "Get the list of windows in the select frame, starting from the one at the top left."
+    "Return a list of windows starting from the top left."
     (window-list (selected-frame) 'no-minibuf (frame-first-window)))
   (defun resize-windows-destructively (windows)
-    "Resize each window in the list to be 80 characters wide. If there's not enough space to do that, delete the appropriate window until there is space."
+    "Resize each window in WINDOWS to 80 characters wide.
+
+If there's not enough space to do that, delete the appropriate
+window until there is space."
     (when windows
       (condition-case nil
           (progn (adjust-window-trailing-edge (first windows) (- 80 (window-width (first windows))) t)
@@ -22,7 +25,7 @@
                  (ignore-errors
                    (delete-window (car windows))))))))
   (defun subsplit (w)
-    "If the given window can be split into multiple 80-column windows, do it."
+    "Split the window W into multiple 80-column windows if possible."
     (when (> (window-width w) (* 2 81))
       (let ((w2 (split-window w 82 t)))
         (save-excursion
@@ -34,7 +37,7 @@
   (balance-windows))
 
 (defun prompt-quit-emacs ()
-  "Prompt before quitting Emacs"
+  "Prompt before quitting Emacs."
   (interactive)
   (if (y-or-n-p (format "Really quit Emacs? "))
       (if (< emacs-major-version 22)
@@ -45,7 +48,7 @@
   (global-set-key (kbd "C-x C-c") 'prompt-quit-emacs))
 
 (defun run-line-in-scala ()
-  "Runs the current line in an inferior Scala shell."
+  "Run the current line in an inferior Scala shell."
   (interactive)
   (save-excursion
     (copy-region-as-kill (line-beginning-position) (line-end-position))
@@ -55,7 +58,7 @@
 
 ;; source: http://steve.yegge.googlepages.com/my-dot-emacs-file
 (defun rename-file-and-buffer (new-name)
-  "Renames both current buffer and file it's visiting to NEW-NAME."
+  "Rename the current buffer and the file it's visiting to NEW-NAME."
   (interactive "sNew name: ")
   (let ((name (buffer-name))
     (filename (buffer-file-name)))
@@ -70,7 +73,7 @@
       (set-buffer-modified-p nil))))))
 
 (defun switch-to-other-buffer ()
-  "Switches to the most recently used buffer."
+  "Switch to the most recently used buffer."
   (interactive)
   (defun get-2nd-mru-window ()
   (let (best-window best-time time)
@@ -88,10 +91,10 @@
 (global-set-key (kbd "C-x C-x") 'switch-to-other-buffer)
 
 (defun new-eshell (&optional name)
-  "Switches to or opens a new eshell buffer in the current
-directory with a name based on NAME (which defaults to the
-current directory). If given a prefix argument, prompts for
-NAME."
+  "Opens an eshell in the current directory named according to NAME.
+
+By default, NAME is the current directory. If given a prefix
+argument, prompt for NAME."
   (interactive
    (list
     (if current-prefix-arg
@@ -101,10 +104,10 @@ NAME."
     (eshell)))
 
 (defun new-shell (&optional name)
-  "Switches to or opens a new shell buffer in the current
-directory with a name based on NAME (which defaults to the
-current directory). If given a prefix argument, prompts for
-NAME."
+  "Open a shell in the current directory named according to NAME.
+
+By default, NAME is the current directory. If given a prefix
+argument, prompt for NAME."
   (interactive
    (list
     (if current-prefix-arg
@@ -115,8 +118,7 @@ NAME."
   (rename-shell name))
 
 (defun rename-shell (&optional name)
-  "Renames the current shell buffer to a name based on NAME and
-modifies the prompt accordingly."
+  "Rename the current shell buffer according to NAME."
   (interactive "sShell name: ")
   (rename-buffer (format "*shell-%s*" name))
   (comint-simple-send
