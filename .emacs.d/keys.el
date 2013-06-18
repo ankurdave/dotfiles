@@ -17,13 +17,9 @@
   (if (region-active-p)
       (kill-region (region-beginning) (region-end))
     (paredit-backward-kill-word)))
-(define-key paredit-mode-map (kbd "C-w") 'paredit-kill-region-or-backward-word)
+(eval-after-load 'paredit
+  '(define-key paredit-mode-map (kbd "C-w")
+     'paredit-kill-region-or-backward-word))
 
 (global-set-key (kbd "M-r") 'isearch-backward-regexp)
 (global-set-key (kbd "M-s") 'isearch-forward-regexp)
-
-;; Swap C-x C-b and C-x b
-;; (let ((switch-buffers (key-binding (kbd "C-x b")))
-;;       (list-buffers (key-binding (kbd "C-x C-b"))))
-;;   (global-set-key (kbd "C-x C-b") switch-buffers)
-;;   (global-set-key (kbd "C-x b") list-buffers))
