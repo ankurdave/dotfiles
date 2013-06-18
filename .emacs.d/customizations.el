@@ -55,7 +55,7 @@
  '(package-archives (quote (("gnu" . "http://elpa.gnu.org/packages/") ("melpa" . "http://melpa.milkbox.net/packages/"))))
  '(pop-up-windows nil)
  '(py-indent-offset 2)
- '(python-indent 2)
+ '(python-indent-offset 2)
  '(require-final-newline t)
  '(scroll-bar-mode nil)
  '(scroll-conservatively 5)
