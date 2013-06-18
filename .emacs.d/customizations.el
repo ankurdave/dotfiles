@@ -28,7 +28,7 @@
  '(doc-view-continuous t)
  '(eshell-buffer-shorthand nil)
  '(eshell-cmpl-cycle-completions nil)
- '(eshell-output-filter-functions (quote (eshell-handle-ansi-color)))
+ '(eshell-output-filter-functions (quote (eshell-handle-ansi-color eshell-handle-control-codes)))
  '(eshell-review-quick-commands (quote not-even-short-output))
  '(ffap-machine-p-known (quote reject))
  '(global-whitespace-mode t)
