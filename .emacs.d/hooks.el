@@ -78,6 +78,19 @@
       `((".*" ,temporary-file-directory t)))
 (setq tramp-auto-save-directory temporary-file-directory)
 
+;; Keep region when undoing in region
+;; from https://github.com/magnars/.emacs.d/blob/de3b35fa41ced10c273f86d2d50d2232eb7e4a6b/my-misc.el#L4
+(defadvice undo-tree-undo (around keep-region activate)
+  (if (use-region-p)
+      (let ((m (set-marker (make-marker) (mark)))
+            (p (set-marker (make-marker) (point))))
+        ad-do-it
+        (goto-char p)
+        (set-mark m)
+        (set-marker p nil)
+        (set-marker m nil))
+    ad-do-it))
+
 ;; auto-complete for eshell
 ;; TODO: Try https://gist.github.com/878213
 ;; (eval-after-load 'auto-complete-config
