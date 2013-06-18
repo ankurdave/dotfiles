@@ -9,9 +9,13 @@
 *~
 .DS_Store
 .\#*
+.emacs.d/.emacs.desktop
+.emacs.d/abbrev_defs
 .emacs.d/ac-comphist.dat
 .emacs.d/elpa
 .emacs.d/eshell/history
+.emacs.d/eshell/lastdir
+.emacs.d/history
 .emacs.d/newsticker
 .emacs.d/site-local.el
 .emacs.d/tramp
