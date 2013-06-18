@@ -59,7 +59,6 @@
  '(require-final-newline t)
  '(scroll-bar-mode nil)
  '(scroll-conservatively 5)
- '(search-whitespace-regexp "[ \t\r\n]+")
  '(semantic-default-submodes (quote (global-semantic-highlight-func-mode global-semantic-decoration-mode global-semantic-stickyfunc-mode global-semantic-idle-completions-mode global-semantic-idle-scheduler-mode global-semanticdb-minor-mode global-semantic-mru-bookmark-mode)))
  '(show-paren-delay 0.0)
  '(show-paren-mode t)
