@@ -45,10 +45,10 @@
 (when (fboundp 'ido-ubiquitous-mode)
   (ido-ubiquitous-mode))
 
-;;; Autoloaded packages
-(autoload 'eshell-smart-initialize "em-smart")
-(eval-after-load 'eshell
-  '(eshell-smart-initialize))
+(when (and (require 'eshell nil t)
+           (require 'em-smart nil t))
+  (eshell-smart-initialize))
 
+;;; Autoloaded packages
 (add-to-list 'load-path "~/.emacs.d")
 (autoload 'typing-test "typing-test" nil t)
