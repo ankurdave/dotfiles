@@ -28,6 +28,14 @@
 ;; C-like languages
 (add-hook 'c-mode-common-hook (lambda () (subword-mode 1)))
 
+;; Custom keys for eshell
+(defun eshell-unbind-arrow-keys ()
+  (define-key eshell-mode-map [up] 'previous-line)
+  (define-key eshell-mode-map [down] 'next-line))
+(add-hook 'eshell-mode-hook 'eshell-unbind-arrow-keys)
+(add-hook 'eshell-mode-hook
+          (lambda () (eshell/export "EDITOR=emacsclient --alternate-editor=")))
+
 ;; Use Python mode for TARGETS files
 (setq auto-mode-alist (cons '("\\/TARGETS$" . python-mode) auto-mode-alist))
 
@@ -54,12 +62,6 @@
         (trait . font-lock-type-face)
         (object . font-lock-type-face)
         (package . font-lock-preprocessor-face)))
-
-;; Custom keys for eshell
-(defun eshell-unbind-arrow-keys ()
-  (define-key eshell-mode-map [up] 'previous-line)
-  (define-key eshell-mode-map [down] 'next-line))
-(add-hook 'eshell-mode-hook 'eshell-unbind-arrow-keys)
 
 ;; Shell customizations
 (defun make-my-shell-output-read-only (text)
