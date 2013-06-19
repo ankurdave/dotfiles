@@ -10,6 +10,7 @@
 .DS_Store
 .\#*
 .emacs.d/.emacs.desktop
+.emacs.d/.swp
 .emacs.d/abbrev_defs
 .emacs.d/ac-comphist.dat
 .emacs.d/elpa
