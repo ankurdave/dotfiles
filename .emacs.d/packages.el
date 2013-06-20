@@ -17,7 +17,8 @@
            auto-complete
            adaptive-wrap
            ido-ubiquitous
-           paredit)))
+           paredit
+           expand-region)))
     (dolist (pkg-name packages-to-install)
       (unless (package-installed-p pkg-name)
         (package-install pkg-name)))))
@@ -50,5 +51,8 @@
   (eshell-smart-initialize))
 
 ;;; Autoloaded packages
+(when (fboundp 'er/expand-region)
+  (global-set-key (kbd "C-=") 'er/expand-region))
+
 (add-to-list 'load-path "~/.emacs.d")
 (autoload 'typing-test "typing-test" nil t)
