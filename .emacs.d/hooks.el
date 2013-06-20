@@ -34,7 +34,7 @@
   (define-key eshell-mode-map [down] 'next-line))
 (add-hook 'eshell-mode-hook 'eshell-unbind-arrow-keys)
 (add-hook 'eshell-mode-hook
-          (lambda () (eshell/export "EDITOR=emacsclient --alternate-editor=")))
+          (lambda () (eshell/export "EDITOR=emacsclient")))
 
 ;; Use Python mode for TARGETS files
 (setq auto-mode-alist (cons '("\\/TARGETS$" . python-mode) auto-mode-alist))

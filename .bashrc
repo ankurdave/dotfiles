@@ -61,7 +61,7 @@ case "$SMART_TERM" in
         ;;
 esac
 
-export EDITOR='emacsclient --alternate-editor='
+export EDITOR='emacsclient'
 
 # Enhance less
 [ -x /usr/bin/lesspipe ] && eval "$(lesspipe)"
