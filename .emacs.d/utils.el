@@ -155,3 +155,29 @@ VARIABLE."
   (if (region-active-p)
       (kill-region (region-beginning) (region-end))
     (sp-backward-kill-word)))
+
+(defun sort-symbols (reverse beg end)
+  "Sort symbols in region alphabetically, in REVERSE if negative.
+See `sort-words'."
+  (interactive "*P\nr")
+  (sort-regexp-fields reverse "\\(\\sw\\|\\s_\\)+" "\\&" beg end))
+
+(defun sexp-beginning-position ()
+  "Return position of the first character inside the current sexp."
+  (require 'smartparens)
+  (save-excursion
+    (sp-beginning-of-sexp)
+    (point)))
+
+(defun sexp-end-position ()
+  "Return position of the last character inside the current sexp."
+  (require 'smartparens)
+  (save-excursion
+    (sp-end-of-sexp)
+    (point)))
+
+(defun sort-symbols-in-sexp (reverse)
+  "Sort symbols in sexp alphabetically, in REVERSE if negative."
+  (interactive "*P")
+  (sort-regexp-fields reverse "\\(\\sw\\|\\s_\\)+" "\\&"
+                      (sexp-beginning-position) (sexp-end-position)))
