@@ -23,6 +23,7 @@
            gitconfig-mode
            gitignore-mode
            ido-ubiquitous
+           magit
            paredit
            popwin
            smartparens

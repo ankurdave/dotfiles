@@ -6,6 +6,9 @@
 
 (global-set-key "\C-w" 'kill-region-or-backward-word)
 
+(when (fboundp 'magit-status)
+  (global-set-key (kbd "C-x m") 'magit-status))
+
 (eval-after-load 'paredit
   '(define-key paredit-mode-map (kbd "C-w")
      'paredit-kill-region-or-backward-word))
