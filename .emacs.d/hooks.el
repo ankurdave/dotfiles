@@ -73,7 +73,7 @@
 
 ;; All backups in temp dir
 (setq backup-directory-alist
-      `((".*" . ,temporary-file-directory)))
+      `(("." . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 (setq tramp-auto-save-directory temporary-file-directory)
@@ -109,3 +109,10 @@
           (quail-defrule (car pair) (cadr pair) "TeX"))
         '(("\\llbracket" "⟦")
           ("\\rrbracket" "⟧"))))
+
+;; Enable key repeat in OS X Lion
+(when (fboundp 'ns-set-resource)
+  (ns-set-resource nil "ApplePressAndHoldEnabled" "NO"))
+
+(put 'narrow-to-region 'disabled nil)
+(put 'ido-exit-minibuffer 'disabled nil)
