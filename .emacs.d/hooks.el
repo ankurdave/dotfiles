@@ -14,6 +14,10 @@
 ;; HTML mode
 (add-hook 'html-mode-hook 'adaptive-wrap-prefix-mode)
 (add-hook 'html-mode-hook (lambda () (toggle-word-wrap 0)))
+(when (fboundp 'turn-on-show-smartparens-mode)
+  (add-hook 'html-mode-hook 'turn-on-show-smartparens-mode))
+(when (fboundp 'turn-on-smartparens-mode)
+  (add-hook 'html-mode-hook 'turn-on-smartparens-mode))
 
 ;; Emacs Lisp mode
 (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)

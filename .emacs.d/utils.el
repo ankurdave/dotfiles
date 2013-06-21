@@ -137,3 +137,21 @@ VARIABLE."
             (append values (split-string (getenv variable) ":" t)))
            ":")))
 
+(defun kill-region-or-backward-word ()
+  "Kill the region if active, otherwise kill the previous word."
+  (interactive)
+  (if (region-active-p)
+      (kill-region (region-beginning) (region-end))
+    (backward-kill-word 1)))
+
+(defun paredit-kill-region-or-backward-word ()
+  (interactive)
+  (if (region-active-p)
+      (kill-region (region-beginning) (region-end))
+    (paredit-backward-kill-word)))
+
+(defun sp-kill-region-or-backward-word ()
+  (interactive)
+  (if (region-active-p)
+      (kill-region (region-beginning) (region-end))
+    (sp-backward-kill-word)))

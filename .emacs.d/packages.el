@@ -24,6 +24,7 @@
            ido-ubiquitous
            paredit
            popwin
+           smartparens
            smex
            smooth-scrolling
            undo-tree)))
@@ -76,6 +77,8 @@
 
 (when (require 'popwin nil t)
   (popwin-mode 1))
+
+(require 'smartparens-config nil t)
 
 ;;; Autoloaded packages
 (when (fboundp 'er/expand-region)
