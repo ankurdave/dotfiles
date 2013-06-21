@@ -25,6 +25,7 @@
            gitignore-mode
            ido-ubiquitous
            paredit
+           popwin
            smex
            smooth-scrolling
            undo-tree)))
@@ -80,6 +81,9 @@
 
 (when (fboundp 'fci-mode)
   (fci-mode 1))
+
+(when (require 'popwin nil t)
+  (popwin-mode 1))
 
 ;;; Autoloaded packages
 (when (fboundp 'er/expand-region)
