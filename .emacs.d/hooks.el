@@ -17,7 +17,8 @@
 
 ;; Emacs Lisp mode
 (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
-(add-hook 'emacs-lisp-mode-hook 'paredit-mode)
+(when (fboundp 'paredit-mode)
+  (add-hook 'emacs-lisp-mode-hook 'paredit-mode))
 
 ;; Scala mode
 (defun toggle-truncate-lines-on ()

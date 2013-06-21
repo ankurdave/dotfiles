@@ -5,10 +5,9 @@
 ;; yet been initialized, because `package-installed-p' is undefined
 ;; until after initialization.
 (when (fboundp 'package-initialize)
-  (package-initialize))
-
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+  (package-initialize)
+  (add-to-list 'package-archives
+               '("melpa" . "http://melpa.milkbox.net/packages/") t))
 
 (defun init--install-packages ()
   "Install core packages."
