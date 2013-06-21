@@ -136,3 +136,9 @@ VARIABLE."
            (delete-dups
             (append values (split-string (getenv variable) ":" t)))
            ":")))
+
+(defun enable-fci-mode ()
+  "Enable fill-column-indicator mode unconditionally."
+  (interactive)
+  (when (fboundp 'fci-mode)
+    (fci-mode 1)))
