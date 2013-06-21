@@ -26,6 +26,10 @@
      (define-key sp-keymap (kbd "C-M-a") 'sp-beginning-of-sexp)
      (define-key sp-keymap (kbd "C-M-e") 'sp-end-of-sexp)
 
+     ;; Also define these keys for paredit
+     (define-key paredit-mode-map (kbd "C-M-a") 'sp-beginning-of-sexp)
+     (define-key paredit-mode-map (kbd "C-M-e") 'sp-end-of-sexp)
+
      (define-key sp-keymap (kbd "C-M-t") 'sp-transpose-sexp)
 
      (define-key sp-keymap (kbd "C-k") 'sp-kill-sexp)
