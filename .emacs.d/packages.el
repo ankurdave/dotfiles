@@ -18,6 +18,7 @@
            exec-path-from-shell
            expand-region
            fill-column-indicator
+           flx
            git-commit-mode
            gitconfig-mode
            gitignore-mode
@@ -65,6 +66,10 @@
 
 (when (fboundp 'ido-ubiquitous-mode)
   (ido-ubiquitous-mode))
+
+(when (fboundp 'flx-ido-mode)
+  (flx-ido-mode 1)
+  (setq gc-cons-threshold 20000000))
 
 (when (and (require 'eshell nil t)
            (require 'em-smart nil t))
