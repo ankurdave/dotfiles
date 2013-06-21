@@ -19,21 +19,25 @@
 (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
 (when (fboundp 'paredit-mode)
   (add-hook 'emacs-lisp-mode-hook 'paredit-mode))
-(add-hook 'emacs-lisp-mode-hook 'enable-fci-mode)
+(when (fboundp 'turn-on-fci-mode)
+  (add-hook 'emacs-lisp-mode-hook 'turn-on-fci-mode))
 
 ;; Python mode
-(add-hook 'python-mode-hook 'enable-fci-mode)
+(when (fboundp 'turn-on-fci-mode)
+  (add-hook 'python-mode-hook 'turn-on-fci-mode))
 
 ;; Scala mode
 (defun toggle-truncate-lines-on ()
   (toggle-truncate-lines 1))
 (add-hook 'scala-mode-hook 'toggle-truncate-lines-on)
 (add-hook 'scala-mode-hook (lambda () (setq fill-column 100)))
-(add-hook 'scala-mode-hook 'enable-fci-mode)
+(when (fboundp 'turn-on-fci-mode)
+  (add-hook 'scala-mode-hook 'turn-on-fci-mode))
 
 ;; C-like languages
 (add-hook 'c-mode-common-hook (lambda () (subword-mode 1)))
-(add-hook 'c-mode-common-hook 'enable-fci-mode)
+(when (fboundp 'turn-on-fci-mode)
+  (add-hook 'c-mode-common-hook 'turn-on-fci-mode))
 
 ;; Custom keys for eshell
 (defun eshell-unbind-arrow-keys ()
