@@ -27,9 +27,6 @@
   (add-hook 'python-mode-hook 'turn-on-fci-mode))
 
 ;; Scala mode
-(defun toggle-truncate-lines-on ()
-  (toggle-truncate-lines 1))
-(add-hook 'scala-mode-hook 'toggle-truncate-lines-on)
 (add-hook 'scala-mode-hook (lambda () (setq fill-column 100)))
 (when (fboundp 'turn-on-fci-mode)
   (add-hook 'scala-mode-hook 'turn-on-fci-mode))
