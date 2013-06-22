@@ -1,3 +1,5 @@
+;; Load site-specific customization first to allow setting up `load-path' and
+;; similar.
 (load "~/.emacs.d/site-local.el" t)
 
 (load "~/.emacs.d/packages.el")
@@ -10,7 +12,9 @@
 (setq custom-file "~/.emacs.d/customizations.el")
 (load custom-file)
 
+;; Finally, accept connections from emacsclient.
 (require 'server)
 (if (server-running-p)
     (message "Server already running")
+  (message "Starting server")
   (server-start))
