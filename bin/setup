@@ -2,7 +2,7 @@
 
 mkdir -p ~/history/
 
-dotfiles=$(cd $(dirname $0) && pwd)
+dotfiles=$(cd $(dirname $0)/.. && pwd)
 
 # Link dotfiles into ~ and back up the old dotfiles into ~/config-old
 find "$dotfiles" -mindepth 1 -maxdepth 1 -not \( \
