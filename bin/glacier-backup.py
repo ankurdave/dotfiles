@@ -37,8 +37,7 @@ def alreadyPresent(f):
 def backup(directory):
   for f_basename in os.listdir(directory):
     f = os.path.join(directory, f_basename)
-    if (alreadyPresent(f) or alreadyPresent(f + '.tar')
-        or alreadyPresent(f_basename) or alreadyPresent(f_basename + '.tar')):
+    if alreadyPresent(f) or alreadyPresent(f + '.tar'):
       print "%s already present; skipping" % f
     else:
       if os.path.isdir(f):
