@@ -128,6 +128,7 @@
 
 ;; popwin configuration
 (push '("\\*magit: .*\\*" :regexp t) popwin:special-display-config)
+(push '("*Buffer List*") popwin:special-display-config)
 
 (put 'narrow-to-region 'disabled nil)
 (put 'ido-exit-minibuffer 'disabled nil)
