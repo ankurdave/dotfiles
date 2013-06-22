@@ -1,0 +1,31 @@
+/* -*- mode: javascript -*- */
+{
+    "^l" = "centerSelectionInVisibleArea:";
+    "^/" = "undo:";
+    "^ " = "setMark:";
+    "^w" = "deleteWordBackward:";
+    "^g" = "abort:";
+    "~f" = "moveWordForward:";
+    "~b" = "moveWordBackward:";
+    "~<" = "moveToBeginningOfDocument:";
+    "~>" = "moveToEndOfDocument:";
+    "~v" = "pageUp:";
+    "~/" = "complete:";
+    "~c" = ("capitalizeWord:",
+            "moveForward:");
+    "~u" = ("uppercaseWord:",
+            "moveForward:");
+    "~l" = ("lowercaseWord:",
+            "moveForward:");
+    "~d" = "deleteWordForward:";
+    "~t" = "transposeWords:";
+    "^x" = {
+        "k"  = "performClose:";
+        "^k" = "deleteToMark:";
+        "^f" = "openDocument:";
+        "^x" = "swapWithMark:";
+        "^s" = "saveDocument:";
+        "^w" = "saveDocumentAs:";
+    };
+
+}

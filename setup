@@ -12,6 +12,7 @@ find $(cd $(dirname $0) && pwd) -mindepth 1 -maxdepth 1 -not \( \
     -iname 'setup' -or \
     -iname 'backup' -or \
     -iname 'glacier-backup.sh' -or \
+    -iname 'misc' -or \
     -iname 'restore' \
     \) -exec bash -c \
     "TARGET=~/\$(basename {})
@@ -28,3 +29,10 @@ find $(cd $(dirname $0) && pwd) -mindepth 1 -maxdepth 1 -not \( \
      fi
 
      ln -s {} \$TARGET" \;
+
+# OS X setup
+if [ -d $HOME/Library ]; then
+    mkdir -p $HOME/Library/KeyBindings
+    cp $(cd $(dirname $0) && pwd)/misc/DefaultKeyBinding.dict \
+        $HOME/Library/KeyBindings/DefaultKeyBinding.dict
+fi
