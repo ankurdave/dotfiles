@@ -126,5 +126,8 @@
 (when (fboundp 'ns-set-resource)
   (ns-set-resource nil "ApplePressAndHoldEnabled" "NO"))
 
+;; popwin configuration
+(push '("\\*magit: .*\\*" :regexp t) popwin:special-display-config)
+
 (put 'narrow-to-region 'disabled nil)
 (put 'ido-exit-minibuffer 'disabled nil)
