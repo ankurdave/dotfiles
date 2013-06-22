@@ -11,6 +11,7 @@ find $(cd $(dirname $0) && pwd) -mindepth 1 -maxdepth 1 -not \( \
     -iname '.gitmodules' -or \
     -iname 'setup' -or \
     -iname 'backup' -or \
+    -iname 'glacier-backup.sh' -or \
     -iname 'restore' \
     \) -exec bash -c \
     "TARGET=~/\$(basename {})
