@@ -2,37 +2,46 @@
 
 mkdir -p ~/history/
 
+dotfiles=$(cd $(dirname $0) && pwd)
+
 # Link dotfiles into ~ and back up the old dotfiles into ~/config-old
-find $(cd $(dirname $0) && pwd) -mindepth 1 -maxdepth 1 -not \( \
+find "$dotfiles" -mindepth 1 -maxdepth 1 -not \( \
     -iname '*~' -or \
     -iname '*#*' -or \
     -iname '.hg' -or \
     -iname '.git' -or \
     -iname '.gitmodules' -or \
-    -iname 'setup' -or \
-    -iname 'backup' -or \
-    -iname 'glacier-backup.sh' -or \
-    -iname 'misc' -or \
-    -iname 'restore' \
-    \) -exec bash -c \
-    "TARGET=~/\$(basename {})
-     echo \"Looking at \$TARGET\"
-     if [[ -e \$TARGET && ! -L \$TARGET ]]
-     then
-         mkdir -p ~/config-old/
-         mv \$TARGET ~/config-old/
-     fi
+    -iname 'bin' -or \
+    -iname 'misc' \
+    \) | while read file; do
+        target=~/"$(basename "$file")"
 
-     if [[ -L \$TARGET ]]
-     then
-         rm \$TARGET
-     fi
+        # Back up real files (not symlinks) to ~/config-old/
+        if [[ -e "$target" && ! -L "$target" ]]
+        then
+            echo "Moving old version of $target to ~/config-old/$(basename "$file")"
+            mkdir -p ~/config-old/
+            mv "$target" ~/config-old/
+        fi
 
-     ln -s {} \$TARGET" \;
+        # Just delete symlinks, because they are probably from a previous run
+        if [[ -L "$target" ]]
+        then
+            rm "$target"
+        fi
 
-# OS X setup
-if [ -d $HOME/Library ]; then
-    mkdir -p $HOME/Library/KeyBindings
-    cp $(cd $(dirname $0) && pwd)/misc/DefaultKeyBinding.dict \
-        $HOME/Library/KeyBindings/DefaultKeyBinding.dict
+        echo "Linking $target"
+        ln -s "$file" "$target"
+    done
+
+# OS X setup: hard-link ~/Library/KeyBindings/DefaultKeyBinding.dict
+if [ -d ~/Library ]; then
+    mkdir -p ~/Library/KeyBindings
+    target=~/Library/KeyBindings/DefaultKeyBinding.dict
+    if [[ -e "$target" ]]
+    then
+        rm "$target"
+    fi
+
+    ln "$dotfiles"/misc/DefaultKeyBinding.dict "$target"
 fi
