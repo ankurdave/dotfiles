@@ -42,8 +42,8 @@ def backup(directory):
     else:
       if os.path.isdir(f):
         dir_size = dirSize(f)
-        if dir_size > 45:
-          print "%s too big (%d kB > 45 kB); recursing" % (f, dir_size)
+        if dir_size > 2000000:
+          print "%s too big (%d kB > 2 GB); recursing" % (f, dir_size)
           backup(f)
         else:
           print "Backing up dir %s (%d kB)" % (f, dir_size)
