@@ -35,6 +35,7 @@
  '(default-input-method "TeX")
  '(delete-by-moving-to-trash t)
  '(delete-selection-mode t)
+ '(dired-details-hidden-string "")
  '(doc-view-continuous t)
  '(enable-recursive-minibuffers t)
  '(eshell-buffer-shorthand nil)

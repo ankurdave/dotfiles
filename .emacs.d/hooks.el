@@ -35,6 +35,9 @@
 (when (fboundp 'turn-on-fci-mode)
   (add-hook 'scala-mode-hook 'turn-on-fci-mode))
 
+;; Dired mode
+(add-hook 'dired-mode-hook (lambda () (toggle-truncate-lines 1)))
+
 ;; C-like languages
 (add-hook 'c-mode-common-hook (lambda () (subword-mode 1)))
 (when (fboundp 'turn-on-fci-mode)

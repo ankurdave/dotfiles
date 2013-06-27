@@ -15,6 +15,7 @@
          '(adaptive-wrap
            auto-complete
            diminish
+           dired-details
            exec-path-from-shell
            expand-region
            fill-column-indicator
@@ -85,6 +86,9 @@
   (popwin-mode 1))
 
 (require 'smartparens-config nil t)
+
+(when (require 'dired-details nil t)
+  (dired-details-install))
 
 ;;; Autoloaded packages
 (when (fboundp 'er/expand-region)
