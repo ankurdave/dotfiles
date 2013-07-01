@@ -357,3 +357,50 @@ If BACKWARD is non-nil, narrow to the previous comment."
 ;; (define-key w3m-mode-map (kbd "N") 'next-sibling-hn-comment)
 
 ;; TODO: on TAB, auto complete if tab would not change indentation
+
+;; From http://mgalgs.github.io/2011/11/30/elisp-pretty-numbers.html
+(defun my-thousands-separate (num)
+  "Formats the (possibly floating point) number with a thousands
+separator."
+  (let* ((nstr (number-to-string num))
+         (dot-ind (string-match "\\." nstr))
+         (nstr-no-decimal (if dot-ind
+                               (substring nstr 0 dot-ind)
+                             nstr))
+         (nrest (if dot-ind
+                    (substring nstr dot-ind)
+                  nil))
+         (pretty nil)
+         (cnt 0))
+    (dolist (c (reverse (append nstr-no-decimal nil)))
+      (if (and (zerop (% cnt 3)) (> cnt 0))
+          (setq pretty (cons ?, pretty)))
+      (setq pretty (cons c pretty))
+      (setq cnt (1+ cnt)))
+    (concat pretty nrest)))
+
+(defun format-number-at-point ()
+  (interactive)
+  (let ((prettified (my-thousands-separate (number-at-point))))
+    (delete-region (point) (save-excursion (forward-word) (point)))
+    (insert prettified)))
+
+;; https://github.com/DinoChiesa/dpchiesa-elisp/blob/master/dired-fixups.el
+(defun format-file-size (file-size)
+  "This is a redefinition of the function from `dired.el'. This
+fixes the formatting of file sizes in dired mode, to support very
+large files. Without this change, dired supports 8 digits max,
+which is up to 10gb. Some files are larger than that.
+"
+  (if (< file-size 1024)
+      (format (if (zerop file-size) "0" "%d") file-size)
+    (do ((file-size (/ file-size 1024.0) (/ file-size 1024.0))
+         ;; kilo, mega, giga, tera, peta, exa
+         (post-fixes (list "k" "M" "G" "T" "P" "E") (cdr post-fixes)))
+        ((< file-size 1024) (format "%.1f%s" file-size (car post-fixes))))))
+
+(defun format-file-size-at-point ()
+  (interactive)
+  (let ((n (number-at-point)))
+    (delete-region (point) (save-excursion (forward-word) (point)))
+    (insert (format-file-size n))))
