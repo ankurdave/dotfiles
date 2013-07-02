@@ -283,18 +283,36 @@ buffer, you can use `C-SPC' to set the mark, then use this
     (set-frame-width (selected-frame)
                      (max fill-column longest-line-length))))
 
+(defun beginning-of-hn-comment ()
+  "Move to the beginning of the Hacker News comment at point in w3m."
+  (interactive)
+  (search-backward "| link")
+  (move-beginning-of-line 2)
+  (point))
+
+(defun end-of-hn-comment ()
+  "Move to the end of the Hacker News comment at point in w3m."
+  (interactive)
+  (search-forward "| link")
+  (move-beginning-of-line -2)
+  (point))
+
 (defun narrow-to-hn-comment-at-point ()
   "Narrow to the Hacker News comment at point in w3m."
   (interactive)
   (widen)
-  (search-backward "| link")
-  (move-beginning-of-line 2)
-  (let ((next-comment-start
-         (save-excursion (search-forward "| link")
-                         (move-beginning-of-line -2)
-                         (point))))
-    (narrow-to-region (point) next-comment-start))
-  (beginning-of-buffer))
+  (narrow-to-region (save-excursion (beginning-of-hn-comment))
+                    (save-excursion (end-of-hn-comment))))
+
+(defcustom hn-comment-narrow nil
+  "Whether or not the HN comment functions should narrow to the
+  current comment."
+  :type 'boolean)
+
+(defun hn-comment-toggle-narrow ()
+  "Toggle the value of `hn-comment-narrow'."
+  (interactive)
+  (setq hn-comment-narrow (not hn-comment-narrow)))
 
 (defun next-hn-comment (&optional backward)
   "Narrow to the next Hacker News comment in w3m.
@@ -306,14 +324,19 @@ If BACKWARD is non-nil, narrow to the previous comment."
       (search-backward "| link" nil nil 2)
     (search-forward "| link"))
   (beginning-of-line 2)
-  (narrow-to-hn-comment-at-point))
-(define-key w3m-mode-map (kbd "n") 'next-hn-comment)
+  (unless backward
+    (end-of-hn-comment))
+  (when hn-comment-narrow
+    (narrow-to-hn-comment-at-point)))
+(eval-after-load "w3m"
+  '(define-key w3m-mode-map (kbd "n") 'next-hn-comment))
 
 (defun previous-hn-comment ()
   "See `next-hn-comment'."
   (interactive)
   (next-hn-comment t))
-(define-key w3m-mode-map (kbd "p") 'previous-hn-comment)
+(eval-after-load "w3m"
+  '(define-key w3m-mode-map (kbd "p") 'previous-hn-comment))
 
 (defun parent-hn-comment ()
   "Narrow to the parent Hacker News comment in w3m."
@@ -331,30 +354,34 @@ If BACKWARD is non-nil, narrow to the previous comment."
              (save-excursion
                (search-forward "| link " (line-end-position) t)))
     (previous-line))
-  ;; (narrow-to-hn-comment-at-point)
-  )
-(define-key w3m-mode-map (kbd "P") 'parent-hn-comment)
+  (when hn-comment-narrow
+    (narrow-to-hn-comment-at-point)))
+(eval-after-load "w3m"
+  '(define-key w3m-mode-map (kbd "P") 'parent-hn-comment))
 
-;; (defun next-sibling-hn-comment ()
-;;   "Narrow to the next sibling Hacker News comment in w3m."
-;;   (interactive)
-;;   (widen)
-;;   ;; Go to last line of this comment
-;;   (search-forward "| link")
-;;   (move-beginning-of-line -1)
-;;   (search-forward-regexp "[^ ]")
-;;   (backward-char)
-;;   (next-line)
-;;   ;; Move forward until we reach the body text of the next sibling comment
-;;   ;; (i.e., while we are either in indentation or in a comment header)
-;;   (let ((goal-column (current-column)))
-;;     (while (or (equal (following-char) ?\s)
-;;                (save-excursion
-;;                  (search-forward "| link " (line-end-position) t)))
-;;       (next-line)))
-;;   ;; (narrow-to-hn-comment-at-point)
-;;   )
-;; (define-key w3m-mode-map (kbd "N") 'next-sibling-hn-comment)
+(defun next-sibling-hn-comment ()
+  "Narrow to the next sibling Hacker News comment in w3m."
+  (interactive)
+  (widen)
+  ;; Go to last line of this comment
+  (search-forward "| link")
+  (move-beginning-of-line -1)
+  (search-forward "[s]" (line-end-position) t) ; skip [s] images
+  (while (looking-at " ")
+    (forward-char))
+  (next-line)
+  ;; Move forward until we reach the body text of the next sibling comment
+  ;; (i.e., while we are either in indentation or in a comment header)
+  (while (or (equal (following-char) ?\s)
+             (save-excursion
+               (search-forward "| link " (line-end-position) t)))
+    (next-line)
+    (sit-for 0)  ; Avoid strange behavior where we skip past the sibling comment
+    )
+  (when hn-comment-narrow
+    (narrow-to-hn-comment-at-point)))
+;; (eval-after-load "w3m"
+;;   '(define-key w3m-mode-map (kbd "N") 'next-sibling-hn-comment))
 
 ;; TODO: on TAB, auto complete if tab would not change indentation
 
