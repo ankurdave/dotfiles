@@ -287,15 +287,25 @@ buffer, you can use `C-SPC' to set the mark, then use this
   "Move to the beginning of the Hacker News comment at point in w3m."
   (interactive)
   (search-backward "| link")
-  (move-beginning-of-line 2)
+  (beginning-of-line 2)
   (point))
 
 (defun end-of-hn-comment ()
   "Move to the end of the Hacker News comment at point in w3m."
   (interactive)
   (search-forward "| link")
-  (move-beginning-of-line -2)
+  (beginning-of-line)
   (point))
+
+(defun dim-all-but-hn-comment-at-point ()
+  (interactive)
+  (let ((dim '(font-lock-face (:foreground "DimGrey")))
+        (comment-start (save-excursion (beginning-of-hn-comment)))
+        (comment-end (save-excursion (end-of-hn-comment))))
+    (with-silent-modifications
+      (remove-text-properties (point-min) (point-max) dim)
+      (add-text-properties (point-min) comment-start dim)
+      (add-text-properties comment-end (point-max) dim))))
 
 (defun narrow-to-hn-comment-at-point ()
   "Narrow to the Hacker News comment at point in w3m."
@@ -304,37 +314,34 @@ buffer, you can use `C-SPC' to set the mark, then use this
   (narrow-to-region (save-excursion (beginning-of-hn-comment))
                     (save-excursion (end-of-hn-comment))))
 
-(defcustom hn-comment-narrow nil
+(defcustom hn-comment-narrow-function nil
   "Whether or not the HN comment functions should narrow to the
   current comment."
-  :type 'boolean)
+  :type '(choice (function-item narrow-to-hn-comment-at-point)
+                 (function-item dim-all-but-hn-comment-at-point)
+                 (const nil)))
 
-(defun hn-comment-toggle-narrow ()
-  "Toggle the value of `hn-comment-narrow'."
-  (interactive)
-  (setq hn-comment-narrow (not hn-comment-narrow)))
-
-(defun next-hn-comment (&optional backward)
-  "Narrow to the next Hacker News comment in w3m.
-
-If BACKWARD is non-nil, narrow to the previous comment."
+(defun next-hn-comment ()
+  "Move to the next Hacker News comment in w3m."
   (interactive)
   (widen)
-  (if backward
-      (search-backward "| link" nil nil 2)
-    (search-forward "| link"))
-  (beginning-of-line 2)
-  (unless backward
-    (end-of-hn-comment))
-  (when hn-comment-narrow
-    (narrow-to-hn-comment-at-point)))
+  (search-forward-regexp "^\\s-*reply\\s-*$")
+  (beginning-of-line)
+  (when hn-comment-narrow-function
+    (funcall hn-comment-narrow-function)))
+
 (eval-after-load "w3m"
   '(define-key w3m-mode-map (kbd "n") 'next-hn-comment))
 
 (defun previous-hn-comment ()
   "See `next-hn-comment'."
   (interactive)
-  (next-hn-comment t))
+  (widen)
+  (search-backward-regexp "| link\\s-*$")
+  (beginning-of-line)
+  (when hn-comment-narrow-function
+    (funcall hn-comment-narrow-function)))
+
 (eval-after-load "w3m"
   '(define-key w3m-mode-map (kbd "p") 'previous-hn-comment))
 
@@ -354,8 +361,9 @@ If BACKWARD is non-nil, narrow to the previous comment."
              (save-excursion
                (search-forward "| link " (line-end-position) t)))
     (previous-line))
-  (when hn-comment-narrow
-    (narrow-to-hn-comment-at-point)))
+  (when hn-comment-narrow-function
+    (funcall hn-comment-narrow-function)))
+
 (eval-after-load "w3m"
   '(define-key w3m-mode-map (kbd "P") 'parent-hn-comment))
 
@@ -378,8 +386,9 @@ If BACKWARD is non-nil, narrow to the previous comment."
     (next-line)
     (sit-for 0)  ; Avoid strange behavior where we skip past the sibling comment
     )
-  (when hn-comment-narrow
-    (narrow-to-hn-comment-at-point)))
+  (when hn-comment-narrow-function
+    (funcall hn-comment-narrow-function)))
+
 ;; (eval-after-load "w3m"
 ;;   '(define-key w3m-mode-map (kbd "N") 'next-sibling-hn-comment))
 
