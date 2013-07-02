@@ -55,5 +55,4 @@
      (define-key w3m-mode-map (kbd "n") 'next-hn-comment)
      (define-key w3m-mode-map (kbd "p") 'previous-hn-comment)
      (define-key w3m-mode-map (kbd "P") 'parent-hn-comment)
-     ;; (define-key w3m-mode-map (kbd "N") 'next-sibling-hn-comment)
-     ))
+     (define-key w3m-mode-map (kbd "C-c n") 'next-sibling-hn-comment)))
