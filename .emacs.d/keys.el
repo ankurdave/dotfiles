@@ -48,3 +48,12 @@
 
      (define-key sp-keymap (kbd "M-J") 'sp-join-sexp)
      (define-key sp-keymap (kbd "M-S") 'sp-split-sexp)))
+
+(eval-after-load "w3m"
+  '(progn
+     (require 'w3m-hacker-news)
+     (define-key w3m-mode-map (kbd "n") 'next-hn-comment)
+     (define-key w3m-mode-map (kbd "p") 'previous-hn-comment)
+     (define-key w3m-mode-map (kbd "P") 'parent-hn-comment)
+     ;; (define-key w3m-mode-map (kbd "N") 'next-sibling-hn-comment)
+     ))
