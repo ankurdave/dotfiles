@@ -86,12 +86,15 @@
   (next-line)
   ;; Move forward until we reach the body text of the next sibling comment
   ;; (i.e., while we are either in indentation or in a comment header)
-  (while (or (equal (following-char) ?\s)
-             (save-excursion
-               (search-forward "| link " (line-end-position) t)))
-    (next-line)
-    (sit-for 0)  ; Avoid strange behavior where we skip past the sibling comment
-    )
+  (let ((goal-column (current-column)))
+    (while (or (equal (following-char) ?\s)
+               (equal (following-char) ?\n)
+               (equal (following-char) ?-)
+               (save-excursion
+                 (search-forward "| link " (line-end-position) t)))
+      (next-line)
+      (sit-for 0) ; Avoid strange behavior where we skip past the sibling comment
+      ))
   (when hn-comment-narrow-function
     (funcall hn-comment-narrow-function)))
 
