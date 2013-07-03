@@ -15,6 +15,7 @@
 
 (eval-after-load 'smartparens
   '(progn
+     ;; TODO: check out `sp-base-key-bindings'
      (define-key sp-keymap (kbd "C-w")
        'sp-kill-region-or-backward-word)
 

@@ -25,12 +25,14 @@
            gitignore-mode
            ido-ubiquitous
            magit
+           molokai-theme
            paredit
            popwin
            smartparens
            smex
            smooth-scrolling
-           undo-tree)))
+           undo-tree
+           volatile-highlights)))
     (dolist (pkg-name packages-to-install)
       (unless (package-installed-p pkg-name)
         (package-install pkg-name)))))
