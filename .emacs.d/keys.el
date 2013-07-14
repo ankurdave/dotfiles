@@ -22,6 +22,9 @@
      (define-key sp-keymap (kbd "C-w")
        'sp-kill-region-or-backward-word)
 
+     ;; TODO: bind paredit-wrap-{round,square,curly} to a sequence containing
+     ;; that char
+
      (define-key sp-keymap (kbd "C-M-f") 'sp-forward-sexp)
      (define-key sp-keymap (kbd "C-M-b") 'sp-backward-sexp)
 
