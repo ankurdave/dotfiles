@@ -17,6 +17,7 @@
             "moveForward:");
     "~l" = ("lowercaseWord:",
             "moveForward:");
+    "^w" = "copy:";
     "~d" = "deleteWordForward:";
     "~t" = "transposeWords:";
     "^x" = {
