@@ -133,5 +133,30 @@
 (push '("\\*magit: .*\\*" :regexp t) popwin:special-display-config)
 (push '("*Buffer List*") popwin:special-display-config)
 
+;; Avoid *Buffer List* undo history warning; see
+;; http://lists.gnu.org/archive/html/help-gnu-emacs/2013-04/msg00497.html
+(add-hook 'Buffer-menu-mode-hook 'buffer-disable-undo)
+
+;; Customize molokai theme
+(when (require 'molokai-theme nil t)
+  (custom-theme-set-faces
+   'molokai
+   '(w3m-anchor
+     ((((class color) (background light))
+       (:foreground "blue"))
+      (((class color) (background dark))
+       (:foreground "SkyBlue1"))
+      (t
+       (:underline
+        (:color foreground-color :style line)))))
+   '(w3m-arrived-anchor
+     ((((class color) (background light))
+       (:foreground "navy"))
+      (((class color) (background dark))
+       (:foreground "SkyBlue4"))
+      (t
+       (:underline
+        (:color foreground-color :style line)))))))
+
 (put 'narrow-to-region 'disabled nil)
 (put 'ido-exit-minibuffer 'disabled nil)
