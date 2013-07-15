@@ -92,13 +92,15 @@
 (when (require 'dired-details nil t)
   (dired-details-install))
 
-;;; Autoloaded packages
+(require 'volatile-highlights nil t)
 
+;;; Autoloaded packages
 (when (fboundp 'diminish)
   (eval-after-load "eldoc" '(diminish 'eldoc-mode))
   ;; (eval-after-load "paredit" '(diminish 'paredit-mode))
   (eval-after-load "whitespace" '(diminish 'global-whitespace-mode))
-  (eval-after-load "auto-complete" '(diminish 'auto-complete-mode)))
+  (eval-after-load "auto-complete" '(diminish 'auto-complete-mode))
+  (eval-after-load "volatile-highlights" '(diminish 'volatile-highlights-mode)))
 
 (add-to-list 'load-path "~/.emacs.d")
 (autoload 'typing-test "typing-test" nil t)
