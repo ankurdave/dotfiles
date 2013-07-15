@@ -85,9 +85,10 @@ window until there is space."
           (setq best-window window))))
     best-window))
   (cond
+   ((minibufferp) nil)
    ((equalp (count-windows) 1) (switch-to-buffer (other-buffer)))
    ((equalp (count-windows) 2) (other-window 1))
-   (t (get-mru-window) (select-window (get-2nd-mru-window)))))
+   (t (select-window (get-2nd-mru-window)))))
 (global-set-key (kbd "C-x C-x") 'switch-to-other-buffer)
 
 (defun new-eshell (&optional name)
