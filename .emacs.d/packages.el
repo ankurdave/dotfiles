@@ -93,8 +93,6 @@
   (dired-details-install))
 
 ;;; Autoloaded packages
-(when (fboundp 'er/expand-region)
-  (global-set-key (kbd "C-=") 'er/expand-region))
 
 (when (fboundp 'diminish)
   (eval-after-load "eldoc" '(diminish 'eldoc-mode))

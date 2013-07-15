@@ -9,6 +9,9 @@
 (when (fboundp 'magit-status)
   (global-set-key (kbd "C-x m") 'magit-status))
 
+(when (fboundp 'er/expand-region)
+  (global-set-key (kbd "C-=") 'er/expand-region))
+
 (eval-after-load 'paredit
   '(define-key paredit-mode-map (kbd "C-w")
      'paredit-kill-region-or-backward-word))
