@@ -61,29 +61,29 @@ window until there is space."
   "Rename the current buffer and the file it's visiting to NEW-NAME."
   (interactive "sNew name: ")
   (let ((name (buffer-name))
-    (filename (buffer-file-name)))
+        (filename (buffer-file-name)))
     (if (not filename)
-    (message "Buffer '%s' is not visiting a file!" name)
+        (message "Buffer '%s' is not visiting a file!" name)
       (if (get-buffer new-name)
-      (message "A buffer named '%s' already exists!" new-name)
-    (progn
-      (rename-file name new-name 1)
-      (rename-buffer new-name)
-      (set-visited-file-name new-name)
-      (set-buffer-modified-p nil))))))
+          (message "A buffer named '%s' already exists!" new-name)
+        (progn
+          (rename-file name new-name 1)
+          (rename-buffer new-name)
+          (set-visited-file-name new-name)
+          (set-buffer-modified-p nil))))))
 
 (defun switch-to-other-buffer ()
   "Switch to the most recently used buffer."
   (interactive)
   (defun get-2nd-mru-window ()
-  (let (best-window best-time time)
-    (dolist (window (window-list-1 nil 'nomini nil))
-      (when (not (equalp window (selected-window)))
-        (setq time (window-use-time window))
-        (when (or (not best-time) (> time best-time))
-          (setq best-time time)
-          (setq best-window window))))
-    best-window))
+    (let (best-window best-time time)
+      (dolist (window (window-list-1 nil 'nomini nil))
+        (when (not (equalp window (selected-window)))
+          (setq time (window-use-time window))
+          (when (or (not best-time) (> time best-time))
+            (setq best-time time)
+            (setq best-window window))))
+      best-window))
   (cond
    ((minibufferp) nil)
    ((equalp (count-windows) 1) (switch-to-buffer (other-buffer)))
@@ -266,13 +266,13 @@ buffer, you can use `C-SPC' to set the mark, then use this
            (when (interactive-p)
              (let ((others  (cdr long-lines)))
                (message "Line %d: %d chars%s (%d lines measured)"
-                (car long-lines) max-width
-                (concat
-                 (and others
-                      (format ", Others: {%s}" (mapconcat
-                                                (lambda (line) (format "%d" line))
-                                                (cdr long-lines) ", "))))
-                (- line start-line))))
+                        (car long-lines) max-width
+                        (concat
+                         (and others
+                              (format ", Others: {%s}" (mapconcat
+                                                        (lambda (line) (format "%d" line))
+                                                        (cdr long-lines) ", "))))
+                        (- line start-line))))
            (list (car long-lines) max-width (cdr long-lines) (- line start-line))))))
 
 (defun fit-frame-width-to-buffer ()
@@ -293,8 +293,8 @@ separator."
   (let* ((nstr (number-to-string num))
          (dot-ind (string-match "\\." nstr))
          (nstr-no-decimal (if dot-ind
-                               (substring nstr 0 dot-ind)
-                             nstr))
+                              (substring nstr 0 dot-ind)
+                            nstr))
          (nrest (if dot-ind
                     (substring nstr dot-ind)
                   nil))
