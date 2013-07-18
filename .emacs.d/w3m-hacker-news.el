@@ -43,7 +43,8 @@
   (search-forward-regexp "^\\s-*reply\\s-*$")
   (beginning-of-line)
   (when hn-comment-narrow-function
-    (funcall hn-comment-narrow-function)))
+    (funcall hn-comment-narrow-function)
+    (recenter -1)))
 
 (defun previous-hn-comment ()
   "See `next-hn-comment'."
@@ -52,12 +53,14 @@
   (search-backward-regexp "| link\\s-*$")
   (beginning-of-line)
   (when hn-comment-narrow-function
-    (funcall hn-comment-narrow-function)))
+    (funcall hn-comment-narrow-function)
+    (recenter -1)))
 
 (defun parent-hn-comment ()
   "Narrow to the parent Hacker News comment in w3m."
   (interactive)
   (widen)
+  (push-mark)
   ;; Go to first line of this comment
   (search-backward "| link")
   (move-beginning-of-line 3)
@@ -71,12 +74,14 @@
                (search-forward "| link " (line-end-position) t)))
     (previous-line))
   (when hn-comment-narrow-function
-    (funcall hn-comment-narrow-function)))
+    (funcall hn-comment-narrow-function)
+    (recenter -1)))
 
 (defun next-sibling-hn-comment ()
   "Narrow to the next sibling Hacker News comment in w3m."
   (interactive)
   (widen)
+  (push-mark)
   ;; Go to last line of this comment
   (search-forward "| link")
   (move-beginning-of-line -1)
@@ -96,6 +101,7 @@
       (sit-for 0) ; Avoid strange behavior where we skip past the sibling comment
       ))
   (when hn-comment-narrow-function
-    (funcall hn-comment-narrow-function)))
+    (funcall hn-comment-narrow-function)
+    (recenter -1)))
 
 (provide 'w3m-hacker-news)
