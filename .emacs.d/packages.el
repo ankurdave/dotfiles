@@ -31,8 +31,7 @@
            smartparens
            smex
            smooth-scrolling
-           undo-tree
-           volatile-highlights)))
+           undo-tree)))
     (dolist (pkg-name packages-to-install)
       (unless (package-installed-p pkg-name)
         (package-install pkg-name)))))
@@ -92,15 +91,12 @@
 (when (require 'dired-details nil t)
   (dired-details-install))
 
-(require 'volatile-highlights nil t)
-
 ;;; Autoloaded packages
 (when (fboundp 'diminish)
   (eval-after-load "eldoc" '(diminish 'eldoc-mode))
   ;; (eval-after-load "paredit" '(diminish 'paredit-mode))
   (eval-after-load "whitespace" '(diminish 'global-whitespace-mode))
-  (eval-after-load "auto-complete" '(diminish 'auto-complete-mode))
-  (eval-after-load "volatile-highlights" '(diminish 'volatile-highlights-mode)))
+  (eval-after-load "auto-complete" '(diminish 'auto-complete-mode)))
 
 (add-to-list 'load-path "~/.emacs.d")
 (autoload 'typing-test "typing-test" nil t)

@@ -103,7 +103,6 @@
  '(vc-follow-symlinks t)
  '(vc-handled-backends nil)
  '(visual-line-mode nil t)
- '(volatile-highlights-mode t)
  '(w3m-confirm-leaving-secure-page nil)
  '(w3m-use-cookies t)
  '(w3m-use-favicon nil)
