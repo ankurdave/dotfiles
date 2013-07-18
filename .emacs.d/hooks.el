@@ -132,6 +132,7 @@
 ;; popwin configuration
 (push '("\\*magit: .*\\*" :regexp t) popwin:special-display-config)
 (push '("*Buffer List*") popwin:special-display-config)
+(push '("*Backtrace*") popwin:special-display-config)
 
 ;; Avoid *Buffer List* undo history warning; see
 ;; http://lists.gnu.org/archive/html/help-gnu-emacs/2013-04/msg00497.html
