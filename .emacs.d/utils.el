@@ -332,3 +332,22 @@ which is up to 10gb. Some files are larger than that.
   (let ((n (number-at-point)))
     (delete-region (point) (save-excursion (forward-word) (point)))
     (insert (format-file-size n))))
+
+(defun next-line-same-column ()
+  (interactive)
+  (let ((column-number (count-matches "\t" (line-beginning-position) (point))))
+    (beginning-of-line 2)
+    (search-forward "\t" (line-end-position) t column-number)))
+
+(defun next-nonempty-column ()
+  (interactive)
+  (let ((match-pos
+         (save-excursion
+           (next-line-same-column)
+           (while (looking-at "\t")
+             (next-line-same-column))
+           (point))))
+    (if (eq match-pos (point-max))
+        (user-error "Reached end of buffer")
+      (push-mark)               ; Save the user's current position before moving
+      (goto-char match-pos))))
