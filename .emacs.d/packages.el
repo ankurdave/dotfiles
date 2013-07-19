@@ -24,6 +24,7 @@
            gitconfig-mode
            gitignore-mode
            ido-ubiquitous
+           ido-vertical-mode
            magit
            molokai-theme
            paredit
@@ -47,9 +48,9 @@
 (when (require 'auto-complete-config nil t)
   (ac-config-default))
 
-;; Must enable `dtrt-indent-mode' here rather than with Customize
-;; because it eagerly enables the mode when setting with
-;; Customize, which fails if it is not installed.
+;; Must enable `dtrt-indent-mode' here rather than with Customize because it
+;; requires the mode when setting with Customize, which fails if it is not
+;; installed.
 (when (fboundp 'dtrt-indent-mode)
   (dtrt-indent-mode t))
 

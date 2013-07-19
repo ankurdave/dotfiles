@@ -56,6 +56,7 @@
  '(ido-use-filename-at-point (quote guess))
  '(ido-use-url-at-point t)
  '(ido-use-virtual-buffers t)
+ '(ido-vertical-mode t)
  '(indent-tabs-mode nil)
  '(inhibit-startup-screen t)
  '(menu-bar-mode nil)
