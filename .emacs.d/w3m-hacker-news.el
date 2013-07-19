@@ -1,18 +1,25 @@
 (defun beginning-of-hn-comment ()
   "Move to the beginning of the Hacker News comment at point in w3m."
   (interactive)
-  (search-backward "| link")
-  (beginning-of-line 2)
-  (point))
+  (condition-case nil
+      (progn
+        (search-backward "| link")
+        (beginning-of-line 2)
+        (point))
+    (search-failed (point-min))))
 
 (defun end-of-hn-comment ()
   "Move to the end of the Hacker News comment at point in w3m."
   (interactive)
-  (search-forward "| link")
-  (beginning-of-line)
-  (point))
+  (condition-case nil
+      (progn
+        (search-forward "| link")
+        (beginning-of-line)
+        (point))
+    (search-failed (point-max))))
 
 (defun dim-all-but-hn-comment-at-point ()
+  "Dim other Hacker News comments in w3m."
   (interactive)
   (let ((dim '(font-lock-face (:foreground "DimGrey")))
         (comment-start (save-excursion (beginning-of-hn-comment)))
@@ -31,7 +38,7 @@
 
 (defcustom hn-comment-narrow-function nil
   "Whether or not the HN comment functions should narrow to the
-  current comment."
+current comment."
   :type '(choice (function-item narrow-to-hn-comment-at-point)
                  (function-item dim-all-but-hn-comment-at-point)
                  (const nil)))
@@ -40,68 +47,75 @@
   "Move to the next Hacker News comment in w3m."
   (interactive)
   (widen)
-  (search-forward-regexp "^\\s-*reply\\s-*$")
-  (beginning-of-line)
-  (when hn-comment-narrow-function
-    (funcall hn-comment-narrow-function)
-    (recenter -1)))
+  (condition-case nil
+      (progn
+        (search-forward-regexp "^\\s-*reply\\s-*$")
+        (beginning-of-line)
+        (when hn-comment-narrow-function
+          (funcall hn-comment-narrow-function)
+          (recenter -1))
+        t)
+    (search-failed nil)))
 
 (defun previous-hn-comment ()
-  "See `next-hn-comment'."
+  "Move to the previous Hacker News comment in w3m."
   (interactive)
   (widen)
-  (search-backward-regexp "| link\\s-*$")
-  (beginning-of-line)
-  (when hn-comment-narrow-function
-    (funcall hn-comment-narrow-function)
-    (recenter -1)))
+  (condition-case nil
+      (progn
+        (search-backward-regexp "| link\\s-*$")
+        (beginning-of-line)
+        (when hn-comment-narrow-function
+          (funcall hn-comment-narrow-function)
+          (recenter -1))
+        t)
+    (search-failed nil)))
+
+(defun hn-comment-indentation-level ()
+  "Return the indentation level of the Hacker News comment at point in w3m."
+  (save-excursion
+    (beginning-of-hn-comment)
+    (forward-line)
+    (search-forward "[s]" (line-end-position) t) ; skip [s] images
+    (while (looking-at " ")
+      (forward-char))
+    (current-column)))
 
 (defun parent-hn-comment ()
-  "Narrow to the parent Hacker News comment in w3m."
+  "Move to the parent Hacker News comment in w3m."
   (interactive)
   (widen)
-  (push-mark)
-  ;; Go to first line of this comment
-  (search-backward "| link")
-  (move-beginning-of-line 3)
-  (search-forward "[s]" (line-end-position) t) ; skip [s] images
-  (while (looking-at " ")
-    (forward-char))
-  ;; Move backward until we reach the body text of the parent comment (i.e.,
-  ;; while we are either in indentation or in a comment header)
-  (while (or (equal (preceding-char) ?\s)
-             (save-excursion
-               (search-forward "| link " (line-end-position) t)))
-    (previous-line))
-  (when hn-comment-narrow-function
-    (funcall hn-comment-narrow-function)
-    (recenter -1)))
+  (condition-case nil
+      (progn
+        (let ((start-indentation-level (hn-comment-indentation-level))
+              (previous-comment-position (point)))
+          (let ((hn-comment-narrow-function nil))
+            (while (and (>= (hn-comment-indentation-level) start-indentation-level)
+                        (previous-hn-comment))))
+          (when hn-comment-narrow-function
+            (funcall hn-comment-narrow-function)
+            (recenter -1))
+          (push-mark previous-comment-position t)
+          (message "Mark set to previous comment")))
+    (search-failed nil)))
 
 (defun next-sibling-hn-comment ()
-  "Narrow to the next sibling Hacker News comment in w3m."
+  "Move to the next sibling Hacker News comment in w3m."
   (interactive)
   (widen)
-  (push-mark)
-  ;; Go to last line of this comment
-  (search-forward "| link")
-  (move-beginning-of-line -1)
-  (search-forward "[s]" (line-end-position) t) ; skip [s] images
-  (while (looking-at " ")
-    (forward-char))
-  (next-line)
-  ;; Move forward until we reach the body text of the next sibling comment
-  ;; (i.e., while we are either in indentation or in a comment header)
-  (let ((goal-column (current-column)))
-    (while (or (equal (following-char) ?\s)
-               (equal (following-char) ?\n)
-               (equal (following-char) ?-)
-               (save-excursion
-                 (search-forward "| link " (line-end-position) t)))
-      (next-line)
-      (sit-for 0) ; Avoid strange behavior where we skip past the sibling comment
-      ))
-  (when hn-comment-narrow-function
-    (funcall hn-comment-narrow-function)
-    (recenter -1)))
+  (condition-case nil
+      (progn
+        (let ((start-indentation-level (hn-comment-indentation-level))
+              (previous-comment-position (point)))
+          (let ((hn-comment-narrow-function nil))
+            (next-hn-comment)
+            (while (and (> (hn-comment-indentation-level) start-indentation-level)
+                        (next-hn-comment))))
+          (when hn-comment-narrow-function
+            (funcall hn-comment-narrow-function)
+            (recenter -1))
+          (push-mark previous-comment-position t)
+          (message "Mark set to previous comment")))
+    (search-failed nil)))
 
 (provide 'w3m-hacker-news)
