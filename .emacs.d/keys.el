@@ -60,6 +60,7 @@
      (define-key w3m-mode-map (kbd "p") 'previous-hn-comment)
      (define-key w3m-mode-map (kbd "P") 'parent-hn-comment)
      (define-key w3m-mode-map (kbd "C-c n") 'next-sibling-hn-comment)
+     (define-key w3m-mode-map (kbd "C-x n c") 'narrow-to-hn-comment-at-point)
 
      (require 'w3m-isearch-links)
      (define-key w3m-mode-map (kbd "/") 'w3m-isearch-links)))

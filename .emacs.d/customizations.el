@@ -47,7 +47,6 @@
  '(global-auto-revert-non-file-buffers nil)
  '(global-hl-line-mode t)
  '(global-whitespace-mode t)
- '(hn-comment-narrow-function (quote narrow-to-hn-comment-at-point))
  '(ido-default-buffer-method (quote selected-window))
  '(ido-enable-flex-matching t)
  '(ido-everywhere t)
