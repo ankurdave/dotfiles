@@ -33,8 +33,7 @@ Return t if movement succeeded, and nil otherwise."
       (widen))
     (condition-case nil
         (progn
-          (search-forward-regexp "^\\s-*reply\\s-*$")
-          (beginning-of-line)
+          (search-forward-regexp "^\\s-*reply\\s-*$\\| points?written ")
           (when narrow
             (narrow-to-hn-comment-at-point)
             (recenter -1))
@@ -50,7 +49,7 @@ Return t if movement succeeded, and nil otherwise."
       (widen))
     (condition-case nil
         (progn
-          (search-backward-regexp "| link\\s-*$")
+          (search-backward-regexp "| link\\s-*$\\| points?written ")
           (beginning-of-line)
           (when narrow
             (narrow-to-hn-comment-at-point)
