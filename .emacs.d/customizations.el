@@ -53,6 +53,7 @@
  '(ido-file-extensions-order (quote (".tex" ".pdf")))
  '(ido-max-file-prompt-width 0.6)
  '(ido-mode (quote both) nil (ido))
+ '(ido-ubiquitous-command-exceptions (quote (w3m-goto-url w3m-goto-url-new-session)))
  '(ido-use-filename-at-point (quote guess))
  '(ido-use-url-at-point t)
  '(ido-use-virtual-buffers t)
