@@ -2,5 +2,5 @@
 
 source /apollo/env/envImprovement/var/bashrc
 
-PATH="$HOME/emacs-24.3/src:$HOME/emacs-24.3/lib-src:$PATH"
+PATH="$HOME/emacs/src:$HOME/emacs/lib-src:$PATH"
 export PYTHONPATH="$HOME/pinard-Pymacs-5989046:$HOME/agr-ropemacs-f422ac6f72c7:$HOME/agr-ropemode-91d0e7b0e5ae:$HOME/rope-0.9.4"
