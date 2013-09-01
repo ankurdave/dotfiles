@@ -13,8 +13,12 @@
   (global-set-key (kbd "C-=") 'er/expand-region))
 
 (eval-after-load 'paredit
-  '(define-key paredit-mode-map (kbd "C-w")
-     'paredit-kill-region-or-backward-word))
+  '(progn
+     (define-key paredit-mode-map (kbd "C-w")
+       'paredit-kill-region-or-backward-word)
+
+     ;; Define some keys everywhere
+     (define-key global-map (kbd "M-(") 'paredit-wrap-round)))
 
 (eval-after-load 'smartparens
   '(progn
