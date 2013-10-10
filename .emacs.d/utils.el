@@ -351,3 +351,7 @@ which is up to 10gb. Some files are larger than that.
         (user-error "Reached end of buffer")
       (push-mark)               ; Save the user's current position before moving
       (goto-char match-pos))))
+
+ (defun date ()
+   (interactive)
+   (insert (format-time-string "%Y-%m-%d")))
