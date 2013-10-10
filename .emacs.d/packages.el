@@ -29,6 +29,7 @@
            molokai-theme
            paredit
            popwin
+           projectile
            smartparens
            smex
            smooth-scrolling
