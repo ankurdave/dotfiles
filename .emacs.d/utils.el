@@ -78,7 +78,7 @@ window until there is space."
   (defun get-2nd-mru-window ()
     (let (best-window best-time time)
       (dolist (window (window-list-1 nil 'nomini nil))
-        (when (not (equalp window (selected-window)))
+        (when (not (equal window (selected-window)))
           (setq time (window-use-time window))
           (when (or (not best-time) (> time best-time))
             (setq best-time time)
@@ -86,8 +86,8 @@ window until there is space."
       best-window))
   (cond
    ((minibufferp) nil)
-   ((equalp (count-windows) 1) (switch-to-buffer (other-buffer)))
-   ((equalp (count-windows) 2) (other-window 1))
+   ((equal (count-windows) 1) (switch-to-buffer (other-buffer)))
+   ((equal (count-windows) 2) (other-window 1))
    (t (select-window (get-2nd-mru-window)))))
 (global-set-key (kbd "C-x C-x") 'switch-to-other-buffer)
 

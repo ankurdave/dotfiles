@@ -130,16 +130,17 @@
   (ns-set-resource nil "ApplePressAndHoldEnabled" "NO"))
 
 ;; popwin configuration
-(push '("\\*magit: .*\\*" :regexp t) popwin:special-display-config)
-(push '("*Buffer List*") popwin:special-display-config)
-(push '("*Backtrace*") popwin:special-display-config)
+(when (boundp 'popwin:special-display-config)
+  (push '("\\*magit: .*\\*" :regexp t) popwin:special-display-config)
+  (push '("*Buffer List*") popwin:special-display-config)
+  (push '("*Backtrace*") popwin:special-display-config))
 
 ;; Avoid *Buffer List* undo history warning; see
 ;; http://lists.gnu.org/archive/html/help-gnu-emacs/2013-04/msg00497.html
 (add-hook 'Buffer-menu-mode-hook 'buffer-disable-undo)
 
 ;; Customize molokai theme
-(when (require 'molokai-theme nil t)
+(when (condition-case nil (load-theme 'molokai nil t) (error nil))
   (custom-theme-set-faces
    'molokai
    '(w3m-anchor
