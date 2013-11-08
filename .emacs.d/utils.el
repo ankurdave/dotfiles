@@ -349,3 +349,28 @@ which is up to 10gb. Some files are larger than that.
  (defun date ()
    (interactive)
    (insert (format-time-string "%Y-%m-%d")))
+
+(defun rgrep-in-project ()
+  "Perform rgrep in the project on files with the same extension
+as the current one."
+  (interactive)
+  (let ((roots (projectile-get-project-directories))
+        (search-regexp (if (and transient-mark-mode mark-active)
+                           (buffer-substring (region-beginning) (region-end))
+                         (read-string (projectile-prepend-project-name "Grep for: ")
+                                      (projectile-symbol-at-point)))))
+    (dolist (root-dir roots)
+      (require 'grep)
+      ;; paths for find-grep should relative and without trailing /
+      (let ((grep-find-ignored-directories (-union (-map (lambda (dir) (s-chop-suffix "/" (s-chop-prefix root-dir dir)))
+                                                         (cdr (projectile-ignored-directories))) grep-find-ignored-directories))
+            (grep-find-ignored-files (-union (-map (lambda (file) (s-chop-prefix root-dir file)) (projectile-ignored-files)) grep-find-ignored-files)))
+        (grep-compute-defaults)
+        (rgrep search-regexp (format "*.%s" (file-name-extension buffer-file-name)) root-dir)))))
+
+(defun projectile-find-file-other-window ()
+  "Jump to a project's file in another window."
+  (interactive)
+  (require 'cl)
+  (cl-letf (((symbol-function 'find-file) (symbol-function 'find-file-other-window)))
+    (projectile-find-file)))

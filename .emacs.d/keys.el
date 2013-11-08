@@ -6,11 +6,16 @@
 
 (global-set-key "\C-w" 'kill-region-or-backward-word)
 
+(global-set-key (kbd "C-x 4 p") 'projectile-find-file-other-window)
+
 (when (fboundp 'magit-status)
   (global-set-key (kbd "C-x m") 'magit-status))
 
 (when (fboundp 'er/expand-region)
   (global-set-key (kbd "C-=") 'er/expand-region))
+
+(when (fboundp 'projectile-find-file)
+  (global-set-key (kbd "M-p") 'projectile-find-file))
 
 (eval-after-load 'paredit
   '(progn
