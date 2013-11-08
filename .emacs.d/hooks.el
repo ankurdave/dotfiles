@@ -39,6 +39,45 @@
           (lambda ()
             (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
 
+;; Scala mode indentation: extra indent step for parameters
+(defadvice scala-indent:resolve-block-step
+  (around extra-indent-step-for-parameters (start anchor) activate)
+  "Add an extra indent step for parameters to a class or method."
+  (let ((in-parameter-list
+         (save-excursion
+           (condition-case nil
+               (and
+                (goto-char start)
+                ;; Jump out of parameter list
+                (sp-backward-up-sexp)
+                ;; Move backward across all previous parameter lists
+                (progn
+                  (while (scala-syntax:looking-back-token ")")
+                    (scala-syntax:backward-sexp))
+                  t)
+                ;; Move backward across constructor modifiers
+                (progn
+                  (while (scala-syntax:looking-back-token scala-syntax:modifiers-re)
+                    (scala-syntax:backward-sexp)
+                    (when (scala-syntax:looking-at "]")
+                      (backward-list)))
+                  t)
+                ;; Move backward across type parameter list
+                (progn
+                  (when (scala-syntax:looking-back-token "]")
+                    (scala-syntax:backward-sexp))
+                  t)
+                ;; Move backward across class/object/method name
+                (progn (scala-syntax:backward-sexp) t)
+                ;; Move backward across class/object/method keyword
+                (progn (scala-syntax:backward-sexp) t)
+                ;; Check keyword
+                (scala-syntax:looking-at (regexp-opt '("class" "object" "def") 'words)))))))
+    (message "in parameter list: %s" in-parameter-list)
+    (if in-parameter-list
+        (setq ad-return-value (+ ad-do-it scala-indent:step))
+      ad-do-it)))
+
 ;; Dired mode
 (add-hook 'dired-mode-hook (lambda () (toggle-truncate-lines 1)))
 
