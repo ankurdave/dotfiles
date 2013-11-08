@@ -17,6 +17,9 @@
 (when (fboundp 'ace-jump-mode)
   (global-set-key (kbd "C-c SPC") 'ace-jump-mode))
 
+(when (boundp 'popwin:keymap)
+  (define-key (current-global-map) (kbd "C-c w") popwin:keymap))
+
 (when (fboundp 'projectile-find-file)
   (global-set-key (kbd "M-p") 'projectile-find-file))
 
