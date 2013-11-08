@@ -5,6 +5,8 @@ PATH=$HOME/scala-2.9.1.final/bin:$PATH
 PATH=/opt/local/bin:$PATH
 PATH=/opt/local/sbin:$PATH
 PATH=/opt/local/Library/Frameworks/Python.framework/Versions/2.7/bin:$PATH
+PATH=~/android/sdk/tools:$PATH
+PATH=~/android/sdk/platform-tools:$PATH
 export PATH
  PYTHONPATH=/opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages:/usr/local/lib/python2.7/site-packages
 export JAVA_HOME=$(/usr/libexec/java_home)
