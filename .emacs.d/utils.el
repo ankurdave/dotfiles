@@ -391,6 +391,12 @@ as the current one."
         (grep-compute-defaults)
         (rgrep search-regexp (format "*.%s" (file-name-extension buffer-file-name)) root-dir)))))
 
+(defun copy-filename-as-kill ()
+  "Copy full path to current file into the kill ring."
+  (interactive)
+  (kill-new buffer-file-name)
+  (message "%s" buffer-file-name))
+
 (defun projectile-find-file-other-window ()
   "Jump to a project's file in another window."
   (interactive)
