@@ -84,6 +84,8 @@
  '(recentf-max-saved-items 200)
  '(require-final-newline t)
  '(savehist-mode t)
+ '(scala-indent:align-parameters nil)
+ '(scala-indent:use-javadoc-style t)
  '(scroll-bar-mode nil)
  '(semantic-default-submodes
    (quote

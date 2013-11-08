@@ -31,9 +31,11 @@
   (add-hook 'python-mode-hook 'turn-on-fci-mode))
 
 ;; Scala mode
-(add-hook 'scala-mode-hook (lambda () (setq fill-column 100)))
 (when (fboundp 'turn-on-fci-mode)
   (add-hook 'scala-mode-hook 'turn-on-fci-mode))
+(add-hook 'scala-mode-hook
+          (lambda ()
+            (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
 
 ;; Dired mode
 (add-hook 'dired-mode-hook (lambda () (toggle-truncate-lines 1)))
