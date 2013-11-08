@@ -111,6 +111,7 @@
  '(uniquify-buffer-name-style (quote forward) nil (uniquify))
  '(vc-follow-symlinks t)
  '(vc-handled-backends nil)
+ '(visible-bell nil)
  '(visual-line-mode nil t)
  '(w3m-confirm-leaving-secure-page nil)
  '(w3m-use-cookies t)

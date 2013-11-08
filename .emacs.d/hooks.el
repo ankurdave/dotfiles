@@ -141,6 +141,9 @@
 ;; http://lists.gnu.org/archive/html/help-gnu-emacs/2013-04/msg00497.html
 (add-hook 'Buffer-menu-mode-hook 'buffer-disable-undo)
 
+;; Disable audible bell
+(setq ring-bell-function 'ignore)
+
 ;; Customize molokai theme
 (when (condition-case nil (load-theme 'molokai nil t) (error nil))
   (custom-theme-set-faces
