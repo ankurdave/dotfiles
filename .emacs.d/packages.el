@@ -12,7 +12,8 @@
 (defun init--install-packages ()
   "Install core packages."
   (let ((packages-to-install
-         '(adaptive-wrap
+         '(ace-jump-mode
+           adaptive-wrap
            auto-complete
            diminish
            dired-details

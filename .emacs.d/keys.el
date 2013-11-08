@@ -14,6 +14,9 @@
 (when (fboundp 'er/expand-region)
   (global-set-key (kbd "C-=") 'er/expand-region))
 
+(when (fboundp 'ace-jump-mode)
+  (global-set-key (kbd "C-c SPC") 'ace-jump-mode))
+
 (when (fboundp 'projectile-find-file)
   (global-set-key (kbd "M-p") 'projectile-find-file))
 
