@@ -23,6 +23,11 @@
 (when (fboundp 'projectile-find-file)
   (global-set-key (kbd "M-p") 'projectile-find-file))
 
+(eval-after-load 'ido
+  '(progn
+     (define-key ido-file-completion-map (kbd "C-w") 'ido-delete-backward-word-updir)
+     (define-key ido-common-completion-map (kbd "C-a") 'move-beginning-of-line)))
+
 (eval-after-load 'paredit
   '(progn
      (define-key paredit-mode-map (kbd "C-w")
