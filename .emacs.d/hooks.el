@@ -186,7 +186,7 @@
 (setq ring-bell-function 'ignore)
 
 ;; Customize molokai theme
-(when (condition-case nil (load-theme 'molokai nil t) (error nil))
+(when (condition-case nil (load-theme 'molokai t t) (error nil))
   (custom-theme-set-faces
    'molokai
    '(w3m-anchor
