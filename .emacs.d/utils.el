@@ -350,6 +350,29 @@ which is up to 10gb. Some files are larger than that.
    (interactive)
    (insert (format-time-string "%Y-%m-%d")))
 
+(defun simplify-time-at-point ()
+  "Converts, e.g., \"12m34.6s\" to \"754.6 s\"."
+  (interactive)
+  (let* ((minutes-start (point))
+         (minutes (string-to-number
+                   (buffer-substring-no-properties
+                    minutes-start
+                    (progn
+                      (while (looking-at "[0-9].")
+                        (forward-char))
+                      (point))))))
+    (forward-char)
+    (let* ((seconds-start (point))
+           (seconds (string-to-number
+                     (buffer-substring-no-properties
+                      seconds-start
+                      (progn
+                        (while (looking-at "[0-9.]")
+                          (forward-char))
+                        (point))))))
+      (delete-region minutes-start (point))
+      (insert (format "%f " (+ (* minutes 60) seconds))))))
+
 (defun rgrep-in-project ()
   "Perform rgrep in the project on files with the same extension
 as the current one."
