@@ -151,12 +151,6 @@ VARIABLE."
       (kill-region (region-beginning) (region-end))
     (paredit-backward-kill-word)))
 
-(defun sp-kill-region-or-backward-word ()
-  (interactive)
-  (if (region-active-p)
-      (kill-region (region-beginning) (region-end))
-    (sp-backward-kill-word)))
-
 (defun sort-symbols (reverse beg end)
   "Sort symbols in region alphabetically, in REVERSE if negative.
 See `sort-words'."
