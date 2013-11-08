@@ -3,11 +3,13 @@
 
 ;; LaTeX mode
 (defun save-and-compile ()
+  "In LaTeX-mode, save the buffer and compile the LaTeX file."
   (interactive)
   (save-buffer)
   (TeX-command "LaTeX" 'TeX-master-file -1))
-(add-hook 'LaTeX-mode-hook
-          (lambda () (local-set-key (kbd "C-x C-s") 'save-and-compile)))
+(defun compile-on-save ()
+  (local-set-key (kbd "C-x C-s") 'save-and-compile))
+(add-hook 'LaTeX-mode-hook 'compile-on-save)
 
 (add-hook 'LaTeX-mode-hook 'adaptive-wrap-prefix-mode)
 
