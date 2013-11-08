@@ -31,6 +31,7 @@
            paredit
            popwin
            projectile
+           scala-mode2
            smartparens
            smex
            smooth-scrolling
