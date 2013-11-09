@@ -138,18 +138,20 @@ VARIABLE."
             (append values (split-string (getenv variable) ":" t)))
            ":")))
 
-(defun kill-region-or-backward-word ()
-  "Kill the region if active, otherwise kill the previous word."
-  (interactive)
-  (if (region-active-p)
-      (kill-region (region-beginning) (region-end))
-    (backward-kill-word 1)))
-
-(defun paredit-kill-region-or-backward-word ()
-  (interactive)
-  (if (region-active-p)
-      (kill-region (region-beginning) (region-end))
-    (paredit-backward-kill-word)))
+(defmacro make-backward-kill-word-fn (backward-kill-word-fn
+                                      &optional backward-kill-word-args)
+  "Construct a function that kills the region if active,
+otherwise invokes BACKWARD-KILL-WORD-FN, which must be an unquoted symbol."
+  (let* ((bkwf-name (symbol-name backward-kill-word-fn))
+         (defun-name (intern (concat "kill-region-or-" bkwf-name)))
+         (docstring (format "Kill the region if active, otherwise invoke %s."
+                            bkwf-name)))
+    `(defun ,defun-name ()
+       ,docstring
+       (interactive)
+       (if (region-active-p)
+          (kill-region (region-beginning) (region-end))
+         (apply (quote ,backward-kill-word-fn) (quote ,backward-kill-word-args))))))
 
 (defun sort-symbols (reverse beg end)
   "Sort symbols in region alphabetically, in REVERSE if negative.

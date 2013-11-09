@@ -4,7 +4,7 @@
 (autoload 'zap-up-to-char "misc")
 (global-set-key "\M-z" 'zap-up-to-char)
 
-(global-set-key "\C-w" 'kill-region-or-backward-word)
+(global-set-key "\C-w" (make-backward-kill-word-fn backward-kill-word (1)))
 
 (global-set-key (kbd "C-x 4 p") 'projectile-find-file-other-window)
 
@@ -31,7 +31,7 @@
 (eval-after-load 'paredit
   '(progn
      (define-key paredit-mode-map (kbd "C-w")
-       'paredit-kill-region-or-backward-word)
+       (make-backward-kill-word-fn paredit-backward-kill-word))
 
      ;; Define some keys everywhere
      (global-set-key (kbd "M-(") 'paredit-wrap-round)))
