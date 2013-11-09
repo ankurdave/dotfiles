@@ -20,7 +20,7 @@
            exec-path-from-shell
            expand-region
            fill-column-indicator
-           flx
+           flx-ido
            git-commit-mode
            gitconfig-mode
            gitignore-mode
