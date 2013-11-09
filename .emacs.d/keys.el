@@ -23,6 +23,10 @@
 (when (fboundp 'projectile-find-file)
   (global-set-key (kbd "M-p") 'projectile-find-file))
 
+(eval-after-load 'subword-mode
+  '(define-key subword-mode-map (kbd "C-w")
+    (make-backward-kill-word-fn subword-backward-kill (1))))
+
 (eval-after-load 'ido
   '(progn
      (define-key ido-file-completion-map (kbd "C-w") 'ido-delete-backward-word-updir)
