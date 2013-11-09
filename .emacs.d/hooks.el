@@ -50,6 +50,8 @@
                 (goto-char start)
                 ;; Jump out of parameter list
                 (sp-backward-up-sexp)
+                ;; Check list paren type
+                (scala-syntax:looking-at "(")
                 ;; Move backward across all previous parameter lists
                 (progn
                   (while (scala-syntax:looking-back-token ")")
