@@ -15,6 +15,7 @@
          '(ace-jump-mode
            adaptive-wrap
            auto-complete
+           browse-kill-ring
            diminish
            dired-details
            exec-path-from-shell

@@ -23,6 +23,9 @@
 (when (fboundp 'projectile-find-file)
   (global-set-key (kbd "M-p") 'projectile-find-file))
 
+(when (fboundp 'browse-kill-ring)
+  (global-set-key (kbd "C-M-y") 'browse-kill-ring))
+
 (eval-after-load 'org
   '(progn
      (define-key org-mode-map (kbd "<tab>") 'org-indent-item-or-cycle)
