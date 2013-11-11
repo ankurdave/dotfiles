@@ -24,7 +24,9 @@
   (global-set-key (kbd "M-p") 'projectile-find-file))
 
 (eval-after-load 'org
-  '(define-key org-mode-map (kbd "<tab>") 'org-cycle-or-indent-item))
+  '(progn
+     (define-key org-mode-map (kbd "<tab>") 'org-indent-item-or-cycle)
+     (define-key org-mode-map (kbd "<S-tab>") 'org-outdent-item-or-shifttab)))
 
 (eval-after-load 'subword-mode
   '(define-key subword-mode-map (kbd "C-w")

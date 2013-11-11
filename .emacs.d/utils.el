@@ -406,15 +406,16 @@ as the current one."
   (cl-letf (((symbol-function 'find-file) (symbol-function 'find-file-other-window)))
     (projectile-find-file)))
 
-(defun org-cycle-or-indent-item ()
-  "In Org-mode, cycle visibility or indent a local list item."
+(defun org-indent-item-or-cycle ()
+  "If before a list, indent it, otherwise cycle visibility."
   (interactive)
-  (let ((cycle-was-no-op nil)
-        (org-pre-cycle-hook
-         (append org-pre-cycle-hook
-                 (lambda (new-state)
-                   (when (equal new-state 'empty)
-                     (setq cycle-was-no-op t))))))
-    (org-cycle)
-    (when cycle-was-no-op
-      (org-indent-item))))
+  (if (org-at-item-p)
+      (org-indent-item-tree)
+    (org-cycle)))
+
+(defun org-outdent-item-or-shifttab ()
+  "If before a list, outdent it, otherwise globally cycle visibility."
+  (interactive)
+  (if (org-at-item-p)
+      (org-outdent-item-tree)
+    (org-shifttab)))
