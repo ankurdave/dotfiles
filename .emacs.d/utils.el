@@ -399,6 +399,13 @@ as the current one."
   (kill-new buffer-file-name)
   (message "%s" buffer-file-name))
 
+(defun copy-relative-filename-as-kill ()
+  "Copy project-relative path of current file into the kill ring."
+  (interactive)
+  (let ((rel-name (s-chop-prefix (projectile-project-root) buffer-file-name)))
+    (kill-new rel-name)
+    (message "%s" rel-name)))
+
 (defun projectile-find-file-other-window ()
   "Jump to a project's file in another window."
   (interactive)
