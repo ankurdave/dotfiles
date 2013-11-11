@@ -119,6 +119,7 @@
  '(w3m-use-title-buffer-name t)
  '(whitespace-global-modes (quote (scala-mode)))
  '(whitespace-line-column nil)
+ '(winner-mode t)
  '(winsize-desired-width 80)
  '(word-wrap t)
  '(x-select-enable-clipboard t))
