@@ -56,8 +56,16 @@
      (global-set-key (kbd "C-M-a") 'sp-beginning-of-sexp)
      (global-set-key (kbd "C-M-e") 'sp-end-of-sexp)
 
+     (define-key sp-keymap (kbd "C-M-a") 'sp-beginning-of-sexp)
+     (define-key sp-keymap (kbd "C-M-e") 'sp-end-of-sexp)
+
+     ;; To free C-M-d in OS X, see
+     ;; http://superuser.com/questions/326223/how-do-i-disable-the-command-control-d-word-definition-keyboard-shortcut-in-os-x
+     (define-key sp-keymap (kbd "C-M-d") 'sp-kill-sexp)
+
      ;; Emulate paredit in smartparens-mode
-     (define-key sp-keymap (kbd "M-J") 'sp-join-sexp)))
+     (define-key sp-keymap (kbd "M-J") 'sp-join-sexp)
+     (define-key sp-keymap (kbd "<M-up>") 'sp-splice-sexp-killing-backward)))
 
 (eval-after-load "w3m"
   '(progn

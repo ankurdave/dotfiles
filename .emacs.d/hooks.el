@@ -35,9 +35,12 @@
 ;; Scala mode
 (when (fboundp 'turn-on-fci-mode)
   (add-hook 'scala-mode-hook 'turn-on-fci-mode))
+(when (fboundp 'turn-on-smartparens-mode)
+  (add-hook 'scala-mode-hook 'turn-on-smartparens-mode))
 (add-hook 'scala-mode-hook
           (lambda ()
-            (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
+            (add-to-list 'write-file-functions 'delete-trailing-whitespace)
+            (setq fill-column 100)))
 
 ;; Scala mode indentation: extra indent step for parameters
 (defadvice scala-indent:resolve-block-step
