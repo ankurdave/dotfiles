@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PATH=$HOME/bin:$PATH
-PATH=$HOME/scala-2.9.1.final/bin:$PATH
+PATH=$HOME/scala-2.10.3/bin:$PATH
 PATH=/opt/local/bin:$PATH
 PATH=/opt/local/sbin:$PATH
 PATH=/opt/local/Library/Frameworks/Python.framework/Versions/2.7/bin:$PATH
@@ -12,5 +12,5 @@ export PATH
 export JAVA_HOME=$(/usr/libexec/java_home)
 export HADOOP_HOME=$HOME/hadoop/
 export MAHOUT_HOME=$HOME/mahout/
-export SCALA_HOME=$HOME/scala-2.9.1.final/
+export SCALA_HOME=$HOME/scala-2.10.3/
 export TEXMFHOME=$HOME/repos/latex
