@@ -6,6 +6,7 @@
 ;; until after initialization.
 (when (fboundp 'package-initialize)
   (package-initialize)
+  (setq package-enable-at-startup nil)
   (add-to-list 'package-archives
                '("melpa" . "http://melpa.milkbox.net/packages/") t))
 

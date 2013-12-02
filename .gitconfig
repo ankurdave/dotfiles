@@ -5,6 +5,7 @@
 	st = status
 	glog = log --decorate --graph --date=short --pretty='format:%C(auto)%h %ad (%an)%C(auto)%d %C(reset)%s'
 	sync = fetch --all --prune
+	unpushed = log --branches --not --remotes
 [color]
 	ui = auto
 [core]

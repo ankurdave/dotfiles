@@ -18,3 +18,4 @@
     (message "Server already running")
   (message "Starting server")
   (server-start))
+(put 'downcase-region 'disabled nil)
