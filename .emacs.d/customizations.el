@@ -48,6 +48,7 @@
  '(global-auto-revert-non-file-buffers nil)
  '(global-hl-line-mode nil)
  '(global-whitespace-mode nil)
+ '(history-length 10000)
  '(ido-default-buffer-method (quote selected-window))
  '(ido-enable-flex-matching t)
  '(ido-everywhere t)
