@@ -42,6 +42,21 @@
             (add-to-list 'write-file-functions 'delete-trailing-whitespace)
             (setq fill-column 100)))
 
+;; ensime mode for Scala
+(when (fboundp 'ensime-scala-mode-hook)
+  (add-hook 'scala-mode-hook 'ensime-scala-mode-hook))
+(setq ensime-sem-high-faces
+      '((var . scala-font-lock:var-face)
+        (val . font-lock-variable-name-face)
+        (varField . scala-font-lock:var-face)
+        (valField . font-lock-variable-name-face)
+        ;; (functionCall . font-lock-function-name-face)
+        ;; (param . font-lock-constant-face)
+        (class . font-lock-type-face)
+        (trait . font-lock-type-face)
+        (object . font-lock-type-face)
+        (package . font-lock-preprocessor-face)))
+
 ;; Scala mode indentation: extra indent step for parameters
 (defadvice scala-indent:resolve-block-step
   (around extra-indent-step-for-parameters (start anchor) activate)
