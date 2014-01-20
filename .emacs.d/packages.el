@@ -107,5 +107,5 @@
   (eval-after-load "auto-complete" '(diminish 'auto-complete-mode))
   (eval-after-load "projectile" '(diminish 'projectile-mode)))
 
-(add-to-list 'load-path "~/.emacs.d")
+(add-to-list 'load-path "~/.emacs.d/lisp")
 (autoload 'typing-test "typing-test" nil t)
