@@ -4,6 +4,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(TeX-PDF-mode t)
+ '(TeX-master (quote dwim))
  '(TeX-save-query nil)
  '(TeX-view-program-list (quote (("open" "open -a Skim %o"))))
  '(TeX-view-program-selection
