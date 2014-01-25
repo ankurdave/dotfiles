@@ -230,3 +230,43 @@
 
 (put 'narrow-to-region 'disabled nil)
 (put 'ido-exit-minibuffer 'disabled nil)
+
+(define-minor-mode color-identifiers-mode
+  "Color the identifiers in the current buffer based on their names."
+  :init-value nil
+  :lighter " ColorIds"
+  (if color-identifiers-mode
+      (color-identifiers:colorize (point-min) (point-max))
+    (color-identifiers:clear (point-min) (point-max))))
+
+(defun color-identifiers:colorize (start end)
+  "Colorize all unfontified identifiers between START and END."
+  (require 'color)
+  (save-excursion
+    (goto-char start)
+    ;; Skip forward to the next appropriate text to colorize
+    (condition-case nil
+        (while (< (point) end)
+          (if (not (memq (get-text-property (point) 'face) '(nil 'scala-font-lock:var-face)))
+              (goto-char (next-property-change (point) nil end))
+            (if (not (looking-at scala-syntax:varid-re))
+                (progn
+                  (forward-char)
+                  (re-search-forward (concat "\\b[" scala-syntax:lower-group "]") end)
+                  (goto-char (match-beginning 0)))
+              ;; Colorize it according to its name using an overlay
+              (let* ((hash (sxhash (buffer-substring
+                                    (match-beginning 0) (match-end 0))))
+                     (hue (/ (% (abs hash) 40) 100.0))
+                     (hex (apply 'color-rgb-to-hex (color-hsl-to-rgb hue 0.8 0.8))))
+                (let ((ov (make-overlay (match-beginning 0) (match-end 0) (current-buffer))))
+                  (overlay-put ov 'face `(:foreground ,hex))
+                  (overlay-put ov 'color-identifiers-overlay t)))
+              (goto-char (match-end 0)))))
+      (search-failed nil))))
+
+(defun color-identifiers:clear (start end)
+  (let ((ovs (overlays-in start end)))
+    (dolist (ov ovs)
+      (when (overlay-get ov 'color-identifiers-overlay)
+        (delete-overlay ov)))))
