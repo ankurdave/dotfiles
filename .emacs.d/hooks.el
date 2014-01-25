@@ -236,37 +236,33 @@
   :init-value nil
   :lighter " ColorIds"
   (if color-identifiers-mode
-      (color-identifiers:colorize (point-min) (point-max))
-    (color-identifiers:clear (point-min) (point-max))))
+      (font-lock-add-keywords nil '((color-identifiers:colorize . color-identifiers:no-op-face)) t)
+    (font-lock-remove-keywords nil '((color-identifiers:colorize . color-identifiers:no-op-face))))
+  (font-lock-fontify-buffer))
 
-(defun color-identifiers:colorize (start end)
-  "Colorize all unfontified identifiers between START and END."
+(defface color-identifiers:no-op-face nil nil)
+
+(defun color-identifiers:colorize (limit)
+  "Colorize all unfontified identifiers from point to LIMIT."
+  (message "color-identifiers:colorize %d" limit)
   (require 'color)
-  (save-excursion
-    (goto-char start)
-    ;; Skip forward to the next appropriate text to colorize
-    (condition-case nil
-        (while (< (point) end)
-          (if (not (memq (get-text-property (point) 'face) '(nil 'scala-font-lock:var-face)))
-              (goto-char (next-property-change (point) nil end))
-            (if (not (looking-at scala-syntax:varid-re))
-                (progn
-                  (forward-char)
-                  (re-search-forward (concat "\\b[" scala-syntax:lower-group "]") end)
-                  (goto-char (match-beginning 0)))
-              ;; Colorize it according to its name using an overlay
-              (let* ((hash (sxhash (buffer-substring
-                                    (match-beginning 0) (match-end 0))))
-                     (hue (/ (% (abs hash) 40) 100.0))
-                     (hex (apply 'color-rgb-to-hex (color-hsl-to-rgb hue 0.8 0.8))))
-                (let ((ov (make-overlay (match-beginning 0) (match-end 0) (current-buffer))))
-                  (overlay-put ov 'face `(:foreground ,hex))
-                  (overlay-put ov 'color-identifiers-overlay t)))
-              (goto-char (match-end 0)))))
-      (search-failed nil))))
-
-(defun color-identifiers:clear (start end)
-  (let ((ovs (overlays-in start end)))
-    (dolist (ov ovs)
-      (when (overlay-get ov 'color-identifiers-overlay)
-        (delete-overlay ov)))))
+  ;; Skip forward to the next appropriate text to colorize
+  (condition-case nil
+      (while (< (point) limit)
+        (if (not (memq (get-text-property (point) 'face) '(nil 'scala-font-lock:var-face)))
+            (goto-char (next-property-change (point) nil limit))
+          (if (not (looking-at scala-syntax:varid-re))
+              (progn
+                (forward-char)
+                (re-search-forward (concat "\\b[" scala-syntax:lower-group "]") limit)
+                (goto-char (match-beginning 0)))
+            ;; Colorize it according to its name using an overlay
+            (message "Colorizing %d" (point))
+            (let* ((hash (sxhash (buffer-substring
+                                  (match-beginning 0) (match-end 0))))
+                   (hue (/ (% (abs hash) 100) 100.0))
+                   (hex (apply 'color-rgb-to-hex (color-hsl-to-rgb hue 0.8 0.8))))
+              (put-text-property (match-beginning 0) (match-end 0)
+                                 'face `(:foreground ,hex))
+            (goto-char (match-end 0))))))
+    (search-failed nil)))
