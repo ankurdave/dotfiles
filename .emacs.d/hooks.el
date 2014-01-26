@@ -230,39 +230,3 @@
 
 (put 'narrow-to-region 'disabled nil)
 (put 'ido-exit-minibuffer 'disabled nil)
-
-(define-minor-mode color-identifiers-mode
-  "Color the identifiers in the current buffer based on their names."
-  :init-value nil
-  :lighter " ColorIds"
-  (if color-identifiers-mode
-      (font-lock-add-keywords nil '((color-identifiers:colorize . color-identifiers:no-op-face)) t)
-    (font-lock-remove-keywords nil '((color-identifiers:colorize . color-identifiers:no-op-face))))
-  (font-lock-fontify-buffer))
-
-(defface color-identifiers:no-op-face nil nil)
-
-(defun color-identifiers:colorize (limit)
-  "Colorize all unfontified identifiers from point to LIMIT."
-  (message "color-identifiers:colorize %d" limit)
-  (require 'color)
-  ;; Skip forward to the next appropriate text to colorize
-  (condition-case nil
-      (while (< (point) limit)
-        (if (not (memq (get-text-property (point) 'face) '(nil 'scala-font-lock:var-face)))
-            (goto-char (next-property-change (point) nil limit))
-          (if (not (looking-at scala-syntax:varid-re))
-              (progn
-                (forward-char)
-                (re-search-forward (concat "\\b[" scala-syntax:lower-group "]") limit)
-                (goto-char (match-beginning 0)))
-            ;; Colorize it according to its name using an overlay
-            (message "Colorizing %d" (point))
-            (let* ((hash (sxhash (buffer-substring
-                                  (match-beginning 0) (match-end 0))))
-                   (hue (/ (% (abs hash) 100) 100.0))
-                   (hex (apply 'color-rgb-to-hex (color-hsl-to-rgb hue 0.8 0.8))))
-              (put-text-property (match-beginning 0) (match-end 0)
-                                 'face `(:foreground ,hex))
-            (goto-char (match-end 0))))))
-    (search-failed nil)))
