@@ -62,6 +62,7 @@
  '(ido-vertical-mode t)
  '(indent-tabs-mode nil)
  '(inhibit-startup-screen t)
+ '(initial-scratch-message nil)
  '(menu-bar-mode nil)
  '(minibuffer-depth-indicate-mode t)
  '(mouse-wheel-progressive-speed nil)
