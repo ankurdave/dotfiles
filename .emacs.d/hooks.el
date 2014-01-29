@@ -1,6 +1,15 @@
 ;; Org mode
 (add-hook 'org-mode-hook 'org-indent-mode)
 
+;; color-identifiers-mode everywhere
+(when (fboundp 'color-identifiers-mode)
+  (add-hook 'emacs-lisp-mode-hook 'color-identifiers-mode)
+  (add-hook 'python-mode-hook 'color-identifiers-mode)
+  (add-hook 'js-mode-hook 'color-identifiers-mode)
+  (add-hook 'js2-mode-hook 'color-identifiers-mode)
+  (add-hook 'ruby-mode-hook 'color-identifiers-mode)
+  (add-hook 'scala-mode-hook 'color-identifiers-mode))
+
 ;; LaTeX mode
 (defun save-and-compile ()
   "In LaTeX-mode, save the buffer and compile the LaTeX file."

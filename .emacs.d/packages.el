@@ -17,6 +17,7 @@
            adaptive-wrap
            auto-complete
            browse-kill-ring
+           color-identifiers-mode
            diminish
            dired-details
            exec-path-from-shell
