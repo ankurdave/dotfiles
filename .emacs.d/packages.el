@@ -34,6 +34,7 @@
            paredit
            popwin
            projectile
+           rainbow-mode
            scala-mode2
            smartparens
            smex
