@@ -23,3 +23,5 @@
 	browser = open
 [push]
 	default = current
+[help]
+	autocorrect = 1
