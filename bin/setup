@@ -44,4 +44,13 @@ if [ -d ~/Library ]; then
     fi
 
     ln "$dotfiles"/misc/DefaultKeyBinding.dict "$target"
+
+    mkdir -p ~/Library/Preferences
+    target=~/Library/Preferences/com.googlecode.iterm2.plist
+    if [[ -e "$target" ]]
+    then
+        rm "$target"
+    fi
+
+    ln "$dotfiles"/misc/com.googlecode.iterm2.plist "$target"
 fi
