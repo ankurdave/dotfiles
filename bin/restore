@@ -2,7 +2,7 @@
 
 cd ~/repos
 
-for remote in $(s3cmd ls s3://ankurdave-backup/ | egrep '^ *DIR' | awk '{print $2}' | sed 's/s3:\/\//amazon-s3:\/\/.jgit@/'); do
+for remote in $(s3cmd -c ~/.s3cfg-personal ls s3://ankurdave-backup/ | egrep '^ *DIR' | awk '{print $2}' | sed 's/s3:\/\//amazon-s3:\/\/.jgit@/'); do
     reponame=$(basename "$remote")
     if [ ! -e "$reponame" ]; then
         jgit clone "$remote"
