@@ -39,7 +39,8 @@
            smartparens
            smex
            smooth-scrolling
-           undo-tree)))
+           undo-tree
+           zenburn-theme)))
     (dolist (pkg-name packages-to-install)
       (unless (package-installed-p pkg-name)
         (package-install pkg-name)))))
