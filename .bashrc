@@ -67,8 +67,8 @@ export EDITOR='emacsclient'
 [ -x /usr/bin/lesspipe ] && eval "$(lesspipe)"
 export LESS="$LESS -FSX"
 
-if [ -f /opt/local/etc/bash_completion ]; then
-    . /opt/local/etc/bash_completion
+if [ -f $(brew --prefix)/etc/bash_completion ]; then
+  . $(brew --prefix)/etc/bash_completion
 fi
 if ! shopt -oq posix; then
   if [ -f /usr/share/bash-completion/bash_completion ]; then
