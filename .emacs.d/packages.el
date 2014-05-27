@@ -44,6 +44,15 @@
       (unless (package-installed-p pkg-name)
         (package-install pkg-name)))))
 
+(defun init--update-packages ()
+  "Update all packages. Assumes (package-refresh-contents) was already called."
+  (interactive)
+  (save-current-buffer
+    (package-list-packages-no-fetch)
+    (when (package-menu--find-upgrades)
+      (package-menu-mark-upgrades)
+      (package-menu-execute))))
+
 (when (fboundp 'package-refresh-contents)
   (condition-case nil
       (init--install-packages)
@@ -87,7 +96,8 @@
   (eshell-smart-initialize))
 
 (when (fboundp 'exec-path-from-shell-initialize)
-  (exec-path-from-shell-initialize))
+  (with-demoted-errors
+      (exec-path-from-shell-initialize)))
 
 (require 'smooth-scrolling nil t)
 
@@ -107,7 +117,10 @@
   ;; (eval-after-load "paredit" '(diminish 'paredit-mode))
   (eval-after-load "whitespace" '(diminish 'global-whitespace-mode))
   (eval-after-load "auto-complete" '(diminish 'auto-complete-mode))
-  (eval-after-load "projectile" '(diminish 'projectile-mode)))
+  (eval-after-load "projectile" '(diminish 'projectile-mode))
+  (eval-after-load "magit" '(diminish 'magit-auto-revert-mode)))
 
 (add-to-list 'load-path "~/.emacs.d/lisp")
 (autoload 'typing-test "typing-test" nil t)
+
+(autoload 'vc-git-grep "vc-git" nil t)

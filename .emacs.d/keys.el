@@ -1,6 +1,8 @@
 (global-unset-key "\C-z")
 (global-set-key "\M-/" 'hippie-expand)
 
+(global-set-key (kbd "M-`") 'other-frame)
+
 (autoload 'zap-up-to-char "misc")
 (global-set-key "\M-z" 'zap-up-to-char)
 

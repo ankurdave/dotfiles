@@ -10,6 +10,7 @@
 	wdiff = -c core.pager='less -+S -FRX' diff --word-diff
 	wshow = -c core.pager='less -+S -FRX' show --word-diff
 	amend = commit -a --amend --no-edit
+	lbranches = for-each-ref --sort=committerdate refs/heads/ --format='%(committerdate:relative)%09%(refname:short)'
 [color]
 	ui = auto
 [core]
@@ -25,3 +26,5 @@
 	default = current
 [help]
 	autocorrect = 1
+[pull]
+	rebase = true

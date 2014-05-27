@@ -6,6 +6,7 @@
   "In LaTeX-mode, save the buffer and compile the LaTeX file."
   (interactive)
   (save-buffer)
+  (require 'tex-buf)
   (TeX-command "LaTeX" 'TeX-master-file -1))
 (defun compile-on-save ()
   (local-set-key (kbd "C-x C-s") 'save-and-compile))
@@ -129,12 +130,12 @@
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
 ;; Interpret ANSI color codes in compiles
-(require 'ansi-color)
-(defun colorize-compilation-buffer ()
-  (toggle-read-only)
-  (ansi-color-apply-on-region (point-min) (point-max))
-  (toggle-read-only))
-(add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
+;; (require 'ansi-color)
+;; (defun colorize-compilation-buffer ()
+;;   (toggle-read-only)
+;;   (ansi-color-apply-on-region (point-min) (point-max))
+;;   (toggle-read-only))
+;; (add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
 
 ;; Use semantic highlighting for ENSIME
 (setq ensime-sem-high-faces
@@ -162,7 +163,7 @@
       `(("." . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
-(setq tramp-auto-save-directory temporary-file-directory)
+;; (setq tramp-auto-save-directory temporary-file-directory)
 
 ;; Keep region when undoing in region
 ;; from https://github.com/magnars/.emacs.d/blob/de3b35fa41ced10c273f86d2d50d2232eb7e4a6b/my-misc.el#L4
@@ -194,7 +195,9 @@
   '(mapc (lambda (pair)
           (quail-defrule (car pair) (cadr pair) "TeX"))
         '(("\\llbracket" "⟦")
-          ("\\rrbracket" "⟧"))))
+          ("\\rrbracket" "⟧")
+          ("\\naturals" "ℕ")
+          ("\\reals" "ℝ"))))
 
 ;; Enable key repeat in OS X Lion
 (when (fboundp 'ns-set-resource)
@@ -206,7 +209,8 @@
   (push '("*Buffer List*") popwin:special-display-config)
   (push '("*Backtrace*") popwin:special-display-config)
   (push '("*Kill Ring*") popwin:special-display-config)
-  (push '("*Inspector*") popwin:special-display-config))
+  (push '("*Inspector*") popwin:special-display-config)
+  (push '("\\*.* output\\*" :regexp t) popwin:special-display-config))
 
 ;; Avoid *Buffer List* undo history warning; see
 ;; http://lists.gnu.org/archive/html/help-gnu-emacs/2013-04/msg00497.html

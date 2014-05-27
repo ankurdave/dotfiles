@@ -454,3 +454,15 @@ Currently only supports doing this in one frame at a time."
     (setq fringe-indicator-alist focus-on-buffer-mode:indicators)
     ;; (set-window-configuration focus-on-buffer-mode:config)
     (set-fringe-mode focus-on-buffer-mode:fringe)))
+
+(defun screenshot-frame ()
+  "Take a screenshot of the Emacs frame."
+  (interactive)
+  (shell-command-to-string "screencapture -w ~/Desktop/`date +%s`.png"))
+
+(defun new-journal-entry (name)
+  "Prompt for name, then start entry with date and name in scratch."
+  (interactive "MName of entry: ")
+  (find-file "~/Dropbox/scratch")
+  (end-of-buffer)
+  (insert (format "* %s %s\n" (format-time-string "%Y-%m-%d") name)))
