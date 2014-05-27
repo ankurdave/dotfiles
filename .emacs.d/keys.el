@@ -80,3 +80,8 @@
 
      (require 'w3m-isearch-links)
      (define-key w3m-mode-map (kbd "/") 'w3m-isearch-links)))
+
+(eval-after-load "god-mode"
+  '(progn
+     (global-set-key (kbd "<escape>") 'god-mode-all)
+     (define-key god-local-mode-map (kbd "/") 'undo-tree-undo)))
