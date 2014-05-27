@@ -46,7 +46,6 @@
  '(fill-column 80)
  '(global-auto-revert-mode nil)
  '(global-auto-revert-non-file-buffers nil)
- '(global-color-identifiers-mode t)
  '(global-hl-line-mode nil)
  '(global-whitespace-mode nil)
  '(history-length 10000)

@@ -27,6 +27,14 @@
   (add-hook 'emacs-lisp-mode-hook 'paredit-mode))
 (when (fboundp 'turn-on-fci-mode)
   (add-hook 'emacs-lisp-mode-hook 'turn-on-fci-mode))
+(when (fboundp 'color-identifiers-mode)
+  (add-hook 'emacs-lisp-mode-hook 'color-identifiers-mode))
+;; (when (fboundp 'flycheck-mode)
+;;   (add-hook 'emacs-lisp-mode-hook 'flycheck-mode)
+;;   (require 'flycheck)
+;;   (require 'dash)
+;;   (setq flycheck-checkers (--remove (eq it 'emacs-lisp-checkdoc) flycheck-checkers)))
+
 
 ;; Python mode
 (when (fboundp 'turn-on-fci-mode)
