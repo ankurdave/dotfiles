@@ -52,6 +52,7 @@
  '(global-hl-line-mode nil)
  '(global-whitespace-mode nil)
  '(history-length 10000)
+ '(htmlize-output-type (quote inline-css))
  '(ido-default-buffer-method (quote selected-window))
  '(ido-enable-flex-matching t)
  '(ido-everywhere t)

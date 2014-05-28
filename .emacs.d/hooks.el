@@ -210,7 +210,8 @@
   (push '("*Backtrace*") popwin:special-display-config)
   (push '("*Kill Ring*") popwin:special-display-config)
   (push '("*Inspector*") popwin:special-display-config)
-  (push '("\\*.* output\\*" :regexp t) popwin:special-display-config))
+  (push '("\\*.* output\\*" :regexp t) popwin:special-display-config)
+  (push '("*Warnings*") popwin:special-display-config))
 
 ;; Avoid *Buffer List* undo history warning; see
 ;; http://lists.gnu.org/archive/html/help-gnu-emacs/2013-04/msg00497.html
