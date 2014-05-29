@@ -23,3 +23,6 @@
 .emacs.d/url
 .ensime
 \#*\#
+.emacs.d/ido.last
+.emacs.d/projectile-bookmarks.eld
+.emacs.d/recentf
