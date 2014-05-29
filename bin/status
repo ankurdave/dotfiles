@@ -4,6 +4,6 @@ cd ~/repos
 
 for repo in $(find . -mindepth 2 -maxdepth 2 -type d -name .git); do
     reponame=$(echo "$repo" | sed 's/\/\.git$//' | sed 's/^\.\///')
-    echo $reponame
-    git --git-dir="$repo" --work-tree="$reponame" -c color.ui=always status
+    echo '=========' $reponame
+    git --git-dir="$repo" --work-tree="$reponame" -c color.ui=always status | grep -v 'nothing to commit, working directory clean' | grep -v 'On branch master' | grep -v 'Your branch is up-to-date' | grep -v '^$'
 done
