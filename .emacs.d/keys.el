@@ -84,4 +84,6 @@
 (eval-after-load "god-mode"
   '(progn
      (global-set-key (kbd "<escape>") 'god-mode-all)
-     (define-key god-local-mode-map (kbd "/") 'undo-tree-undo)))
+     (define-key god-local-mode-map (kbd "/") 'undo-tree-undo)
+     (define-key god-local-mode-map (kbd ".") 'repeat)
+     (define-key god-local-mode-map (kbd "i") 'prompt-and-insert)))

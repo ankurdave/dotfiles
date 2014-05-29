@@ -27,6 +27,7 @@
            git-commit-mode
            gitconfig-mode
            gitignore-mode
+           god-mode
            ido-ubiquitous
            ido-vertical-mode
            magit

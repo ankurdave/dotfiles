@@ -466,3 +466,7 @@ Currently only supports doing this in one frame at a time."
   (find-file "~/Dropbox/scratch")
   (end-of-buffer)
   (insert (format "* %s %s\n" (format-time-string "%Y-%m-%d") name)))
+
+(defun prompt-and-insert (string)
+  (interactive "MInsert: ")
+  (insert-string string))
