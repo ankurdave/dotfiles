@@ -4,6 +4,7 @@ PATH=$HOME/scala-2.10.3/bin:$PATH
 PATH=$HOME/bin:$PATH
 PATH=~/android/sdk/tools:$PATH
 PATH=~/android/sdk/platform-tools:$PATH
+PATH=/usr/local/Cellar/ruby/2.1.2/bin:$PATH
 export PATH
 
 PYTHONPATH=/usr/local/lib/python2.7/site-packages
