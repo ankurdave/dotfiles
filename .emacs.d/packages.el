@@ -41,6 +41,7 @@
            smex
            smooth-scrolling
            undo-tree
+           visual-regexp
            zenburn-theme)))
     (dolist (pkg-name packages-to-install)
       (unless (package-installed-p pkg-name)
