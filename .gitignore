@@ -26,3 +26,8 @@
 .emacs.d/ido.last
 .emacs.d/projectile-bookmarks.eld
 .emacs.d/recentf
+.floo
+*.elc
+.emacs.d/.litable-lists.el
+.emacs.d/bookmarks
+.emacs.d/games/
