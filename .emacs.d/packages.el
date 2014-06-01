@@ -20,6 +20,7 @@
            color-identifiers-mode
            diminish
            dired-details
+           dtrt-indent
            exec-path-from-shell
            expand-region
            fill-column-indicator
