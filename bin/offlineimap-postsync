@@ -1,0 +1,55 @@
+#!/bin/bash
+
+notmuch new
+
+# Addressed directly to me, but really are bulk mail
+notmuch tag -inbox -- tag:new AND \( \
+    from:careermail3@berkeley.edu OR \
+    from:equity_inclusion@berkeley.edu OR \
+    from:seniors@coe.berkeley.edu OR \
+    from:scala-devel@epfl.ch OR \
+    from:support@ucmetalk.com OR \
+    from:no-reply@piazza.com OR \
+    from:recruit@berkeley.edu OR \
+    from:ess@coe.berkeley.edu OR \
+    from:digest-noreply@quora.com OR \
+    from:messages-noreply@linkedin.com OR \
+    from:invitations-noreply@linkedin.com OR \
+    \(from:noreply-comment@blogger.com subject:"New comment on Creating your own LaTeX document class"\) \
+\)
+notmuch tag -inbox +deleted -- tag:new AND \( \
+    to:hpc-announce.mcs.anl.gov OR \
+    to:E-GRID@listserv.ieee.org OR \
+    from:noreply@mailers.thomascook.in \
+\)
+
+# Personal notifications
+notmuch tag -inbox +notifications -- tag:new AND \( \
+    from:n-naxheqnir=tznvy.pbz-97586@postmaster.twitter.com OR \
+    from:messages-noreply@linkedin.com OR \
+    from:noreply@youtube.com OR \
+    from:noreply@quora.com OR \
+    from:member@linkedin.com OR \
+    from:voice-noreply@google.com OR \
+    from:notification+mabg5yyr@facebookmail.com OR \
+    from:update+mabg5yyr@facebookmail.com OR \
+    from:notifications+mabg5yyr@facebookmail.com OR \
+    from:no-reply@datemyschool.com OR \
+    from:bounces@mail1.oknotify2.com OR \
+    from:no-reply@dms.me OR \
+    from:noreply@invite.quoramail.com OR \
+    from:no-reply@yelp.com OR \
+    from:aboutme@about.me OR \
+    from:ship-confirm@amazon.com OR \
+    from:auto-confirm@amazon.com OR \
+    from:help@ting.com subject:"has been paid" \
+\)
+
+# Catch-all for bulk mail
+notmuch tag -inbox -- tag:new AND NOT from:ankur AND NOT to:ankur
+
+# Sent mail
+notmuch tag -inbox +sent -- tag:new AND \(from:ankurdave@gmail.com OR from:ankurd@eecs.berkeley.edu OR from:ankurdave@berkeley.edu\)
+
+# Unmark new
+notmuch tag -new -- tag:new
