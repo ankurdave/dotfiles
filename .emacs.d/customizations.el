@@ -73,6 +73,34 @@
  '(mouse-wheel-progressive-speed nil)
  '(mouse-wheel-scroll-amount (quote (2 ((shift) . 1))))
  '(mumamo-chunk-coloring 2)
+ '(notmuch-hello-thousands-separator ",")
+ '(notmuch-saved-searches
+   (quote
+    ((:name "inbox" :query "tag:inbox")
+     (:name "unread" :query "tag:unread")
+     (:name "graphx" :query "(to:user.spark.apache.org OR to:user@spark.incubator.apache.org OR to:spark@noreply.github.com) AND graphx AND NOT from:\"UCB AMPLab\" AND NOT tag:sent")
+     (:name "spark-user" :query "to:user@spark.apache.org OR to:user@spark.apache.incubator.org")
+     (:name "spark-dev" :query "to:dev@spark.apache.org")
+     (:name "to-read" :query "(tag:inbox OR ((to:user.spark.apache.org OR to:user@spark.incubator.apache.org OR to:spark@noreply.github.com) AND graphx AND NOT from:\"UCB AMPLab\") OR to:dev@spark.apache.org) AND NOT tag:sent AND is:unread"))))
+ '(notmuch-search-line-faces
+   (quote
+    (("unread" :weight bold)
+     ("flagged" :foreground "#8CD0D3"))))
+ '(notmuch-search-oldest-first nil)
+ '(notmuch-show-all-tags-list t)
+ '(notmuch-show-indent-messages-width 2)
+ '(notmuch-show-indent-multipart t)
+ '(notmuch-show-part-button-default-action (quote notmuch-show-interactively-view-part))
+ '(notmuch-tag-formats
+   (quote
+    (("unread"
+      (propertize tag
+                  (quote face)
+                  (quote
+                   (:foreground "#CC9393"))))
+     ("flagged"
+      (notmuch-tag-format-image-data tag
+                                     (notmuch-tag-star-icon))))))
  '(ns-alternate-modifier (quote meta))
  '(ns-command-modifier (quote meta))
  '(ns-tool-bar-display-mode (quote both) t)
@@ -98,6 +126,7 @@
  '(semantic-default-submodes
    (quote
     (global-semantic-highlight-func-mode global-semantic-decoration-mode global-semantic-stickyfunc-mode global-semantic-idle-completions-mode global-semantic-idle-scheduler-mode global-semanticdb-minor-mode global-semantic-mru-bookmark-mode)))
+ '(send-mail-function (quote smtpmail-send-it))
  '(shift-select-mode nil)
  '(show-paren-delay 0.0)
  '(show-paren-mode t)
@@ -115,6 +144,8 @@
  '(undo-tree-history-directory-alist (quote (("." . "~/.emacs.d/undo-history/"))))
  '(undo-tree-mode-lighter "")
  '(uniquify-buffer-name-style (quote forward) nil (uniquify))
+ '(user-full-name "Ankur Dave")
+ '(user-mail-address "ankurdave@gmail.com")
  '(vc-annotate-background "#2B2B2B")
  '(vc-annotate-color-map
    (quote

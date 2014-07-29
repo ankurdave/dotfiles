@@ -33,6 +33,7 @@
            ido-vertical-mode
            magit
            molokai-theme
+           notmuch
            paredit
            popwin
            projectile

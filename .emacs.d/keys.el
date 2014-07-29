@@ -87,3 +87,16 @@
      (define-key god-local-mode-map (kbd "/") 'undo-tree-undo)
      (define-key god-local-mode-map (kbd ".") 'repeat)
      (define-key god-local-mode-map (kbd "i") 'prompt-and-insert)))
+
+(eval-after-load "notmuch"
+  '(progn
+     (define-key notmuch-search-mode-map (kbd "I") 'notmuch-search-mark-read)
+     (define-key notmuch-search-mode-map (kbd "g") 'notmuch-refresh-this-buffer)))
+
+(eval-after-load "notmuch-show"
+  '(progn
+     (define-key notmuch-show-mode-map (kbd "d") 'notmuch-mark-deleted)
+     (define-key notmuch-show-mode-map (kbd "o") 'goto-address-at-point)))
+
+(eval-after-load "notmuch-hello"
+  '(define-key notmuch-hello-mode-map (kbd "g") 'notmuch-refresh-this-buffer))

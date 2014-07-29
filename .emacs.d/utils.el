@@ -492,3 +492,16 @@ Currently only supports doing this in one frame at a time."
          (insert (expand-file-name filename)))
         (t
          (insert filename))))
+
+(defun notmuch-search-mark-read ()
+  "Mark this email as read."
+  (interactive)
+  (notmuch-search-remove-tag (list "-unread"))
+  (notmuch-search-next-thread))
+
+(defun notmuch-mark-deleted ()
+  "Mark this email as deleted."
+  (interactive)
+  (when (y-or-n-p "Are you sure you want to this message?")
+    (notmuch-show-add-tag (list "+deleted"))
+    (notmuch-show-next-thread)))
