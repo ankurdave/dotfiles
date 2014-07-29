@@ -131,6 +131,7 @@
    (quote
     (global-semantic-highlight-func-mode global-semantic-decoration-mode global-semantic-stickyfunc-mode global-semantic-idle-completions-mode global-semantic-idle-scheduler-mode global-semanticdb-minor-mode global-semantic-mru-bookmark-mode)))
  '(send-mail-function (quote smtpmail-send-it))
+ '(sentence-end-double-space nil)
  '(shift-select-mode nil)
  '(show-paren-delay 0.0)
  '(show-paren-mode t)
