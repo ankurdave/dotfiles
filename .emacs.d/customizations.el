@@ -120,6 +120,7 @@
  '(recentf-max-saved-items 200)
  '(require-final-newline t)
  '(savehist-mode t)
+ '(sbt:program-name "~/repos/spark/sbt/sbt")
  '(scala-indent:align-parameters nil)
  '(scala-indent:use-javadoc-style t)
  '(scroll-bar-mode nil)
