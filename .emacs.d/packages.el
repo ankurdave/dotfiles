@@ -44,6 +44,7 @@
            smooth-scrolling
            undo-tree
            visual-regexp
+           visual-regexp-steroids
            zenburn-theme)))
     (dolist (pkg-name packages-to-install)
       (unless (package-installed-p pkg-name)
