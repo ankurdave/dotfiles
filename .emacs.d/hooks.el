@@ -49,7 +49,8 @@
 (add-hook 'scala-mode-hook
           (lambda ()
             (add-to-list 'write-file-functions 'delete-trailing-whitespace)
-            (setq fill-column 100)))
+            (setq fill-column 100)
+            (toggle-truncate-lines 1)))
 
 ;; ensime mode for Scala
 (when (fboundp 'ensime-scala-mode-hook)
