@@ -5,12 +5,14 @@
 	st = status
 	glog = log --decorate --graph --date=short --pretty='format:%C(auto)%h %ad (%an)%C(auto)%d %C(reset)%s'
 	sync = fetch --all --prune
-	unpushed = log --branches --not --remotes
+	unpushed = log --branches --not --remotes --decorate --graph
+	unpushed-branches = log --branches --not --remotes --simplify-by-decoration --decorate --oneline
 	review = diff -U10  -w --find-renames=1
 	wdiff = -c core.pager='less -+S -FRX' diff --word-diff
 	wshow = -c core.pager='less -+S -FRX' show --word-diff
 	amend = commit -a --amend --no-edit
 	lbranches = for-each-ref --sort=committerdate refs/heads/ --format='%(committerdate:relative)%09%(refname:short)'
+	lbranches2 = log --branches --simplify-by-decoration --decorate --oneline
 [color]
 	ui = auto
 [core]
