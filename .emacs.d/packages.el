@@ -123,7 +123,6 @@
   ;; (eval-after-load "paredit" '(diminish 'paredit-mode))
   (eval-after-load "whitespace" '(diminish 'global-whitespace-mode))
   (eval-after-load "auto-complete" '(diminish 'auto-complete-mode))
-  (eval-after-load "projectile" '(diminish 'projectile-mode))
   (eval-after-load "magit" '(diminish 'magit-auto-revert-mode)))
 
 (add-to-list 'load-path "~/.emacs.d/lisp")
