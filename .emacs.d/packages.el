@@ -42,7 +42,6 @@
            scala-mode2
            smartparens
            smex
-           smooth-scrolling
            undo-tree
            visual-regexp
            visual-regexp-steroids
@@ -106,7 +105,7 @@
   (with-demoted-errors
       (exec-path-from-shell-initialize)))
 
-(require 'smooth-scrolling nil t)
+;; (require 'smooth-scrolling nil t)
 
 (when (require 'popwin nil t)
   (popwin-mode 1))
