@@ -34,6 +34,7 @@
            magit
            molokai-theme
            notmuch
+           notmuch-unread
            paredit
            popwin
            projectile

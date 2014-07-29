@@ -73,6 +73,7 @@
  '(mouse-wheel-progressive-speed nil)
  '(mouse-wheel-scroll-amount (quote (2 ((shift) . 1))))
  '(mumamo-chunk-coloring 2)
+ '(notmuch-fcc-dirs nil)
  '(notmuch-hello-thousands-separator ",")
  '(notmuch-saved-searches
    (quote
@@ -101,6 +102,8 @@
      ("flagged"
       (notmuch-tag-format-image-data tag
                                      (notmuch-tag-star-icon))))))
+ '(notmuch-unread-search-term
+   "(tag:inbox OR ((to:user.spark.apache.org OR to:user@spark.incubator.apache.org OR to:spark@noreply.github.com) AND graphx AND NOT from:\"UCB AMPLab\") OR to:dev@spark.apache.org) AND NOT tag:sent AND is:unread")
  '(ns-alternate-modifier (quote meta))
  '(ns-command-modifier (quote meta))
  '(ns-tool-bar-display-mode (quote both) t)
