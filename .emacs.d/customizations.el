@@ -78,13 +78,9 @@
  '(notmuch-hello-thousands-separator ",")
  '(notmuch-saved-searches
    (quote
-    ((:name "inbox" :query "tag:inbox")
-     (:name "unread" :query "tag:unread AND NOT to:user@spark.apache.org AND NOT to:user@spark.incubator.apache.org AND NOT to:spark@noreply.github.com")
-     (:name "graphx" :query "(to:user.spark.apache.org OR to:user@spark.incubator.apache.org OR to:spark@noreply.github.com) AND graphx AND NOT from:\"UCB AMPLab\" AND NOT tag:sent")
-     (:name "spark-user" :query "to:user@spark.apache.org OR to:user@spark.apache.incubator.org")
-     (:name "spark-dev" :query "to:dev@spark.apache.org")
-     (:name "must-read" :query "(tag:inbox OR tag:is-reply OR to:cs-msphd OR ((to:user.spark.apache.org OR to:user@spark.incubator.apache.org OR to:spark@noreply.github.com) AND graphx AND NOT from:\"UCB AMPLab\")) AND NOT tag:sent AND is:unread")
-     (:name "should-read" :query "(to:dev@spark.apache.org OR to:radlab-space) AND NOT tag:sent AND is:unread"))))
+    ((:name "must-read" :query "(tag:inbox OR tag:is-reply OR tag:graphx) AND is:unread")
+     (:name "should-read" :query "(tag:notifications) AND is:unread")
+     (:name "may-read" :query "(tag:spark-dev OR tag:amplab-lists OR tag:berkeley-lists) AND is:unread"))))
  '(notmuch-search-line-faces
    (quote
     (("unread" :weight bold)
@@ -106,7 +102,7 @@
                                      (notmuch-tag-star-icon))))))
  '(notmuch-unread-mode nil nil (notmuch))
  '(notmuch-unread-search-term
-   "(tag:inbox OR tag:is-reply OR ((to:user.spark.apache.org OR to:user@spark.incubator.apache.org OR to:spark@noreply.github.com) AND graphx AND NOT from:\"UCB AMPLab\") OR to:dev@spark.apache.org) AND NOT tag:sent AND is:unread")
+   "(tag:inbox OR tag:is-reply OR tag:graphx OR tag:notifications) AND is:unread")
  '(ns-alternate-modifier (quote meta))
  '(ns-command-modifier (quote meta))
  '(ns-tool-bar-display-mode (quote both) t)

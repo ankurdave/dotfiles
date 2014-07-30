@@ -1,55 +1,101 @@
 #!/bin/bash
 
+set -x
+set -e
+
 notmuch new
 
-# Addressed directly to me, but really are bulk mail
+# Lowering visibility
 /usr/bin/time notmuch tag -inbox -- tag:new AND \( \
-    from:careermail3@berkeley.edu OR \
-    from:equity_inclusion@berkeley.edu OR \
-    from:seniors@coe.berkeley.edu OR \
-    from:scala-devel@epfl.ch OR \
-    from:support@ucmetalk.com OR \
-    from:no-reply@piazza.com OR \
-    from:recruit@berkeley.edu OR \
-    from:ess@coe.berkeley.edu OR \
-    from:digest-noreply@quora.com OR \
-    from:messages-noreply@linkedin.com OR \
-    from:invitations-noreply@linkedin.com OR \
-    \(from:noreply-comment@blogger.com subject:"New comment on Creating your own LaTeX document class"\) \
-\)
-/usr/bin/time notmuch tag -inbox +deleted -- tag:new AND \( \
-    to:hpc-announce.mcs.anl.gov OR \
-    to:E-GRID@listserv.ieee.org OR \
-    from:noreply@mailers.thomascook.in \
+    from:equity_inclusion@berkeley.edu \
+    OR from:recruit@berkeley.edu \
+    OR \( from:noreply-comment@blogger.com subject:"New comment on Creating your own LaTeX document class" \) \
+    OR to:hpc-announce.mcs.anl.gov \
+    OR to:E-GRID@listserv.ieee.org \
+    OR from:noreply@mailers.thomascook.in \
+    OR \( from:noreply@quora.com AND NOT from:digest-noreply@quora.com \) \
+    OR from:notification+mabg5yyr@facebookmail.com \
+    OR from:update+mabg5yyr@facebookmail.com \
+    OR from:no-reply@datemyschool.com \
+    OR from:bounces@mail1.oknotify2.com \
+    OR from:no-reply@dms.me \
+    OR to:users@nersc.gov \
+    OR to:carver-users@nersc.gov \
 \)
 
-# Personal notifications
 /usr/bin/time notmuch tag -inbox +notifications -- tag:new AND \( \
-    from:n-naxheqnir=tznvy.pbz-97586@postmaster.twitter.com OR \
-    from:messages-noreply@linkedin.com OR \
-    from:noreply@youtube.com OR \
-    from:noreply@quora.com OR \
-    from:member@linkedin.com OR \
-    from:voice-noreply@google.com OR \
-    from:notification+mabg5yyr@facebookmail.com OR \
-    from:update+mabg5yyr@facebookmail.com OR \
-    from:notifications+mabg5yyr@facebookmail.com OR \
-    from:no-reply@datemyschool.com OR \
-    from:bounces@mail1.oknotify2.com OR \
-    from:no-reply@dms.me OR \
-    from:noreply@invite.quoramail.com OR \
-    from:no-reply@yelp.com OR \
-    from:aboutme@about.me OR \
-    from:ship-confirm@amazon.com OR \
-    from:auto-confirm@amazon.com OR \
-    from:help@ting.com subject:"has been paid" \
+    from:ship-confirm@amazon.com \
+    OR from:auto-confirm@amazon.com \
+    OR from:voice-noreply@google.com \
+    OR from:no-reply@yelp.com \
+    OR from:noreply@invite.quoramail.com \
+    OR from:aboutme@about.me \
+    OR from:help@ting.com \
+    OR from:info@sender.runkeeper.com \
+    OR from:noreply@youtube.com \
+    OR from:messages-noreply@linkedin.com \
+    OR from:invitations-noreply@linkedin.com \
+    OR from:notifications-noreply@linkedin.com \
+    OR from:member@linkedin.com \
+    OR from:n-naxheqnir=tznvy.pbz-97586@postmaster.twitter.com \
+    OR from:digest-noreply@quora.com \
+    OR from:noreply@medium.com \
+    OR from:helpme@backblaze.com \
+    OR from:do_not_reply@apple.com \
+    OR from:team@mint.com \
+    OR from:contact@coinbase.com \
+    OR from:scholaralerts-noreply@google.com \
+    OR from:onlinebanking@ealerts.bankofamerica.com \
+    OR from:notifications+vvvowqwk20@zyngamail.comnotifications+vvvowqwk20@zyngamail.com \
+    OR from:noreply@wallet.google.com \
+    OR from:no-reply@kongregate.com \
+    OR from:contact@coffeemeetsbagel.com \
+    OR from:CustomerServiceOnline@pge.com \
+    OR from:noreply@steampowered.com \
 \)
 
-# Catch-all for bulk mail
-/usr/bin/time notmuch tag -inbox -- tag:new AND NOT from:ankur AND NOT to:ankur
+/usr/bin/time notmuch tag -inbox +spark-dev -- tag:new AND \( \
+    to:dev@spark.apache.org \
+    OR to:dev@spark.incubator.apache.org \
+\)
+
+/usr/bin/time notmuch tag -inbox +spark-github -- tag:new AND to:spark@noreply.github.com
+
+/usr/bin/time notmuch tag -inbox +spark-user -- tag:new AND \( \
+    to:user@spark.apache.org \
+    OR to:user@spark.incubator.apache.org \
+\)
+
+/usr/bin/time notmuch tag -inbox +berkeley-lists -- tag:new AND \( \
+    to:cs-grads-food \
+    OR to:CALmessages@berkeley.edu \
+    OR to:eecs-grads-misc \
+    OR to:eecs-grads \
+    OR to:eecs-announce \
+    OR to:seminars@ICSI.Berkeley.EDU \
+    OR to:not-another-teen-movie \
+    OR to:cs-grads-social \
+    OR to:soda-info \
+    OR from:gradweb@berkeley.edu \
+\)
+
+/usr/bin/time notmuch tag -inbox +amplab-lists -- tag:new AND \( \
+    to:radlab-space \
+    OR to:amp-research \
+    OR to:dbseminar \
+    OR to:netsyslab \
+    OR to:networks-lunch \
+\)
+
+# Raising visibility
+/usr/bin/time notmuch tag +graphx -- tag:new AND \( tag:spark-dev OR tag:spark-user \) AND graphx
 
 # Sent mail
-/usr/bin/time notmuch tag -inbox +sent -- tag:new AND \(from:ankurdave@gmail.com OR from:ankurd@eecs.berkeley.edu OR from:ankurdave@berkeley.edu\)
+/usr/bin/time notmuch tag -inbox +sent -- tag:new AND \( \
+    from:ankurdave@gmail.com \
+    OR from:ankurd@eecs.berkeley.edu \
+    OR from:ankurdave@berkeley.edu \
+\)
 
 # Tag replies to things I've sent
 newthreads=$(notmuch search --output=threads tag:new)
