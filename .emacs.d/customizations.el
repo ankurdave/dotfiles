@@ -83,7 +83,8 @@
      (:name "graphx" :query "(to:user.spark.apache.org OR to:user@spark.incubator.apache.org OR to:spark@noreply.github.com) AND graphx AND NOT from:\"UCB AMPLab\" AND NOT tag:sent")
      (:name "spark-user" :query "to:user@spark.apache.org OR to:user@spark.apache.incubator.org")
      (:name "spark-dev" :query "to:dev@spark.apache.org")
-     (:name "to-read" :query "(tag:inbox OR tag:is-reply OR ((to:user.spark.apache.org OR to:user@spark.incubator.apache.org OR to:spark@noreply.github.com) AND graphx AND NOT from:\"UCB AMPLab\") OR to:dev@spark.apache.org) AND NOT tag:sent AND is:unread"))))
+     (:name "must-read" :query "(tag:inbox OR tag:is-reply OR to:cs-msphd OR ((to:user.spark.apache.org OR to:user@spark.incubator.apache.org OR to:spark@noreply.github.com) AND graphx AND NOT from:\"UCB AMPLab\")) AND NOT tag:sent AND is:unread")
+     (:name "should-read" :query "(to:dev@spark.apache.org OR to:radlab-space) AND NOT tag:sent AND is:unread"))))
  '(notmuch-search-line-faces
    (quote
     (("unread" :weight bold)
