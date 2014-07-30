@@ -79,7 +79,7 @@
  '(notmuch-saved-searches
    (quote
     ((:name "inbox" :query "tag:inbox")
-     (:name "unread" :query "tag:unread")
+     (:name "unread" :query "tag:unread AND NOT to:user@spark.apache.org AND NOT to:user@spark.incubator.apache.org AND NOT to:spark@noreply.github.com")
      (:name "graphx" :query "(to:user.spark.apache.org OR to:user@spark.incubator.apache.org OR to:spark@noreply.github.com) AND graphx AND NOT from:\"UCB AMPLab\" AND NOT tag:sent")
      (:name "spark-user" :query "to:user@spark.apache.org OR to:user@spark.apache.incubator.org")
      (:name "spark-dev" :query "to:dev@spark.apache.org")
