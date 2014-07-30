@@ -505,3 +505,9 @@ Currently only supports doing this in one frame at a time."
   (when (y-or-n-p "Are you sure you want to this message?")
     (notmuch-show-add-tag (list "+deleted"))
     (notmuch-show-next-thread)))
+
+(defun notmuch-tree-next-matching-message-and-mark-read ()
+  "Move to next matching message and mark it as read."
+  (interactive)
+  (notmuch-tree-next-matching-message)
+  (notmuch-tree-remove-tag (list "-unread")))

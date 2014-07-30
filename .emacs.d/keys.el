@@ -100,3 +100,7 @@
 
 (eval-after-load "notmuch-hello"
   '(define-key notmuch-hello-mode-map (kbd "g") 'notmuch-refresh-this-buffer))
+
+(eval-after-load "notmuch-tree"
+  '(progn
+     (define-key notmuch-tree-mode-map (kbd "n") 'notmuch-tree-next-matching-message-and-mark-read)))
