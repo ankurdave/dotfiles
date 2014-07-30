@@ -103,8 +103,9 @@
      ("flagged"
       (notmuch-tag-format-image-data tag
                                      (notmuch-tag-star-icon))))))
+ '(notmuch-unread-mode t nil (notmuch))
  '(notmuch-unread-search-term
-   "(tag:inbox OR ((to:user.spark.apache.org OR to:user@spark.incubator.apache.org OR to:spark@noreply.github.com) AND graphx AND NOT from:\"UCB AMPLab\") OR to:dev@spark.apache.org) AND NOT tag:sent AND is:unread")
+   "(tag:inbox OR tag:is-reply OR ((to:user.spark.apache.org OR to:user@spark.incubator.apache.org OR to:spark@noreply.github.com) AND graphx AND NOT from:\"UCB AMPLab\") OR to:dev@spark.apache.org) AND NOT tag:sent AND is:unread")
  '(ns-alternate-modifier (quote meta))
  '(ns-command-modifier (quote meta))
  '(ns-tool-bar-display-mode (quote both) t)
