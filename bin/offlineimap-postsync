@@ -3,7 +3,7 @@
 notmuch new
 
 # Addressed directly to me, but really are bulk mail
-notmuch tag -inbox -- tag:new AND \( \
+/usr/bin/time notmuch tag -inbox -- tag:new AND \( \
     from:careermail3@berkeley.edu OR \
     from:equity_inclusion@berkeley.edu OR \
     from:seniors@coe.berkeley.edu OR \
@@ -17,14 +17,14 @@ notmuch tag -inbox -- tag:new AND \( \
     from:invitations-noreply@linkedin.com OR \
     \(from:noreply-comment@blogger.com subject:"New comment on Creating your own LaTeX document class"\) \
 \)
-notmuch tag -inbox +deleted -- tag:new AND \( \
+/usr/bin/time notmuch tag -inbox +deleted -- tag:new AND \( \
     to:hpc-announce.mcs.anl.gov OR \
     to:E-GRID@listserv.ieee.org OR \
     from:noreply@mailers.thomascook.in \
 \)
 
 # Personal notifications
-notmuch tag -inbox +notifications -- tag:new AND \( \
+/usr/bin/time notmuch tag -inbox +notifications -- tag:new AND \( \
     from:n-naxheqnir=tznvy.pbz-97586@postmaster.twitter.com OR \
     from:messages-noreply@linkedin.com OR \
     from:noreply@youtube.com OR \
@@ -46,10 +46,19 @@ notmuch tag -inbox +notifications -- tag:new AND \( \
 \)
 
 # Catch-all for bulk mail
-notmuch tag -inbox -- tag:new AND NOT from:ankur AND NOT to:ankur
+/usr/bin/time notmuch tag -inbox -- tag:new AND NOT from:ankur AND NOT to:ankur
 
 # Sent mail
-notmuch tag -inbox +sent -- tag:new AND \(from:ankurdave@gmail.com OR from:ankurd@eecs.berkeley.edu OR from:ankurdave@berkeley.edu\)
+/usr/bin/time notmuch tag -inbox +sent -- tag:new AND \(from:ankurdave@gmail.com OR from:ankurd@eecs.berkeley.edu OR from:ankurdave@berkeley.edu\)
+
+# Tag replies to things I've sent
+newthreads=$(notmuch search --output=threads tag:new)
+if [ -n "$newthreads" ]; then
+    newthreads_with_sent=$(notmuch search --output=threads $newthreads is:sent)
+    if [ -n "$newthreads_with_sent" ]; then
+        /usr/bin/time notmuch tag +is-reply -- $newthreads_with_sent tag:new
+    fi
+fi
 
 # Unmark new
-notmuch tag -new -- tag:new
+/usr/bin/time notmuch tag -new -- tag:new
