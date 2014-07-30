@@ -201,7 +201,7 @@
           ("\\reals" "ℝ"))))
 
 ;; Enable key repeat in OS X Lion
-(when (fboundp 'ns-set-resource)
+(when (and window-system (fboundp 'ns-set-resource))
   (ns-set-resource nil "ApplePressAndHoldEnabled" "NO"))
 
 ;; popwin configuration
