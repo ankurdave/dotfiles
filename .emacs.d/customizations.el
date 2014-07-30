@@ -69,6 +69,7 @@
  '(initial-scratch-message nil)
  '(linum-format " %7i ")
  '(menu-bar-mode nil)
+ '(message-fill-column nil)
  '(minibuffer-depth-indicate-mode t)
  '(mouse-wheel-progressive-speed nil)
  '(mouse-wheel-scroll-amount (quote (2 ((shift) . 1))))
