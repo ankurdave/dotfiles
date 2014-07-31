@@ -69,6 +69,11 @@
  '(initial-scratch-message nil)
  '(linum-format " %7i ")
  '(menu-bar-mode nil)
+ '(message-citation-line-format "On %a, %b %-e, %Y at %-I:%M %p, %f wrote:")
+ '(message-citation-line-function (quote message-insert-formatted-citation-line))
+ '(message-cite-reply-position (quote traditional))
+ '(message-cite-style nil)
+ '(message-confirm-send t)
  '(message-fill-column nil)
  '(minibuffer-depth-indicate-mode t)
  '(mouse-wheel-progressive-speed nil)
@@ -87,8 +92,8 @@
      ("flagged" :foreground "#8CD0D3"))))
  '(notmuch-search-oldest-first nil)
  '(notmuch-show-all-tags-list t)
- '(notmuch-show-indent-messages-width 2)
- '(notmuch-show-indent-multipart t)
+ '(notmuch-show-indent-messages-width 1)
+ '(notmuch-show-indent-multipart nil)
  '(notmuch-show-part-button-default-action (quote notmuch-show-interactively-view-part))
  '(notmuch-tag-formats
    (quote
