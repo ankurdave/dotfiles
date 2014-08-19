@@ -54,6 +54,7 @@ notmuch new
     OR from:noreply@steampowered.com \
     OR from:online.communications@alerts.comcast.net \
     OR from:organizers@spark-summit.org \
+    OR from:AmericanExpress@welcome.aexp.com \
 \)
 
 /usr/bin/time notmuch tag -inbox +spark-dev -- tag:new AND \( \
@@ -111,6 +112,9 @@ if [ -n "$newthreads" ]; then
         /usr/bin/time notmuch tag +is-reply -- $newthreads_with_sent tag:new AND NOT is:sent
     fi
 fi
+
+# Databricks mail
+/usr/bin/time notmuch tag +databricks -- tag:new AND 'path:databricks/**'
 
 # Unmark new
 /usr/bin/time notmuch tag -new -- tag:new
