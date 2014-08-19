@@ -192,8 +192,8 @@
 ;;         (setq ac-sources '(ac-source-pcomplete))))))
 
 ;; Oxford brackets for TeX input method
-(eval-after-load "quail/latin-ltx"
-  '(mapc (lambda (pair)
+(with-eval-after-load "quail/latin-ltx"
+  (mapc (lambda (pair)
           (quail-defrule (car pair) (cadr pair) "TeX"))
         '(("\\llbracket" "⟦")
           ("\\rrbracket" "⟧")

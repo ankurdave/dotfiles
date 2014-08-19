@@ -119,11 +119,11 @@
 
 ;;; Autoloaded packages
 (when (fboundp 'diminish)
-  (eval-after-load "eldoc" '(diminish 'eldoc-mode))
-  ;; (eval-after-load "paredit" '(diminish 'paredit-mode))
-  (eval-after-load "whitespace" '(diminish 'global-whitespace-mode))
-  (eval-after-load "auto-complete" '(diminish 'auto-complete-mode))
-  (eval-after-load "magit" '(diminish 'magit-auto-revert-mode)))
+  (with-eval-after-load "eldoc" (diminish 'eldoc-mode))
+  ;; (with-eval-after-load "paredit" (diminish 'paredit-mode))
+  (with-eval-after-load "whitespace" (diminish 'global-whitespace-mode))
+  (with-eval-after-load "auto-complete" (diminish 'auto-complete-mode))
+  (with-eval-after-load "magit" (diminish 'magit-auto-revert-mode)))
 
 (add-to-list 'load-path "~/.emacs.d/lisp")
 (autoload 'typing-test "typing-test" nil t)
