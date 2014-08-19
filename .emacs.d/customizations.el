@@ -69,7 +69,7 @@
  '(initial-scratch-message nil)
  '(linum-format " %7i ")
  '(menu-bar-mode nil)
- '(message-citation-line-format "On %a, %b %-e, %Y at %-I:%M %p, %f wrote:")
+ '(message-citation-line-format "At %Y-%m-%d %T %z, %f wrote:")
  '(message-citation-line-function (quote message-insert-formatted-citation-line))
  '(message-cite-reply-position (quote traditional))
  '(message-cite-style nil)
