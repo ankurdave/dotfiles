@@ -96,3 +96,7 @@
 
 (with-eval-after-load "company"
   (define-key company-active-map (kbd "C-w") nil))
+
+(with-eval-after-load "scala-mode2"
+  (define-key scala-mode-map (kbd "M-n") 'highlight-symbol-next)
+  (define-key scala-mode-map (kbd "M-p") 'highlight-symbol-prev))

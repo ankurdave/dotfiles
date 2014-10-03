@@ -29,6 +29,7 @@
            gitconfig-mode
            gitignore-mode
            god-mode
+           highlight-symbol
            ido-ubiquitous
            ido-vertical-mode
            magit

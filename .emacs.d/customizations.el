@@ -52,6 +52,7 @@
  '(global-auto-revert-non-file-buffers nil)
  '(global-hl-line-mode nil)
  '(global-whitespace-mode nil)
+ '(highlight-symbol-on-navigation-p t)
  '(history-length 10000)
  '(htmlize-output-type (quote inline-css))
  '(ido-default-buffer-method (quote selected-window))
@@ -197,5 +198,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(highlight-symbol-face ((t (:background "disabledControlTextColor"))))
  '(magit-diff-add ((t (:inherit diff-added)))))
 (put 'narrow-to-region 'disabled nil)
