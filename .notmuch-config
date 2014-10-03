@@ -1,0 +1,19 @@
+# .notmuch-config - Configuration file for the notmuch mail system
+
+[database]
+path=/Users/ankurdave/mail
+
+[user]
+name=Ankur Dave
+primary_email=ankurdave@gmail.com
+other_email=ankurdave@berkeley.edu;ankurd@eecs.berkeley.edu
+
+[new]
+tags=unread;inbox;new
+ignore=
+
+[search]
+exclude_tags=deleted
+
+[maildir]
+synchronize_flags=true
