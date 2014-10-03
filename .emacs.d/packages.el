@@ -15,9 +15,9 @@
   (let ((packages-to-install
          '(ace-jump-mode
            adaptive-wrap
-           auto-complete
            browse-kill-ring
            color-identifiers-mode
+           company
            diminish
            dired-details
            dtrt-indent
@@ -67,8 +67,8 @@
      (init--install-packages))))
 
 ;;; Eagerly loaded packages
-(when (require 'auto-complete-config nil t)
-  (ac-config-default))
+(when (require 'company nil t)
+  (global-company-mode))
 
 ;; Must enable `dtrt-indent-mode' here rather than with Customize because it
 ;; requires the mode when setting with Customize, which fails if it is not

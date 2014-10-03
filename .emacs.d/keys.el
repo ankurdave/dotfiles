@@ -1,5 +1,6 @@
 (global-unset-key "\C-z")
-(global-set-key "\M-/" 'hippie-expand)
+
+(global-set-key (kbd "M-/") 'company-complete-common)
 
 (global-set-key (kbd "M-`") 'other-frame)
 
@@ -21,9 +22,6 @@
 
 (when (boundp 'popwin:keymap)
   (define-key (current-global-map) (kbd "C-c w") popwin:keymap))
-
-(when (fboundp 'projectile-find-file)
-  (global-set-key (kbd "M-p") 'projectile-find-file))
 
 (when (fboundp 'browse-kill-ring)
   (global-set-key (kbd "C-M-y") 'browse-kill-ring))
@@ -95,3 +93,6 @@
 
 (with-eval-after-load "notmuch-tree"
   (define-key notmuch-tree-mode-map (kbd "n") 'notmuch-tree-next-matching-message-and-mark-read))
+
+(with-eval-after-load "company"
+  (define-key company-active-map (kbd "C-w") nil))

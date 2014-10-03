@@ -25,6 +25,7 @@
  '(c-basic-offset 2)
  '(c-default-style "k&r")
  '(column-number-mode t)
+ '(company-idle-delay nil)
  '(cs164-basic-offset 2)
  '(cs164-indent-automatically t)
  '(cursor-type (quote (bar . 2)))
