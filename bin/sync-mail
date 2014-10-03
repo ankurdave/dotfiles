@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# For gtimeout on OS X: brew install coreutils
+while true; do
+    gtimeout --signal=QUIT 30m offlineimap -o
+    echo "=== Sleeping..."
+    sleep 120
+done
