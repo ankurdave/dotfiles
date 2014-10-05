@@ -511,3 +511,57 @@ Currently only supports doing this in one frame at a time."
   (interactive)
   (notmuch-tree-next-matching-message)
   (notmuch-tree-remove-tag (list "-unread")))
+
+(defun scala-parse-imports (str)
+  "Return a list of imports in the given string."
+  (let* ((imports-raw (split-string str "^import " t))
+         (imports (mapcar 's-trim imports-raw)))
+    imports))
+
+(defun scala-get-package ()
+  "Get the package of the current file."
+  (save-excursion
+    (beginning-of-buffer)
+    (search-forward-regexp "^package ")
+    (let ((beg (point)))
+      (end-of-line)
+      (buffer-substring-no-properties beg (point)))))
+
+(defun list-organize-by-predicates (elems preds)
+  "Reorder ELEMS into chunks that match each of PREDS in order,
+returning a list of chunks."
+  (if preds
+      (let* ((first-pred (car preds))
+             (matches-rest (-separate first-pred elems))
+             (matches (first matches-rest))
+             (rest-elems (second matches-rest))
+             (rest-preds (cdr preds)))
+        (cons matches (list-organize-by-predicates rest-elems rest-preds)))
+    (list elems)))
+
+(defun scala-organize-import-string (import-string package)
+  "Organize imports in IMPORT-STRING assuming we are in PACKAGE."
+  (let* ((imports (scala-parse-imports import-string))
+         (sorted-imports (sort imports 'string<))
+         (grouped-imports
+          (list-organize-by-predicates
+           sorted-imports
+           (list (lambda (s) (string-prefix-p "java." s))
+                 (lambda (s) (string-prefix-p "scala." s))
+                 (lambda (s) (not (string-prefix-p package s))))))
+         (import-string
+          (mapconcat (lambda (group)
+                       (mapconcat (lambda (s) (format "import %s\n" s)) group ""))
+                     grouped-imports "\n")))
+    import-string))
+
+(defun scala-organize-imports (beg end)
+  "Organize Scala imports between BEG and END."
+  (interactive "r")
+  (let ((new-imports
+         (scala-organize-import-string
+          (buffer-substring-no-properties beg end) (scala-get-package))))
+    (save-excursion
+      (delete-region beg end)
+      (goto-char beg)
+      (insert new-imports))))

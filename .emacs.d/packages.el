@@ -18,6 +18,7 @@
            browse-kill-ring
            color-identifiers-mode
            company
+           dash
            diminish
            dired-details
            dtrt-indent
@@ -40,6 +41,7 @@
            popwin
            projectile
            rainbow-mode
+           s
            scala-mode2
            smartparens
            smex
