@@ -126,6 +126,7 @@
      ("melpa" . "http://melpa.milkbox.net/packages/"))))
  '(pop-up-windows t)
  '(projectile-global-mode t)
+ '(projectile-use-git-grep t)
  '(py-indent-offset 2)
  '(python-indent-offset 2)
  '(recentf-max-saved-items 200)
