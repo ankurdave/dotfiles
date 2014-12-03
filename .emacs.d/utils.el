@@ -616,3 +616,15 @@ See `american-to-iso'."
   (while (re-search-forward "^\\([0-9/]+\\)," nil t)
     (american-to-iso-region (match-beginning 1) (match-end 1))
     (redisplay)))
+
+;;; WIP
+;; (defun scala-cycle-paren-type ()
+;;   (interactive)
+;;   (smartparens-mode 1)
+;;   (let* ((current-paren-type (plist-get (sp-get-enclosing-sexp) :op))
+;;          (new-paren-type
+;;           (cond
+;;             ((string-equal current-paren-type "(") "{" )
+;;             ((string-equal current-paren-type "{") "(" )
+;;             (t (error "Unknown paren type: " current-paren-type)))))
+;;     (sp-rewrap-sexp new-paren-type)))
