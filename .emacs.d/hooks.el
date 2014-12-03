@@ -214,7 +214,8 @@
   (push '("*Kill Ring*") popwin:special-display-config)
   (push '("*Inspector*") popwin:special-display-config)
   (push '("\\*.* output\\*" :regexp t) popwin:special-display-config)
-  (push '("*Warnings*") popwin:special-display-config))
+  (push '("*Warnings*") popwin:special-display-config)
+  (push '("\\*helm[ -].*\\*" :regexp t) popwin:special-display-config))
 
 ;; Avoid *Buffer List* undo history warning; see
 ;; http://lists.gnu.org/archive/html/help-gnu-emacs/2013-04/msg00497.html
@@ -249,4 +250,3 @@
       smtpmail-smtp-service 465)
 
 (put 'narrow-to-region 'disabled nil)
-(put 'ido-exit-minibuffer 'disabled nil)

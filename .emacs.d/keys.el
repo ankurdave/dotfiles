@@ -26,6 +26,19 @@
 (when (fboundp 'browse-kill-ring)
   (global-set-key (kbd "C-M-y") 'browse-kill-ring))
 
+(when (fboundp 'helm-mode)
+  (require 'helm-config)
+  (helm-mode 1)
+  (global-set-key (kbd "M-x") 'helm-M-x)
+  (global-set-key (kbd "C-x b") 'helm-mini)
+  (global-set-key (kbd "C-c h") 'helm-command-prefix)
+  (global-set-key (kbd "C-x C-f") 'helm-find-files)
+  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+  (define-key helm-map (kbd "C-SPC") nil)
+  (define-key helm-map (kbd "C-k") nil)
+  (define-key helm-map (kbd "C-w") nil))
+
 (with-eval-after-load 'org
   (define-key org-mode-map (kbd "<tab>") 'org-indent-item-or-cycle)
   (define-key org-mode-map (kbd "<S-tab>") 'org-outdent-item-or-shifttab))
@@ -33,10 +46,6 @@
 (with-eval-after-load 'subword-mode
   (define-key subword-mode-map (kbd "C-w")
     (make-backward-kill-word-fn subword-backward-kill (1))))
-
-(with-eval-after-load 'ido
-  (define-key ido-file-completion-map (kbd "C-w") 'ido-delete-backward-word-updir)
-  (define-key ido-common-completion-map (kbd "C-a") 'move-beginning-of-line))
 
 (with-eval-after-load 'paredit
   (define-key paredit-mode-map (kbd "C-w")
