@@ -132,6 +132,9 @@
 ;; Use C++ mode for .h files
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
+;; Use Gnuplot mode for .plt files
+(add-to-list 'auto-mode-alist '("\\.plt\\'" . gnuplot-mode))
+
 ;; Interpret ANSI color codes in compiles
 ;; (require 'ansi-color)
 ;; (defun colorize-compilation-buffer ()
