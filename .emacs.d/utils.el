@@ -628,3 +628,54 @@ See `american-to-iso'."
 ;;             ((string-equal current-paren-type "{") "(" )
 ;;             (t (error "Unknown paren type: " current-paren-type)))))
 ;;     (sp-rewrap-sexp new-paren-type)))
+
+;; From http://www.emacswiki.org/emacs/BackToIndentationOrBeginning
+(defun point-in-comment ()
+  "Determine if the point is inside a comment"
+  (let ((syn (syntax-ppss)))
+    (and (nth 8 syn)
+         (not (nth 3 syn)))))
+
+(defun escape-capturing-groups (re)
+  (s-replace "\\(" "\\(?:" re))
+
+(defvar scala-class-object-trait-re "\\<\\(class\\|object\\|trait\\)\\>")
+(defvar scala-class-object-trait-posix-re "\\<(class|object|trait)\\>")
+(defvar scala-java-file-glob "*.{scala,java}")
+
+(defun scala-get-package-for-class (class)
+  "Return the package for the specified class.
+If the class name is ambiguous in the current repository, present
+the choices to the user."
+  (let* ((default-directory (projectile-project-root))
+         (command
+          (format "git --no-pager grep -h --all-match --extended-regexp --no-color -e %s -e ^package -- %s"
+                  (shell-quote-argument
+                   (format "%s\\s+%s\\>" scala-class-object-trait-posix-re class))
+                  scala-java-file-glob))
+         (matches-string (shell-command-to-string command))
+         (matches-list (split-string matches-string "\n" t))
+         (package-decls (-filter (lambda (str) (string-match-p "^package" str)) matches-list))
+         (package-list (-map (lambda (str) (s-trim (replace-regexp-in-string "^package" "" str))) package-decls))
+         (fully-qualified-class-list (-uniq (-map (lambda (package) (format "%s.%s" package class)) package-list)))
+         (selected
+          (pcase fully-qualified-class-list
+            (`nil (error "No declaration found for %s" class))
+            (`(,unique-match) unique-match)
+            (match-list (completing-read "Fully qualified class: " match-list)))))
+    selected))
+
+(defun scala-import-class-at-point ()
+  "Import the class at point at the top of the file.
+If the class name is ambiguous in the current repository, present
+the choices to the user."
+  (interactive)
+  (let* ((class (symbol-at-point))
+         (fully-qualified-class (scala-get-package-for-class class))
+         (import-statement (format "import %s\n" fully-qualified-class)))
+    (save-excursion
+      (beginning-of-buffer)
+      (search-forward-regexp "^import ")
+      (forward-line)
+      (insert import-statement)
+      (scala-organize-imports))))
