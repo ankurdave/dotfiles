@@ -546,19 +546,38 @@ returning a list of chunks."
            sorted-imports
            (list (lambda (s) (string-prefix-p "java." s))
                  (lambda (s) (string-prefix-p "scala." s))
-                 (lambda (s) (not (string-prefix-p package s))))))
+                 ;; Uncomment this line to put same-package imports in their own
+                 ;; group
+                 ;; (lambda (s) (not (string-prefix-p package s)))
+                 )))
+         (grouped-imports-no-nulls (-filter #'identity grouped-imports))
          (import-string
           (mapconcat (lambda (group)
                        (mapconcat (lambda (s) (format "import %s\n" s)) group ""))
-                     grouped-imports "\n")))
-    import-string))
+                     grouped-imports-no-nulls "\n")))
+    (concat import-string "\n")))
 
-(defun scala-organize-imports (beg end)
-  "Organize Scala imports between BEG and END."
-  (interactive "r")
-  (let ((new-imports
-         (scala-organize-import-string
-          (buffer-substring-no-properties beg end) (scala-get-package))))
+(defun scala-get-import-block ()
+  (save-excursion
+    (beginning-of-buffer)
+    (search-forward-regexp "^import ")
+    (beginning-of-line)
+    (let ((beg (point)))
+      (while (or (looking-at "^import ")
+                 (looking-at "^\\s-")
+                 (looking-at "^$"))
+        (forward-line))
+      (cons beg (point)))))
+
+(defun scala-organize-imports ()
+  "Organize Scala imports in current file."
+  (interactive)
+  (let* ((import-block (scala-get-import-block))
+         (beg (car import-block))
+         (end (cdr import-block))
+         (new-imports
+          (scala-organize-import-string
+           (buffer-substring-no-properties beg end) (scala-get-package))))
     (save-excursion
       (delete-region beg end)
       (goto-char beg)
