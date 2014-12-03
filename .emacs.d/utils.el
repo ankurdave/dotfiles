@@ -514,9 +514,7 @@ Currently only supports doing this in one frame at a time."
 
 (defun scala-parse-imports (str)
   "Return a list of imports in the given string."
-  (let* ((imports-raw (split-string str "^import " t))
-         (imports (mapcar 's-trim imports-raw)))
-    imports))
+  (split-string str "^import " t "[[:space:]\n]+"))
 
 (defun scala-get-package ()
   "Get the package of the current file."
