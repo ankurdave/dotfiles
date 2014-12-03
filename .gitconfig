@@ -13,6 +13,7 @@
 	amend = commit -a --amend --no-edit
 	lbranches = for-each-ref --sort=committerdate refs/heads/ --format='%(committerdate:relative)%09%(refname:short)%0A%09%(contents:subject)'
 	lbranches2 = log --branches --simplify-by-decoration --decorate --oneline
+	autocommit = commit -am 'Autocommit'
 [color]
 	ui = auto
 [core]
