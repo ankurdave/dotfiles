@@ -563,3 +563,37 @@ returning a list of chunks."
       (delete-region beg end)
       (goto-char beg)
       (insert new-imports))))
+
+(defun american-to-iso (american)
+  "Return the ISO-8601 date corresponding to the given AMERICAN date.
+For example, (american-to-iso \"9/7/2014\") returns
+\"2014-09-07\". If only the day and month are specified, the
+current year is used."
+  (let* ((elems (split-string american "/"))
+         (month (string-to-number (first elems)))
+         (day (string-to-number (second elems)))
+         (year
+          (string-to-number
+           (if (third elems)
+               (third elems)
+             (format-time-string "%Y")))))
+    (format "%d-%02d-%02d" year month day)))
+
+(defun american-to-iso-region (beg end)
+  "When the region contains an American date, replace it with the ISO-8601 date.
+See `american-to-iso'."
+  (interactive "r")
+  (let* ((american (buffer-substring-no-properties beg end))
+         (iso (american-to-iso american)))
+    (save-excursion
+      (delete-region beg end)
+      (goto-char beg)
+      (insert iso))))
+
+(defun american-to-iso-buffer ()
+  "Change the first column of a CSV file from American to ISO-8601 dates.
+See `american-to-iso'."
+  (interactive)
+  (while (re-search-forward "^\\([0-9/]+\\)," nil t)
+    (american-to-iso-region (match-beginning 1) (match-end 1))
+    (redisplay)))
