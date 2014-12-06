@@ -31,6 +31,7 @@
  '(cursor-type (quote (bar . 2)))
  '(custom-enabled-themes (quote (zenburn)))
  '(custom-safe-themes t)
+ '(debug-on-error nil)
  '(default-input-method "TeX")
  '(delete-by-moving-to-trash t)
  '(delete-selection-mode t)
