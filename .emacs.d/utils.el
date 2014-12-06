@@ -679,3 +679,14 @@ the choices to the user."
       (forward-line)
       (insert import-statement)
       (scala-organize-imports))))
+
+(defun helm-run-open-dir-or-find-file ()
+  "In helm-find-files, persistently enter the selected directory
+or else find the selected file."
+  (interactive)
+  (let ((candidate (helm-get-selection)))
+    (cond
+     ((file-directory-p candidate)
+      (helm-find-files-persistent-action candidate))
+     (t
+      (helm-maybe-exit-minibuffer)))))
