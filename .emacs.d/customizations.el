@@ -116,6 +116,7 @@
  '(ns-command-modifier (quote meta))
  '(ns-tool-bar-display-mode (quote both) t)
  '(ns-tool-bar-size-mode (quote regular) t)
+ '(org-agenda-files (quote ("~/Dropbox/scratch")))
  '(org-src-fontify-natively t)
  '(org-startup-folded nil)
  '(org-startup-truncated nil)
