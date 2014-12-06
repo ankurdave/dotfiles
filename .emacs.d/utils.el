@@ -660,7 +660,7 @@ the choices to the user."
          (fully-qualified-class-list (-uniq (-map (lambda (package) (format "%s.%s" package class)) package-list)))
          (selected
           (pcase fully-qualified-class-list
-            (`nil (error "No declaration found for %s" class))
+            (`nil (user-error "No declaration found for %s" class))
             (`(,unique-match) unique-match)
             (match-list (completing-read "Fully qualified class: " match-list)))))
     selected))
