@@ -512,77 +512,6 @@ Currently only supports doing this in one frame at a time."
   (notmuch-tree-next-matching-message)
   (notmuch-tree-remove-tag (list "-unread")))
 
-(defun scala-parse-imports (str)
-  "Return a list of imports in the given string."
-  (split-string str "^import " t "[[:space:]\n]+"))
-
-(defun scala-get-package ()
-  "Get the package of the current file."
-  (save-excursion
-    (beginning-of-buffer)
-    (search-forward-regexp "^package ")
-    (let ((beg (point)))
-      (end-of-line)
-      (buffer-substring-no-properties beg (point)))))
-
-(defun list-organize-by-predicates (elems preds)
-  "Reorder ELEMS into chunks that match each of PREDS in order,
-returning a list of chunks."
-  (if preds
-      (let* ((first-pred (car preds))
-             (matches-rest (-separate first-pred elems))
-             (matches (first matches-rest))
-             (rest-elems (second matches-rest))
-             (rest-preds (cdr preds)))
-        (cons matches (list-organize-by-predicates rest-elems rest-preds)))
-    (list elems)))
-
-(defun scala-organize-import-string (import-string package)
-  "Organize imports in IMPORT-STRING assuming we are in PACKAGE."
-  (let* ((imports (scala-parse-imports import-string))
-         (sorted-imports (sort imports 'string<))
-         (grouped-imports
-          (list-organize-by-predicates
-           sorted-imports
-           (list (lambda (s) (string-prefix-p "java." s))
-                 (lambda (s) (string-prefix-p "scala." s))
-                 ;; Uncomment this line to put same-package imports in their own
-                 ;; group
-                 ;; (lambda (s) (not (string-prefix-p package s)))
-                 )))
-         (grouped-imports-no-nulls (-filter #'identity grouped-imports))
-         (import-string
-          (mapconcat (lambda (group)
-                       (mapconcat (lambda (s) (format "import %s\n" s)) group ""))
-                     grouped-imports-no-nulls "\n")))
-    (concat import-string "\n")))
-
-(defun scala-get-import-block ()
-  (save-excursion
-    (beginning-of-buffer)
-    (search-forward-regexp "^import ")
-    (beginning-of-line)
-    (let ((beg (point)))
-      (while (or (looking-at "^import ")
-                 (looking-at "^\\s-")
-                 (looking-at "^$"))
-        (forward-line))
-      (cons beg (point)))))
-
-(defun scala-organize-imports ()
-  "Organize Scala imports in current file."
-  (interactive)
-  (let* ((import-block (scala-get-import-block))
-         (beg (car import-block))
-         (end (cdr import-block))
-         (new-imports
-          (scala-organize-import-string
-           (buffer-substring-no-properties beg end) (scala-get-package))))
-    (save-excursion
-      (delete-region beg end)
-      (goto-char beg)
-      (insert new-imports))))
-
 (defun american-to-iso (american)
   "Return the ISO-8601 date corresponding to the given AMERICAN date.
 For example, (american-to-iso \"9/7/2014\") returns
@@ -638,47 +567,6 @@ See `american-to-iso'."
 
 (defun escape-capturing-groups (re)
   (s-replace "\\(" "\\(?:" re))
-
-(defvar scala-class-object-trait-re "\\<\\(class\\|object\\|trait\\)\\>")
-(defvar scala-class-object-trait-posix-re "\\<(class|object|trait)\\>")
-(defvar scala-java-file-glob "*.{scala,java}")
-
-(defun scala-get-package-for-class (class)
-  "Return the package for the specified class.
-If the class name is ambiguous in the current repository, present
-the choices to the user."
-  (let* ((default-directory (projectile-project-root))
-         (command
-          (format "git --no-pager grep -h --all-match --extended-regexp --no-color -e %s -e ^package -- %s"
-                  (shell-quote-argument
-                   (format "%s\\s+%s\\>" scala-class-object-trait-posix-re class))
-                  scala-java-file-glob))
-         (matches-string (shell-command-to-string command))
-         (matches-list (split-string matches-string "\n" t))
-         (package-decls (-filter (lambda (str) (string-match-p "^package" str)) matches-list))
-         (package-list (-map (lambda (str) (s-trim (replace-regexp-in-string "^package" "" str))) package-decls))
-         (fully-qualified-class-list (-uniq (-map (lambda (package) (format "%s.%s" package class)) package-list)))
-         (selected
-          (pcase fully-qualified-class-list
-            (`nil (user-error "No declaration found for %s" class))
-            (`(,unique-match) unique-match)
-            (match-list (completing-read "Fully qualified class: " match-list)))))
-    selected))
-
-(defun scala-import-class-at-point ()
-  "Import the class at point at the top of the file.
-If the class name is ambiguous in the current repository, present
-the choices to the user."
-  (interactive)
-  (let* ((class (symbol-at-point))
-         (fully-qualified-class (scala-get-package-for-class class))
-         (import-statement (format "import %s\n" fully-qualified-class)))
-    (save-excursion
-      (beginning-of-buffer)
-      (search-forward-regexp "^import ")
-      (forward-line)
-      (insert import-statement)
-      (scala-organize-imports))))
 
 (defun helm-run-open-dir-or-find-file ()
   "In helm-find-files, persistently enter the selected directory

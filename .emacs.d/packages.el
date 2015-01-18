@@ -113,7 +113,8 @@
   (with-eval-after-load "auto-complete" (diminish 'auto-complete-mode))
   (with-eval-after-load "magit" (diminish 'magit-auto-revert-mode)))
 
-(add-to-list 'load-path "~/.emacs.d/lisp")
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
+(load "scala-import")
 (autoload 'typing-test "typing-test" nil t)
 
 (autoload 'vc-git-grep "vc-git" nil t)
