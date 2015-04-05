@@ -578,3 +578,16 @@ or else find the selected file."
       (helm-find-files-persistent-action candidate))
      (t
       (helm-maybe-exit-minibuffer)))))
+
+(defun TeX-recenter-output-buffer (line)
+  "Redisplay buffer of TeX job output so that most recent output can be seen.
+The last line of the buffer is displayed on line LINE of the window, or
+at bottom if LINE is nil."
+  (interactive "P")
+  (let ((buffer (TeX-active-buffer)))
+    (if buffer
+        (let ((old-buffer (current-buffer)))
+          (TeX-pop-to-buffer buffer t t)
+          (goto-char (point-max))
+          (recenter -1))
+      (message "No process for this document."))))

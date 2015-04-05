@@ -52,15 +52,6 @@
       (unless (package-installed-p pkg-name)
         (package-install pkg-name)))))
 
-(defun init--update-packages ()
-  "Update all packages. Assumes (package-refresh-contents) was already called."
-  (interactive)
-  (save-current-buffer
-    (package-list-packages-no-fetch)
-    (when (package-menu--find-upgrades)
-      (package-menu-mark-upgrades)
-      (package-menu-execute))))
-
 (when (fboundp 'package-refresh-contents)
   (condition-case nil
       (init--install-packages)

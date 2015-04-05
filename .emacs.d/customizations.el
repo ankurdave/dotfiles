@@ -22,7 +22,7 @@
  '(aquamacs-tool-bar-user-customization nil t)
  '(auto-revert-verbose nil)
  '(blink-cursor-mode nil)
- '(c-basic-offset 2)
+ '(c-basic-offset 4)
  '(c-default-style "k&r")
  '(column-number-mode t)
  '(company-idle-delay nil)
