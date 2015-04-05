@@ -591,3 +591,10 @@ at bottom if LINE is nil."
           (goto-char (point-max))
           (recenter -1))
       (message "No process for this document."))))
+
+(require 'flx)
+(defun helm-score-candidate-for-pattern (candidate pattern)
+  (let ((score (flx-score candidate pattern)))
+  (if score
+      (car score)
+    0)))

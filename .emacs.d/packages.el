@@ -25,6 +25,7 @@
            exec-path-from-shell
            expand-region
            fill-column-indicator
+           flx
            git-commit-mode
            gitconfig-mode
            gitignore-mode

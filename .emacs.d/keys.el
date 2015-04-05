@@ -38,7 +38,8 @@
   (define-key helm-map (kbd "C-SPC") nil)
   (define-key helm-map (kbd "C-k") nil)
   (define-key helm-map (kbd "C-w") nil)
-  (define-key helm-find-files-map (kbd "<RET>") 'helm-run-open-dir-or-find-file))
+  ;; (define-key helm-find-files-map (kbd "<RET>") 'helm-run-open-dir-or-find-file)
+  )
 
 (with-eval-after-load 'org
   (define-key org-mode-map (kbd "<tab>") 'org-indent-item-or-cycle)
