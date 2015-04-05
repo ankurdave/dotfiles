@@ -25,6 +25,7 @@
            exec-path-from-shell
            expand-region
            fill-column-indicator
+           flx-ido
            git-commit-mode
            gitconfig-mode
            gitignore-mode
@@ -33,6 +34,8 @@
            helm-git-grep
            helm-projectile
            highlight-symbol
+           ido-ubiquitous
+           ido-vertical-mode
            magit
            molokai-theme
            notmuch
@@ -44,6 +47,7 @@
            s
            scala-mode2
            smartparens
+           smex
            undo-tree
            visual-regexp
            visual-regexp-steroids
@@ -82,6 +86,22 @@
   (global-undo-tree-mode)
   (global-set-key (kbd "C--") 'undo-tree-undo)
   (global-set-key (kbd "C-?") 'undo-tree-redo))
+
+(when (fboundp 'smex)
+  (smex-initialize)
+  (global-set-key (kbd "M-x") 'smex)
+  (global-set-key (kbd "M-X") 'smex-major-mode-commands)
+  (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command))
+
+(when (fboundp 'ido-mode)
+  (ido-mode 1))       ; must run before enabling `ido-ubiquitous-mode'
+
+(when (fboundp 'ido-ubiquitous-mode)
+  (ido-ubiquitous-mode))
+
+(when (fboundp 'flx-ido-mode)
+  (flx-ido-mode 1)
+  (setq gc-cons-threshold 20000000))
 
 (when (and (require 'eshell nil t)
            (require 'em-smart nil t))

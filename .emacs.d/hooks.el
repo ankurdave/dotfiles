@@ -254,3 +254,4 @@
       smtpmail-smtp-service 465)
 
 (put 'narrow-to-region 'disabled nil)
+(put 'ido-exit-minibuffer 'disabled nil)
