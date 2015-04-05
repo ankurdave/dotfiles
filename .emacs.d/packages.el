@@ -48,6 +48,7 @@
            undo-tree
            visual-regexp
            visual-regexp-steroids
+           ws-butler
            zenburn-theme)))
     (dolist (pkg-name packages-to-install)
       (unless (package-installed-p pkg-name)

@@ -197,6 +197,7 @@
  '(winner-mode t)
  '(winsize-desired-width 80)
  '(word-wrap t)
+ '(ws-butler-global-mode t)
  '(x-select-enable-clipboard t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

@@ -50,7 +50,6 @@
   (add-hook 'scala-mode-hook 'highlight-symbol-mode))
 (add-hook 'scala-mode-hook
           (lambda ()
-            (add-to-list 'write-file-functions 'delete-trailing-whitespace)
             (setq fill-column 100)
             (toggle-truncate-lines 1)))
 
