@@ -592,9 +592,31 @@ at bottom if LINE is nil."
           (recenter -1))
       (message "No process for this document."))))
 
-(require 'flx)
-(defun helm-score-candidate-for-pattern (candidate pattern)
-  (let ((score (flx-score candidate pattern)))
-  (if score
-      (car score)
-    0)))
+;; From https://github.com/emacs-helm/helm/issues/145#issuecomment-69478087
+(with-eval-after-load 'helm
+  (require 'flx)
+  (defvar helm-flx-cache (flx-make-string-cache #'flx-get-heatmap-str))
+
+  (defun helm-score-candidate-for-pattern (candidate pattern)
+    (car (flx-score candidate pattern helm-flx-cache)))
+
+  (defun helm-fuzzy-default-highlight-match (candidate)
+    (let* ((pair (and (consp candidate) candidate))
+            (display (if pair (car pair) candidate))
+            (real (cdr pair)))
+      (with-temp-buffer
+        (insert display)
+        (goto-char (point-min))
+        (if (string-match-p " " helm-pattern)
+          (cl-loop with pattern = (split-string helm-pattern)
+            for p in pattern
+            do (when (search-forward p nil t)
+                 (add-text-properties
+                   (match-beginning 0) (match-end 0) '(face helm-match))))
+          (cl-loop with pattern = (cdr (flx-score display
+                                         helm-pattern helm-flx-cache))
+            for index in pattern
+            do (add-text-properties
+                 (1+ index) (+ 2 index) '(face helm-match))))
+        (setq display (buffer-string)))
+      (if real (cons display real) display))))
