@@ -598,7 +598,8 @@ at bottom if LINE is nil."
   (defvar helm-flx-cache (flx-make-string-cache #'flx-get-heatmap-str))
 
   (defun helm-score-candidate-for-pattern (candidate pattern)
-    (car (flx-score candidate pattern helm-flx-cache)))
+    (let ((score (flx-score candidate pattern helm-flx-cache)))
+      (if score (car score) 0)))
 
   (defun helm-fuzzy-default-highlight-match (candidate)
     (let* ((pair (and (consp candidate) candidate))
