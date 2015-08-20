@@ -33,6 +33,9 @@
 
 ;;; Code:
 
+(require 'dash)
+(require 's)
+
 ;;;###autoload
 (defun scala-import-organize ()
   "Organize Scala imports in current file."
@@ -64,6 +67,21 @@ Git."
       (forward-line)
       (insert import-statement)
       (scala-import-organize))))
+
+;;;###autoload
+(defun scala-import-goto-class-at-point ()
+  "Open the class at point.
+If the class name is ambiguous in the current repository, present
+the choices to the user. Requires the repository to be stored in
+Git."
+  (interactive)
+  (let* ((class (symbol-at-point))
+         (location (scala-import--get-location-for-class class))
+         (filename (car location))
+         (line-number (cdr location)))
+    (find-file filename)
+    (goto-char (point-min))
+    (forward-line (1- line-number))))
 
 (defun scala-import--parse-imports (str)
   "Return a list of imports in the given string."
@@ -131,8 +149,7 @@ returning a list of chunks."
 If the class name is ambiguous in the current repository, present
 the choices to the user. Requires the repository to be stored in
 Git."
-  (let* ((default-directory (projectile-project-root))
-         (command
+  (let* ((command
           (format "git --no-pager grep -h --all-match --extended-regexp --no-color -e %s -e ^package -- %s"
                   (shell-quote-argument
                    (format "%s\\s+%s\\>" scala-import--class-object-trait-posix-re class))
@@ -148,6 +165,35 @@ Git."
             (`(,unique-match) unique-match)
             (match-list (completing-read "Fully qualified class: " match-list)))))
     selected))
+
+(defun scala-import--get-location-for-class (class)
+  "Return the location where the specified class is declared.
+Returns a cons cell of the filename and the line.
+If the class name is ambiguous in the current repository, present
+the choices to the user. Requires the repository to be stored in
+Git."
+  (let* ((default-directory (projectile-project-root))
+         (command
+          (format "git --no-pager grep --extended-regexp --no-color --line-number -e %s -- %s"
+                  (shell-quote-argument
+                   (format "%s\\s+%s\\>" scala-import--class-object-trait-posix-re class))
+                  scala-import--scala-java-file-glob))
+         (matches-string (shell-command-to-string command))
+         (matches-list (split-string matches-string "\n" t))
+         (matches-parsed (-map (lambda (match-line) (split-string match-line ":")) matches-list))
+         (matching-files (-uniq (-map (lambda (match) (nth 0 match)) matches-parsed)))
+         (selected-file
+          (pcase matching-files
+            (`nil (user-error "No declaration found for %s" class))
+            (`(,unique-match) unique-match)
+            (match-list (completing-read "File name: " match-list))))
+         (selected-line (nth 1 (car (-filter (lambda (match)
+                                               (equal selected-file (nth 0 match)))
+                                             matches-parsed)))))
+    (cons (expand-file-name selected-file default-directory)
+          (string-to-number selected-line))))
+
+
 
 (provide 'scala-import)
 
