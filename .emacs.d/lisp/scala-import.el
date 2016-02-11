@@ -141,7 +141,7 @@ returning a list of chunks."
         (forward-line))
       (cons beg (point)))))
 
-(defvar scala-import--class-object-trait-posix-re "\\<(class|object|trait)\\>")
+(defvar scala-import--class-object-trait-posix-re "\\<(class|object|trait|type)\\>")
 (defvar scala-import--scala-java-file-glob "*.{scala,java}")
 
 (defun scala-import--get-package-for-class (class)
@@ -149,15 +149,18 @@ returning a list of chunks."
 If the class name is ambiguous in the current repository, present
 the choices to the user. Requires the repository to be stored in
 Git."
-  (let* ((command
+  (let* ((default-directory (projectile-project-root))
+         (command
           (format "git --no-pager grep -h --all-match --extended-regexp --no-color -e %s -e ^package -- %s"
                   (shell-quote-argument
                    (format "%s\\s+%s\\>" scala-import--class-object-trait-posix-re class))
                   scala-import--scala-java-file-glob))
          (matches-string (shell-command-to-string command))
          (matches-list (split-string matches-string "\n" t))
-         (package-decls (-filter (lambda (str) (string-match-p "^package" str)) matches-list))
-         (package-list (-map (lambda (str) (s-trim (replace-regexp-in-string "^package" "" str))) package-decls))
+         (package-list
+          (scala-import--handle-package-objects
+           (-filter (lambda (str) (string-match-p "^package" str))
+                    matches-list)))
          (fully-qualified-class-list (-uniq (-map (lambda (package) (format "%s.%s" package class)) package-list)))
          (selected
           (pcase fully-qualified-class-list
@@ -165,6 +168,23 @@ Git."
             (`(,unique-match) unique-match)
             (match-list (completing-read "Fully qualified class: " match-list)))))
     selected))
+
+(defun scala-import--handle-package-objects (package-list &optional cur-package)
+  (when package-list
+    (if (string-match-p "^package object" (car package-list))
+        (cons
+         (format
+          "%s.%s" cur-package
+          (s-trim
+           (replace-regexp-in-string
+            "{.*$" ""
+            (replace-regexp-in-string
+             "^package object" "" (car package-list)))))
+         (scala-import--handle-package-objects (cdr package-list) cur-package))
+      (let ((new-cur-package
+             (s-trim (replace-regexp-in-string "^package" "" (car package-list)))))
+        (cons new-cur-package
+              (scala-import--handle-package-objects (cdr package-list) new-cur-package))))))
 
 (defun scala-import--get-location-for-class (class)
   "Return the location where the specified class is declared.
