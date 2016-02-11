@@ -110,4 +110,6 @@
 
 (with-eval-after-load "scala-mode2"
   (define-key scala-mode-map (kbd "M-n") 'highlight-symbol-next)
-  (define-key scala-mode-map (kbd "M-p") 'highlight-symbol-prev))
+  (define-key scala-mode-map (kbd "M-p") 'highlight-symbol-prev)
+  (define-key scala-mode-map (kbd "M-.") 'scala-import-goto-class-at-point)
+  (define-key scala-mode-map (kbd "M-,") 'scala-import-class-at-point))
