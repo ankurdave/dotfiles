@@ -628,3 +628,12 @@ at bottom if LINE is nil."
     (if (functionp symb)
         (find-function symb)
       (find-variable symb))))
+
+(defun eval-last-sexp-other-buffer ()
+  (interactive)
+  (let ((sexp (preceding-sexp))
+        (lexical-binding-saved lexical-binding))
+    (save-selected-window
+      (switch-to-other-buffer)
+      (eval-last-sexp-print-value
+       (eval sexp lexical-binding-saved)))))

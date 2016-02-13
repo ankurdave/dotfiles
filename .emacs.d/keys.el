@@ -12,7 +12,10 @@
 (global-set-key (kbd "C-x 4 p") 'projectile-find-file-other-window)
 
 (define-key emacs-lisp-mode-map
- (kbd "M-.") 'find-symbol-at-point)
+  (kbd "M-.") 'find-symbol-at-point)
+(define-key emacs-lisp-mode-map
+  (kbd "C-c e") 'eval-last-sexp-other-buffer)
+
 
 (when (fboundp 'magit-status)
   (global-set-key (kbd "C-x m") 'magit-status))
