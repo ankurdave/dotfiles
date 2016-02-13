@@ -63,8 +63,9 @@ Git."
          (import-statement (format "import %s\n" fully-qualified-class)))
     (save-excursion
       (goto-char (point-min))
-      (search-forward-regexp "^import ")
+      (search-forward-regexp "^package ")
       (forward-line)
+      (insert "\n")
       (insert import-statement)
       (scala-import-organize))))
 
