@@ -145,19 +145,30 @@ returning a list of chunks."
 
 (defvar scala-import--class-object-trait-posix-re "\\<(class|object|trait|type)\\>")
 (defvar scala-import--scala-java-file-glob "*.{scala,java}")
+(defvar scala-import-dependencies nil)
+
+(defun scala-import--run-command-in-project-and-dependencies (command &optional prepend-dir)
+  (mapconcat
+   (lambda (default-directory)
+     (if prepend-dir
+         (s-join "\n"
+                 (-map (lambda (line) (concat default-directory line))
+                       (s-split "\n" (shell-command-to-string command) t)))
+       (shell-command-to-string command)))
+   (cons (projectile-project-root) scala-import-dependencies)
+   ""))
 
 (defun scala-import--get-package-for-class (class)
   "Return the package for the specified class.
 If the class name is ambiguous in the current repository, present
 the choices to the user. Requires the repository to be stored in
 Git."
-  (let* ((default-directory (projectile-project-root))
-         (command
+  (let* ((command
           (format "git --no-pager grep -h --all-match --extended-regexp --no-color -e %s -e ^package -- %s"
                   (shell-quote-argument
                    (format "%s\\s+%s\\>" scala-import--class-object-trait-posix-re class))
                   scala-import--scala-java-file-glob))
-         (matches-string (shell-command-to-string command))
+         (matches-string (scala-import--run-command-in-project-and-dependencies command))
          (matches-list (split-string matches-string "\n" t))
          (package-list
           (scala-import--handle-package-objects
@@ -194,13 +205,12 @@ Returns a cons cell of the filename and the line.
 If the class name is ambiguous in the current repository, present
 the choices to the user. Requires the repository to be stored in
 Git."
-  (let* ((default-directory (projectile-project-root))
-         (command
-          (format "git --no-pager grep --extended-regexp --no-color --line-number -e %s -- %s"
+  (let* ((command
+          (format "git --no-pager grep --extended-regexp --full-name --no-color --line-number -e %s -- %s"
                   (shell-quote-argument
                    (format "%s\\s+%s\\>" scala-import--class-object-trait-posix-re class))
                   scala-import--scala-java-file-glob))
-         (matches-string (shell-command-to-string command))
+         (matches-string (scala-import--run-command-in-project-and-dependencies command t))
          (matches-list (split-string matches-string "\n" t))
          (matches-parsed (-map (lambda (match-line) (split-string match-line ":")) matches-list))
          (matching-files (-uniq (-map (lambda (match) (nth 0 match)) matches-parsed)))
@@ -212,7 +222,7 @@ Git."
          (selected-line (nth 1 (car (-filter (lambda (match)
                                                (equal selected-file (nth 0 match)))
                                              matches-parsed)))))
-    (cons (expand-file-name selected-file default-directory)
+    (cons selected-file
           (string-to-number selected-line))))
 
 
