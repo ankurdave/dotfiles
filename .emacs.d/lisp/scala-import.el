@@ -113,7 +113,7 @@ returning a list of chunks."
 (defun scala-import--organize-import-string (import-string package)
   "Organize imports in IMPORT-STRING assuming we are in PACKAGE."
   (let* ((imports (scala-import--parse-imports import-string))
-         (sorted-imports (sort imports 'string<))
+         (sorted-imports (-distinct (sort imports 'string<)))
          (grouped-imports
           (scala-import--list-organize-by-predicates
            sorted-imports
