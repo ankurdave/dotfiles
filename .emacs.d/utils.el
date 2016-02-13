@@ -621,3 +621,10 @@ at bottom if LINE is nil."
                  (1+ index) (+ 2 index) '(face helm-match))))
         (setq display (buffer-string)))
       (if real (cons display real) display))))
+
+(defun find-symbol-at-point ()
+  (interactive)
+  (let ((symb (symbol-at-point)))
+    (if (functionp symb)
+        (find-function symb)
+      (find-variable symb))))

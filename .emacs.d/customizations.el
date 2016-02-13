@@ -45,6 +45,7 @@
  '(fci-rule-color "#383838")
  '(ffap-machine-p-known (quote reject))
  '(fill-column 80)
+ '(find-function-recenter-line nil)
  '(flycheck-emacs-lisp-initialize-packages t)
  '(global-auto-revert-mode nil)
  '(global-auto-revert-non-file-buffers nil)
