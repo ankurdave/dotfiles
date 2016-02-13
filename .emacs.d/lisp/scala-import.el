@@ -118,6 +118,7 @@ returning a list of chunks."
           (scala-import--list-organize-by-predicates
            sorted-imports
            (list (lambda (s) (string-prefix-p "java." s))
+                 (lambda (s) (string-prefix-p "javax." s))
                  (lambda (s) (string-prefix-p "scala." s))
                  ;; Uncomment this line to put same-package imports in their own
                  ;; group
