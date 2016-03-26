@@ -90,6 +90,15 @@ Each path should end in a slash. You can set this for a project
 using a '.dir-locals.el' file as described in Info node
 `Per-Directory Local Variables'.")
 
+(defun scala-import-add-dependency (dep)
+  (interactive "D")
+  (save-current-buffer
+    (let ((default-directory (projectile-project-root)))
+      (add-dir-local-variable
+       nil 'scala-import-dependencies (cons dep scala-import-dependencies)))
+    (save-buffer))
+  (hack-dir-local-variables-non-file-buffer))
+
 (defun scala-import--parse-imports (str)
   "Return a list of imports in the given string."
   (split-string str "^import " t "[[:space:]\n]+"))
