@@ -1,0 +1,11 @@
+#!/bin/bash
+
+cd "$HOME/Library/Application Support/Google/Chrome/Default"
+
+while true; do
+    echo "=== Backing up..."
+    sqlite3 History "SELECT DATETIME(last_visit_time/1000000-11644473600,'unixepoch'),title,url FROM urls ORDER BY last_visit_time DESC" >> ~/history/chrome.txt
+    sort --unique --output ~/history/chrome.txt ~/history/chrome.txt
+    echo "=== Done."
+    sleep 3600
+done

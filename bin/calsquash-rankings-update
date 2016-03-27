@@ -1,0 +1,12 @@
+#!/bin/bash
+
+. /Users/ankurdave/.bash_profile
+
+set -e
+
+cd /Users/ankurdave/repos/calsquash-rankings-cron
+git pull --ff-only
+./scraper.py
+./skill.py
+git autocommit
+git push origin master
