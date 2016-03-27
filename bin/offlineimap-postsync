@@ -104,14 +104,13 @@ notmuch new
     OR from:ankurdave@berkeley.edu \
 \)
 
-# Tag replies to things I've sent
-newthreads=$(notmuch search --output=threads tag:new)
-if [ -n "$newthreads" ]; then
-    newthreads_with_sent=$(notmuch search --output=threads $newthreads is:sent)
-    if [ -n "$newthreads_with_sent" ]; then
-        /usr/bin/time notmuch tag +is-reply -- $newthreads_with_sent tag:new AND NOT is:sent
-    fi
-fi
+# Tag replies to things I've sent:
+# 1. Find threads with new mail
+# 2. Filter those to threads containing mail sent by me
+# 3. Tag the new mail in those threads as replies
+/usr/bin/time notmuch search --output=threads tag:new |
+    /usr/bin/time xargs -J {} notmuch search --output=threads {} is:sent |
+    /usr/bin/time xargs -J {} notmuch tag +is-reply -- {} tag:new AND NOT is:sent
 
 # Databricks mail
 /usr/bin/time notmuch tag +databricks -- tag:new AND 'path:databricks/**'
