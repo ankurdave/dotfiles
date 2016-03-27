@@ -5,35 +5,12 @@
   (indent-region (point-min) (point-max) nil))
 
 (defun smart-split ()
-  "Split the frame into as many 80-column sub-windows as possible."
+  "Split the frame into as many 80-column windows as possible."
   (interactive)
-  (defun ordered-window-list ()
-    "Return a list of windows starting from the top left."
-    (window-list (selected-frame) 'no-minibuf (frame-first-window)))
-  (defun resize-windows-destructively (windows)
-    "Resize each window in WINDOWS to 80 characters wide.
-
-If there's not enough space to do that, delete the appropriate
-window until there is space."
-    (when windows
-      (condition-case nil
-          (progn (adjust-window-trailing-edge (first windows) (- 80 (window-width (first windows))) t)
-                 (resize-windows-destructively (cdr windows)))
-        (error (if (cdr windows)
-                   (progn (delete-window (cadr windows))
-                          (resize-windows-destructively (cons (car windows) (cddr windows))))
-                 (ignore-errors
-                   (delete-window (car windows))))))))
-  (defun subsplit (w)
-    "Split the window W into multiple 80-column windows if possible."
-    (when (> (window-width w) (* 2 81))
-      (let ((w2 (split-window w 82 t)))
-        (save-excursion
-          (select-window w2)
-          (switch-to-buffer (other-buffer (window-buffer w)))))
-      (subsplit w)))
-  (resize-windows-destructively (ordered-window-list))
-  (walk-windows 'subsplit)
+  (delete-other-windows)
+  (let ((num-windows (/ (frame-width) 80)))
+    (dotimes (i (1- num-windows))
+      (split-window-right)))
   (balance-windows))
 
 (defun prompt-quit-emacs ()
