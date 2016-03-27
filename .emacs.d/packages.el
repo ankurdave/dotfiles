@@ -80,9 +80,9 @@
            (require 'em-smart nil t))
   (eshell-smart-initialize))
 
-(when (fboundp 'exec-path-from-shell-initialize)
-  (with-demoted-errors
-      (exec-path-from-shell-initialize)))
+(when (fboundp 'exec-path-from-shell-copy-env)
+  (exec-path-from-shell-copy-env "PATH")
+  (exec-path-from-shell-copy-env "SCALA_HOME"))
 
 ;; (require 'smooth-scrolling nil t)
 

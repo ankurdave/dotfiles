@@ -129,6 +129,7 @@
      ("melpa" . "http://melpa.milkbox.net/packages/"))))
  '(pop-up-windows t)
  '(projectile-global-mode t)
+ '(projectile-tags-file-name ".TAGS")
  '(projectile-use-git-grep t)
  '(py-indent-offset 2)
  '(python-indent-offset 2)
@@ -155,6 +156,8 @@
    (quote
     (4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80 84 88 92 96 100 104 108 112 116 120)))
  '(tab-width 4)
+ '(tags-add-tables t)
+ '(tags-revert-without-query t)
  '(tool-bar-mode nil)
  '(transient-mark-mode t)
  '(undo-tree-auto-save-history t)

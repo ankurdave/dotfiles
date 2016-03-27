@@ -51,7 +51,8 @@
 (add-hook 'scala-mode-hook
           (lambda ()
             (setq fill-column 100)
-            (toggle-truncate-lines 1)))
+            (toggle-truncate-lines 1)
+            (setq projectile-tags-command "sctags -e -f \"%s\"")))
 
 ;; ensime mode for Scala
 (when (fboundp 'ensime-scala-mode-hook)

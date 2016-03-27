@@ -14,7 +14,7 @@ export JAVA_HOME=$(/usr/libexec/java_home)
 export HADOOP_HOME=$HOME/hadoop/
 export MAHOUT_HOME=$HOME/mahout/
 # export SCALA_HOME=$(brew --repository)/Library/LinkedKegs/scala/libexec
-export SCALA_HOME=$(/usr/local/bin/brew --repository)/Cellar/scala210/2.10.4/libexec
+export SCALA_HOME=$(/usr/local/bin/brew --prefix scala)/libexec
 export TEXMFHOME=$HOME/repos/latex
 
 export SHELL=/usr/local/bin/bash

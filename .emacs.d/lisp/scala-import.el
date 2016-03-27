@@ -36,6 +36,7 @@
 
 (require 'dash)
 (require 's)
+(require 'projectile)
 
 ;;;###autoload
 (defun scala-import-organize ()
@@ -59,7 +60,7 @@
 If the class name is ambiguous in the current repository, present
 the choices to the user."
   (interactive)
-  (let* ((class (symbol-at-point))
+  (let* ((class (symbol-name (symbol-at-point)))
          (fully-qualified-class (scala-import--get-package-for-class class))
          (import-statement (format "import %s\n" fully-qualified-class)))
     (save-excursion
@@ -76,28 +77,14 @@ the choices to the user."
 If the class name is ambiguous in the current repository, present
 the choices to the user."
   (interactive)
-  (let* ((class (symbol-at-point))
-         (location (scala-import--get-location-for-class class))
-         (filename (car location))
-         (line-number (cdr location)))
-    (find-file filename)
-    (goto-char (point-min))
-    (forward-line (1- line-number))))
-
-(defvar scala-import-dependencies nil
-  "A list of paths to other Git repos where classes may reside.
-Each path should end in a slash. You can set this for a project
-using a '.dir-locals.el' file as described in Info node
-`Per-Directory Local Variables'.")
-
-(defun scala-import-add-dependency (dep)
-  (interactive "D")
-  (save-current-buffer
-    (let ((default-directory (projectile-project-root)))
-      (add-dir-local-variable
-       nil 'scala-import-dependencies (cons dep scala-import-dependencies)))
-    (save-buffer))
-  (hack-dir-local-variables-non-file-buffer))
+  (if (not (symbol-at-point))
+      (call-interactively #'find-tag)
+    (let ((class (symbol-name (symbol-at-point))))
+      (if (and (eq last-command 'scala-import-goto-class-at-point) find-tag-history)
+          (find-tag (car find-tag-history) t)
+        (find-tag (scala-import--get-package-for-class class)))
+      (search-forward class (line-end-position))
+      (setq this-command 'scala-import-goto-class-at-point))))
 
 (defun scala-import--parse-imports (str)
   "Return a list of imports in the given string."
@@ -158,111 +145,31 @@ returning a list of chunks."
         (forward-line))
       (cons beg (point)))))
 
-(defvar scala-import--class-object-trait-posix-re
-  "\\<(class|object|trait|type)\\>"
-  "Regexp matching declarations for classes and other importable identifiers.
-This should return accurate results for all files matched by
-`scala-import--scala-java-file-glob'.")
-
-(defvar scala-import--scala-java-file-glob "*.{scala,java}"
-  "Glob matching files that could contain a declaration.")
-
-(defun scala-import--run-command-in-project-and-dependencies
-    (command &optional prepend-dir)
-  "Run shell COMMAND in the current project root and dependencies.
-Return the output as a single string, with each line prepended by
-the directory in which the command was run if PREPEND-DIR is
-non-nil. The list of dependent projects is specified by
-`scala-import-dependencies'."
-  (mapconcat
-   (lambda (default-directory)
-     (if prepend-dir
-         (s-join "\n"
-                 (-map (lambda (line) (concat default-directory line))
-                       (s-split "\n" (shell-command-to-string command) t)))
-       (shell-command-to-string command)))
-   (cons (projectile-project-root) scala-import-dependencies)
-   ""))
+(defun scala-import--obarray-to-list (obarray)
+  (let ((result '()))
+    (mapatoms (lambda (x) (push x result)) obarray)
+    result))
 
 (defun scala-import--get-package-for-class (class)
   "Return the package for the specified class.
 If the class name is ambiguous in the current repository, present
 the choices to the user."
-  (let* ((command
-          (format "git --no-pager grep -h --all-match --extended-regexp --no-color -e %s -e ^package -- %s"
-                  (shell-quote-argument
-                   (format "%s\\s+%s\\>"
-                           scala-import--class-object-trait-posix-re class))
-                  scala-import--scala-java-file-glob))
-         (matches-string
-          (scala-import--run-command-in-project-and-dependencies command))
-         (matches-list (split-string matches-string "\n" t))
-         (package-list
-          (scala-import--handle-package-objects
-           (-filter (lambda (str) (string-match-p "^package" str))
-                    matches-list)))
+  (let* ((tags (-map #'symbol-name
+                     (scala-import--obarray-to-list (tags-completion-table))))
          (fully-qualified-class-list
-          (-uniq (-map
-                  (lambda (package) (format "%s.%s" package class))
-                  package-list)))
+          (let ((case-fold-search nil))
+            (-filter
+             (lambda (tag)
+               (string-match-p (concat "\\b" (regexp-quote class) "$") tag))
+             tags)))
          (selected
           (pcase fully-qualified-class-list
-            (`nil (user-error "No declaration found for %s" class))
+            (`nil (user-error "No declaration found for %s (%s candidates)"
+                              class (length tags)))
             (`(,unique-match) unique-match)
             (match-list
              (completing-read "Fully qualified class: " match-list)))))
     selected))
-
-(defun scala-import--handle-package-objects (package-list &optional cur-package)
-  "Prefix package objects in PACKAGE-LIST with the preceding package."
-  (when package-list
-    (if (string-match-p "^package object" (car package-list))
-        (cons
-         (format
-          "%s.%s" cur-package
-          (s-trim
-           (replace-regexp-in-string
-            "{.*$" ""
-            (replace-regexp-in-string
-             "^package object" "" (car package-list)))))
-         (scala-import--handle-package-objects (cdr package-list) cur-package))
-      (let ((new-cur-package
-             (s-trim (replace-regexp-in-string
-                      "^package" "" (car package-list)))))
-        (cons new-cur-package
-              (scala-import--handle-package-objects
-               (cdr package-list) new-cur-package))))))
-
-(defun scala-import--get-location-for-class (class)
-  "Return the location where the specified class is declared.
-The location is represented as a cons cell of the filename and
-the line. If the class name is ambiguous in the current
-repository, present the choices to the user."
-  (let* ((command
-          (format "git --no-pager grep --extended-regexp --full-name --no-color --line-number -e %s -- %s"
-                  (shell-quote-argument
-                   (format "%s\\s+%s\\>"
-                           scala-import--class-object-trait-posix-re class))
-                  scala-import--scala-java-file-glob))
-         (matches-string
-          (scala-import--run-command-in-project-and-dependencies command t))
-         (matches-list (split-string matches-string "\n" t))
-         (matches-parsed
-          (-map (lambda (match-line) (split-string match-line ":"))
-                matches-list))
-         (matching-files
-          (-uniq (-map (lambda (match) (nth 0 match)) matches-parsed)))
-         (selected-file
-          (pcase matching-files
-            (`nil (user-error "No declaration found for %s" class))
-            (`(,unique-match) unique-match)
-            (match-list (completing-read "File name: " match-list))))
-         (selected-line
-          (nth 1 (car (-filter (lambda (match)
-                                 (equal selected-file (nth 0 match)))
-                               matches-parsed)))))
-    (cons selected-file
-          (string-to-number selected-line))))
 
 (provide 'scala-import)
 
