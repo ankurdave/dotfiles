@@ -62,6 +62,7 @@ case "$SMART_TERM" in
 esac
 
 export EDITOR='emacsclient'
+alias e=$EDITOR
 
 # Enhance less
 [ -x /usr/bin/lesspipe ] && eval "$(lesspipe)"
@@ -80,6 +81,8 @@ fi
 
 stty werase undef
 bind '"\C-w": backward-kill-word'
+
+export JAVA_OPTS="-Dscala.color"
 
 # Include post-bashrc local config
 if [ -f ~/.bashrc.d/local-config ]; then

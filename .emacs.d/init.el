@@ -1,8 +1,12 @@
+(setq gc-cons-threshold 50000000)
+
 ;; Load site-specific customization first to allow setting up `load-path' and
 ;; similar.
 (load "~/.emacs.d/site-local.el" t)
 
+;; Calls (package-initialize).
 (load "~/.emacs.d/packages.el")
+
 (load "~/.emacs.d/utils.el")
 (load "~/.emacs.d/keys.el")
 (load "~/.emacs.d/hooks.el")
@@ -18,5 +22,3 @@
     (message "Server already running")
   (message "Starting server")
   (server-start))
-(put 'downcase-region 'disabled nil)
-(put 'upcase-region 'disabled nil)

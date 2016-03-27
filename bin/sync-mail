@@ -4,5 +4,5 @@
 while true; do
     gtimeout --signal=QUIT 30m offlineimap -o
     echo "=== Sleeping..."
-    sleep 120
+    sleep 3600
 done

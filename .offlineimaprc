@@ -24,13 +24,14 @@ localfolders = ~/mail
 
 [Repository AnkurDaveGmail]
 type = Gmail
-maxconnections = 1
+maxconnections = 8
 remoteuser = ankurdave@gmail.com
 realdelete = no
 folderfilter = lambda foldername: foldername in ['[Gmail]/All Mail', '[Google Mail]/Sent Mail']
 nametrans = lambda foldername: re.sub('^\[Gmail\]/All Mail$', 'all', re.sub('^\[Google Mail\]/Sent Mail$', 'sent', foldername))
 # Generate this using http://mercurial.selenic.com/wiki/CACertificates#Mac_OS_X_10.6_and_higher
 sslcacertfile = /Users/ankurdave/repos/dotfiles/misc/dummycert.pem
+readonly = true
 
 # [Repository DatabricksRemote]
 # type = Gmail

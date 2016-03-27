@@ -35,8 +35,9 @@ find "$dotfiles" -mindepth 1 -maxdepth 1 -not \( \
         ln -s "$file" "$target"
     done
 
-# OS X setup: hard-link ~/Library/KeyBindings/DefaultKeyBinding.dict
+# OS X setup
 if [ -d ~/Library ]; then
+    # Hard-link ~/Library/KeyBindings/DefaultKeyBinding.dict
     mkdir -p ~/Library/KeyBindings
     target=~/Library/KeyBindings/DefaultKeyBinding.dict
     if [[ -e "$target" ]]
@@ -46,6 +47,7 @@ if [ -d ~/Library ]; then
 
     ln "$dotfiles"/misc/DefaultKeyBinding.dict "$target"
 
+    # Hard-link ~/Library/Preferences/com.googlecode.iterm2.plist
     mkdir -p ~/Library/Preferences
     target=~/Library/Preferences/com.googlecode.iterm2.plist
     if [[ -e "$target" ]]
@@ -54,4 +56,7 @@ if [ -d ~/Library ]; then
     fi
 
     ln "$dotfiles"/misc/com.googlecode.iterm2.plist "$target"
+
+    # Other prefs
+    defaults write -app Skim SKAutoReloadFileUpdate -boolean true
 fi

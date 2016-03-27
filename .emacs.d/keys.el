@@ -15,7 +15,8 @@
   (kbd "M-.") 'find-symbol-at-point)
 (define-key emacs-lisp-mode-map
   (kbd "C-c e") 'eval-last-sexp-other-buffer)
-
+(define-key emacs-lisp-mode-map (kbd "M-n") 'highlight-symbol-next)
+(define-key emacs-lisp-mode-map (kbd "M-p") 'highlight-symbol-prev)
 
 (when (fboundp 'magit-status)
   (global-set-key (kbd "C-x m") 'magit-status))

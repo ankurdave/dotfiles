@@ -15,6 +15,8 @@
   (let ((packages-to-install
          '(ace-jump-mode
            adaptive-wrap
+           auctex
+           auto-compile
            browse-kill-ring
            color-identifiers-mode
            company
@@ -26,20 +28,23 @@
            expand-region
            fill-column-indicator
            flx
-           git-commit-mode
            gitconfig-mode
            gitignore-mode
+           gnuplot-mode
            god-mode
            helm
+           helm-flx
            helm-git-grep
            helm-projectile
+           helm-themes
            highlight-symbol
+           htmlize
            magit
+           markdown-mode
            molokai-theme
            notmuch
            notmuch-unread
            paredit
-           popwin
            projectile
            rainbow-mode
            s
@@ -80,14 +85,11 @@
            (require 'em-smart nil t))
   (eshell-smart-initialize))
 
-(when (fboundp 'exec-path-from-shell-initialize)
-  (with-demoted-errors
-      (exec-path-from-shell-initialize)))
+(when (fboundp 'exec-path-from-shell-copy-env)
+  (exec-path-from-shell-copy-env "PATH")
+  (exec-path-from-shell-copy-env "SCALA_HOME"))
 
 ;; (require 'smooth-scrolling nil t)
-
-(when (require 'popwin nil t)
-  (popwin-mode 1))
 
 (require 'smartparens-config nil t)
 
@@ -101,10 +103,16 @@
 ;;; Autoloaded packages
 (when (fboundp 'diminish)
   (with-eval-after-load "eldoc" (diminish 'eldoc-mode))
-  ;; (with-eval-after-load "paredit" (diminish 'paredit-mode))
+  (with-eval-after-load "paredit" (diminish 'paredit-mode))
   (with-eval-after-load "whitespace" (diminish 'global-whitespace-mode))
   (with-eval-after-load "auto-complete" (diminish 'auto-complete-mode))
-  (with-eval-after-load "magit" (diminish 'magit-auto-revert-mode)))
+  (with-eval-after-load "magit" (diminish 'magit-auto-revert-mode))
+  (with-eval-after-load "highlight-symbol" (diminish 'highlight-symbol-mode))
+  (with-eval-after-load "ws-butler" (diminish 'ws-butler-mode))
+  (with-eval-after-load "helm" (diminish 'helm-mode))
+  (with-eval-after-load "color-identifiers-mode" (diminish 'color-identifiers-mode))
+  (with-eval-after-load "company" (diminish 'company-mode))
+  (with-eval-after-load "smartparens" (diminish 'smartparens-mode)))
 
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
 (load "scala-import")

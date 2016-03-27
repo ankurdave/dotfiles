@@ -18,7 +18,7 @@
 	ui = auto
 [core]
 	pager = less -+$LESS -FRX
-	excludesfile = ~/.gitignore
+	excludesfile = /Users/ankurdave/.gitignore_global
 [rerere]
 	enabled = 1
 [receive]

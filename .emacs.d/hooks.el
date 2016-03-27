@@ -30,6 +30,9 @@
   (add-hook 'emacs-lisp-mode-hook 'turn-on-fci-mode))
 (when (fboundp 'color-identifiers-mode)
   (add-hook 'emacs-lisp-mode-hook 'color-identifiers-mode))
+(when (fboundp 'highlight-symbol-mode)
+  (add-hook 'emacs-lisp-mode-hook 'highlight-symbol-mode))
+
 ;; (when (fboundp 'flycheck-mode)
 ;;   (add-hook 'emacs-lisp-mode-hook 'flycheck-mode)
 ;;   (require 'flycheck)
@@ -113,7 +116,6 @@
 (add-hook 'dired-mode-hook (lambda () (toggle-truncate-lines 1)))
 
 ;; C-like languages
-(add-hook 'c-mode-common-hook (lambda () (subword-mode 1)))
 (when (fboundp 'turn-on-fci-mode)
   (add-hook 'c-mode-common-hook 'turn-on-fci-mode))
 
@@ -209,16 +211,11 @@
 (when (and window-system (fboundp 'ns-set-resource))
   (ns-set-resource nil "ApplePressAndHoldEnabled" "NO"))
 
-;; popwin configuration
-(when (boundp 'popwin:special-display-config)
-  (push '("\\*magit: .*\\*" :regexp t) popwin:special-display-config)
-  (push '("*Buffer List*") popwin:special-display-config)
-  (push '("*Backtrace*") popwin:special-display-config)
-  (push '("*Kill Ring*") popwin:special-display-config)
-  (push '("*Inspector*") popwin:special-display-config)
-  (push '("\\*.* output\\*" :regexp t) popwin:special-display-config)
-  (push '("*Warnings*") popwin:special-display-config)
-  (push '("\\*helm[ -].*\\*" :regexp t) popwin:special-display-config))
+(add-to-list 'display-buffer-alist
+             `(,(rx bos "*helm" (* not-newline) "*" eos)
+               (display-buffer-in-side-window)
+               (inhibit-same-window . t)
+               (window-height . 0.4)))
 
 ;; Avoid *Buffer List* undo history warning; see
 ;; http://lists.gnu.org/archive/html/help-gnu-emacs/2013-04/msg00497.html
@@ -253,3 +250,5 @@
       smtpmail-smtp-service 465)
 
 (put 'narrow-to-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
