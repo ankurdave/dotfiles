@@ -30,6 +30,7 @@
  '(company-idle-delay nil)
  '(compilation-auto-jump-to-first-error t)
  '(compilation-scroll-output (quote first-error))
+ '(confirm-kill-emacs (quote y-or-n-p))
  '(cs164-basic-offset 2)
  '(cs164-indent-automatically t)
  '(cursor-type (quote (bar . 2)))
