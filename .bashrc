@@ -74,8 +74,13 @@ alias e=$EDITOR
 [ -x /usr/bin/lesspipe ] && eval "$(lesspipe)"
 export LESS="$LESS -FSX"
 
-if [ -f $(brew --prefix)/etc/bash_completion ]; then
-  . $(brew --prefix)/etc/bash_completion
+command_exists () {
+    type "$1" &> /dev/null ;
+}
+if command_exists brew; then
+    if [ -f $(brew --prefix)/etc/bash_completion ]; then
+	. $(brew --prefix)/etc/bash_completion
+    fi
 fi
 if ! shopt -oq posix; then
   if [ -f /usr/share/bash-completion/bash_completion ]; then
