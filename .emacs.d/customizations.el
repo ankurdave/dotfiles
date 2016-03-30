@@ -43,6 +43,7 @@
  '(dired-details-hidden-string "")
  '(doc-view-continuous t)
  '(edit-server-new-frame nil)
+ '(electric-indent-mode t)
  '(enable-recursive-minibuffers t)
  '(eshell-buffer-shorthand nil)
  '(eshell-cmpl-cycle-completions nil)
