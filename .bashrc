@@ -44,7 +44,13 @@ esac
 
 case "$SMART_TERM" in
     yes)
-        PS1='\[\033[01;32m\]\u@\h\[\033[00m\] \D{%Y-%m-%d %H:%M:%S} \[\033[01;34m\]\w\[\033[00m\]\n\$ '
+        TERM=xterm-256color
+
+        hostname_colors=(146 141 152 228 210 117 218 156)
+        hostname_crc=$(echo $HOSTNAME | tr 'A-Z' 'a-z' | cksum)
+        hostname_crc=${hostname_crc%% *}
+        hostname_color=${hostname_colors[${hostname_crc} % ${#hostname_colors[@]}]}
+        PS1="\[\033[01;38;5;${hostname_color}m\]\u@\h\[\033[00m\] \D{%Y-%m-%d %H:%M:%S} \[\033[01;34m\]\w\[\033[00m\]\n\$ "
 
         case $(uname) in
             Darwin)
