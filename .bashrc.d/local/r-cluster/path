@@ -1,5 +1,7 @@
 #!/bin/bash
 
-if [ -e "$HOME/bin/r-cluster" ]; then
-   PATH="$HOME/bin/r-cluster:$PATH"
+if [ -e "/home/ankurd/sctags/target/scala-2.11/sctags" ]; then
+   PATH="/home/ankurd/sctags/target/scala-2.11:$PATH"
 fi
+
+export SCALA_HOME=/home/ankurd/scala-2.11.8

@@ -39,6 +39,17 @@
 (require 'projectile)
 
 ;;;###autoload
+(defun scala-import-init ()
+  "Initialize project tags using sctags."
+  (interactive)
+  (make-directory (concat (projectile-project-root) ".tags") t)
+  (let ((default-directory
+          (file-name-as-directory (concat (projectile-project-root) ".tags"))))
+    (write-region
+     (format scala-import--makefile (projectile-project-name)) nil "Makefile" nil nil nil t)
+    (compile "make")))
+
+;;;###autoload
 (defun scala-import-organize ()
   "Organize Scala imports in current file."
   (interactive)
@@ -85,6 +96,9 @@ the choices to the user."
     (find-file file)
     (goto-char (point-min))
     (forward-line (1- line))))
+
+(defvar scala-import--makefile
+  "tags:\n\tsctags -e -f %s.tags -R $(realpath ../)")
 
 (defun scala-import--parse-imports (str)
   "Return a list of imports in the given string."
@@ -161,7 +175,7 @@ is ambiguous in the current repository, present the choices to
 the user."
   (let* ((command
           (format "grep -h -e %s *.tags"
-                  (shell-quote-argument (format "\\b%s\\t" class))))
+                  (shell-quote-argument (format "\\b%s\t" class))))
          (tags-directory (concat (projectile-project-root)
                                  (file-name-as-directory ".tags")))
          (matches-string
