@@ -1,5 +1,7 @@
 (setq gc-cons-threshold 50000000)
 
+(load "~/.emacs.d/compat.el")
+
 ;; Load site-specific customization first to allow setting up `load-path' and
 ;; similar.
 (load "~/.emacs.d/site-local.el" t)
