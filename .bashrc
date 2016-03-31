@@ -67,7 +67,11 @@ case "$SMART_TERM" in
         ;;
 esac
 
-export EDITOR='emacsclient'
+if [ -n "$SSH_CLIENT" ]; then
+    export EDITOR='emacsclient -nw'
+else
+    export EDITOR='emacsclient'
+fi
 alias e=$EDITOR
 
 # Enhance less

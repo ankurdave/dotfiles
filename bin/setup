@@ -36,7 +36,10 @@ find "$dotfiles" -mindepth 1 -maxdepth 1 -not \( \
     done
 
 # OS X setup
-if [ -d ~/Library ]; then
+command_exists () {
+    type "$1" &> /dev/null ;
+}
+if [ -d ~/Library ] && command_exists defaults; then
     # Hard-link ~/Library/KeyBindings/DefaultKeyBinding.dict
     mkdir -p ~/Library/KeyBindings
     target=~/Library/KeyBindings/DefaultKeyBinding.dict
