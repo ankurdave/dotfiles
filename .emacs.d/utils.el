@@ -559,6 +559,61 @@ at bottom if LINE is nil."
           (recenter -1))
       (message "No process for this document."))))
 
+(defun scala-project-init (code-buffer)
+  (interactive "bCode buffer: ")
+  (setq scala-project-code-buffer code-buffer)
+  (setq scala-project-repl-file-name
+        (expand-file-name "./bin/spark-shell" (projectile-project-root)))
+  (let ((default-directory (projectile-project-root)))
+    (let ((shell-file-name scala-project-repl-file-name))
+      (setenv "SPARK_PREPEND_CLASSES" "true")
+      (shell "*scala-repl*"))
+    (let ((compilation-buffer-name-function #'(lambda (name-of-mode) "*scala-compilation*")))
+      (compile "sbt/sbt ~compile")))
+  (setq scala-project-repl-buffer (get-buffer "*scala-repl*"))
+  (setq scala-project-compilation-buffer (get-buffer "*scala-compilation*")))
+
+(defun scala-project-rerun ()
+  (interactive)
+  (let ((shell-file-name scala-project-repl-file-name)
+              (code (with-current-buffer scala-project-code-buffer (buffer-string))))
+          (pop-to-buffer scala-project-repl-buffer)
+          (comint-send-eof)
+          (sit-for 3)
+          (shell scala-project-repl-buffer)
+          (sit-for 5)
+          (comint-send-string scala-project-repl-buffer code)))
+
+(defun workouts-cleanup-log ()
+  (interactive)
+  (goto-char (point-min))
+  (let ((cur-date nil))
+    (while (not (eobp))
+      (if (looking-at "[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\},")
+          (setq cur-date (match-string 0))
+        (when (looking-at "[a-z]") (insert cur-date)))
+      (forward-line)))
+  (goto-char (point-min))
+  (replace-regexp "^[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\},$" ""))
+
+(defun workouts-copy-weights-as-kill ()
+  (interactive)
+  (copy-matches-as-kill "^[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\},[^,\n]+$"))
+
+(defun workouts-copy-sets-as-kill ()
+  (interactive)
+  (copy-matches-as-kill "^[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\},[^0-9].*$"))
+
+(defun copy-matches-as-kill (regexp)
+  "Copy all matches for REGEXP to the kill ring, one match per line."
+  (interactive "sRegexp to match: ")
+  (save-match-data
+    (save-excursion
+      (kill-new "")
+      (goto-char (point-min))
+      (while (re-search-forward regexp nil t)
+        (kill-append (concat (match-string 0) "\n") nil)))))
+
 (defun calc-eval-region (beg end)
   (interactive "r")
   (save-excursion

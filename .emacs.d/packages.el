@@ -28,6 +28,7 @@
            expand-region
            fill-column-indicator
            flx
+           git-commit
            gitconfig-mode
            gitignore-mode
            gnuplot-mode
@@ -99,6 +100,14 @@
 (require 'projectile nil t)
 (when (require 'helm-projectile nil t)
   (helm-projectile-on))
+;; file-exists-p -> file-regular-p
+(defun projectile-visit-project-tags-table ()
+  "Visit the current project's tags table."
+  (when (projectile-project-p)
+    (let ((tags-file (projectile-expand-root projectile-tags-file-name)))
+      (when (file-regular-p tags-file)
+        (with-demoted-errors "Error loading tags-file: %s"
+          (visit-tags-table tags-file t))))))
 
 ;;; Autoloaded packages
 (when (fboundp 'diminish)

@@ -167,6 +167,13 @@ returning a list of chunks."
          (line (string-to-number (second file-line))))
     (list fqid file line)))
 
+;; TODO: order options by similarity to current package
+;; TODO: handle multiple identifiers with same fully-qualified name (eg class
+;; and companion object) by showing both with disambiguation when jumping, and
+;; by deduplicating when importing
+;; TODO: store tags in sqlite with indexing
+;; TODO: support Java
+;; TODO: browse all tags more quickly by defining a helm source
 (defun scala-import--get-location-for-class (class)
   "Return the location for the specified class.
 The location is represented as the list (fqid file line), where
