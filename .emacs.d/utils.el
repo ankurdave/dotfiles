@@ -580,3 +580,18 @@ at bottom if LINE is nil."
       (switch-to-other-buffer)
       (eval-last-sexp-print-value
        (eval sexp lexical-binding-saved)))))
+
+;; From http://emacs.stackexchange.com/questions/539/how-do-i-measure-performance-of-elisp-code
+(defmacro with-timer (title &rest forms)
+  "Run the given FORMS, counting the elapsed time.
+A message including the given TITLE and the corresponding elapsed
+time is displayed."
+  (declare (indent 1))
+  (let ((nowvar (make-symbol "now"))
+        (body   `(progn ,@forms)))
+    `(let ((,nowvar (current-time)))
+       (message "%s..." ,title)
+       (prog1 ,body
+         (let ((elapsed
+                (float-time (time-subtract (current-time) ,nowvar))))
+           (message "%s... done (%.3fs)" ,title elapsed))))))

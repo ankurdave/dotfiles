@@ -38,6 +38,9 @@
 (require 's)
 (require 'projectile)
 
+(defvar scala-import--makefile
+  "tags:\n\tsctags -e -f %s.tags -R $(realpath ../)")
+
 ;;;###autoload
 (defun scala-import-init ()
   "Initialize project tags using sctags."
@@ -71,7 +74,7 @@
 If the class name is ambiguous in the current repository, present
 the choices to the user."
   (interactive)
-  (let* ((class (symbol-name (symbol-at-point)))
+  (let* ((class (symbol-at-point))
          (fully-qualified-class
           (first (scala-import--get-location-for-class class)))
          (import-statement (format "import %s\n" fully-qualified-class)))
@@ -96,9 +99,6 @@ the choices to the user."
     (find-file file)
     (goto-char (point-min))
     (forward-line (1- line))))
-
-(defvar scala-import--makefile
-  "tags:\n\tsctags -e -f %s.tags -R $(realpath ../)")
 
 (defun scala-import--parse-imports (str)
   "Return a list of imports in the given string."
@@ -172,15 +172,22 @@ returning a list of chunks."
 The location is represented as the list (fqid file line), where
 fqid is the fully-qualified version of CLASS. If the class name
 is ambiguous in the current repository, present the choices to
-the user."
-  (let* ((command
-          (format "grep -h -e %s *.tags"
+the user. If CLASS is nil, present all available tags to the user."
+  (let* ((command-template
+          (if (not class)
+              "cat *.tags"
+            (if (executable-find "ag")
+                "ag --nofilename --follow --case-sensitive %s *.tags"
+              "grep -h -e %s *.tags")))
+         (command
+          (format command-template
                   (shell-quote-argument (format "\\b%s\t" class))))
          (tags-directory (concat (projectile-project-root)
                                  (file-name-as-directory ".tags")))
          (matches-string
           (let ((default-directory tags-directory))
-            (shell-command-to-string command)))
+            (with-timer "search tags"
+              (shell-command-to-string command))))
          (matches-list (split-string matches-string "\n" t))
          (matches-parsed (-map #'scala-import--parse-match-line matches-list)))
     (pcase matches-parsed
