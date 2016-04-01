@@ -1,3 +1,5 @@
+;;; `use-package' setup:
+
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives
@@ -9,6 +11,8 @@
   (package-install 'use-package))
 
 (setq use-package-always-ensure t)
+
+;;; Package configuration:
 
 (use-package ace-jump-mode
   :bind ("C-c SPC" . ace-jump-mode))
@@ -58,18 +62,18 @@
   :load-path "lisp/"
   :ensure nil)
 
-(use-package dired-details
-  :functions dired-details-install
-  :config
-  (dired-details-install)
-  :demand)
+(use-package diminish)
 
 (use-package dired
   :ensure nil
   :init
   (add-hook 'dired-mode-hook (lambda () (toggle-truncate-lines 1))))
 
-(use-package diminish)
+(use-package dired-details
+  :functions dired-details-install
+  :config
+  (dired-details-install)
+  :demand)
 
 (use-package dtrt-indent
   :config
@@ -79,12 +83,6 @@
   :init
   (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)
   :diminish eldoc-mode)
-
-(use-package esh-mode
-  :ensure nil
-  :bind (:map eshell-mode-map
-              ("<up>" . previous-line)
-              ("<down>" . next-line)))
 
 (use-package em-smart
   :ensure nil
@@ -110,6 +108,12 @@
           (package . font-lock-preprocessor-face)))
   :config
   (add-hook 'scala-mode-hook 'ensime-scala-mode-hook))
+
+(use-package esh-mode
+  :ensure nil
+  :bind (:map eshell-mode-map
+              ("<up>" . previous-line)
+              ("<down>" . next-line)))
 
 (use-package exec-path-from-shell
   :if (memq window-system '(mac ns))
@@ -140,10 +144,6 @@
 (use-package frame
   :ensure nil
   :bind ("M-`" . other-frame))
-
-(when (and (>= emacs-major-version 24)
-           (>= emacs-minor-version 5))
-  (use-package git-commit))
 
 (use-package gitconfig-mode)
 
@@ -180,10 +180,6 @@
   :diminish helm-mode
   :demand)
 
-(when (and (>= emacs-major-version 24)
-           (>= emacs-minor-version 5))
-  (use-package helm-flx))
-
 (use-package helm-git-grep)
 
 (use-package helm-projectile
@@ -198,6 +194,9 @@
   (add-hook 'scala-mode-hook #'highlight-symbol-mode)
   :diminish highlight-symbol-mode)
 
+(use-package htmlize
+  :defer t)
+
 (use-package lisp-mode
   :ensure nil
   :bind (:map emacs-lisp-mode-map
@@ -205,20 +204,6 @@
               ("M-p" . highlight-symbol-prev)
               ("M-." . find-symbol-at-point)
               ("C-c e" . eval-last-sexp-other-buffer)))
-
-(use-package sgml-mode
-  :init
-  (add-hook 'html-mode-hook (lambda () (toggle-word-wrap 0)))
-  :defer t)
-
-(use-package htmlize
-  :defer t)
-
-(when (and (>= emacs-major-version 24)
-           (>= emacs-minor-version 5))
-  (use-package magit
-    :bind ("C-x m" . magit-status)
-    :diminish magit-auto-revert-mode))
 
 (use-package markdown-mode
   :defer t)
@@ -337,6 +322,11 @@
   :init
   (add-hook 'after-init-hook #'server-start t))
 
+(use-package sgml-mode
+  :init
+  (add-hook 'html-mode-hook (lambda () (toggle-word-wrap 0)))
+  :defer t)
+
 (use-package smartparens
   :init
   (add-hook 'html-mode-hook #'turn-on-smartparens-mode)
@@ -443,3 +433,23 @@
   :diminish ws-butler-mode)
 
 (use-package zenburn-theme)
+
+(when (and (>= emacs-major-version 24)
+           (>= emacs-minor-version 5))
+  (use-package git-commit))
+
+(when (and (>= emacs-major-version 24)
+           (>= emacs-minor-version 5))
+  (use-package helm-flx))
+
+(when (and (>= emacs-major-version 24)
+           (>= emacs-minor-version 5))
+  (use-package magit
+    :bind ("C-x m" . magit-status)
+    :diminish magit-auto-revert-mode))
+
+;;; Package configuration ends here
+
+;; Local Variables:
+;; eval: (add-to-list (quote before-save-hook) (quote sort-package-configurations))
+;; End:

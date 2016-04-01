@@ -113,6 +113,33 @@ See `sort-words'."
   (interactive "*P\nr")
   (sort-regexp-fields reverse "\\(\\sw\\|\\s_\\)+" "\\&" beg end))
 
+(defun sort-sexps (reverse beg end)
+  "Sort sexps in region alphabetically; argument means descending order.
+Called from a program, there are three arguments:
+REVERSE (non-nil means reverse order), BEG and END (region to sort).
+The variable `sort-fold-case' determines whether alphabetic case affects
+the sort order."
+  (interactive "P\nr")
+  (save-excursion
+    (save-restriction
+      (narrow-to-region beg end)
+      (goto-char (point-min))
+      (sort-subr reverse
+                 #'ignore
+                 #'end-of-defun
+                 (lambda () (forward-sexp) (backward-sexp))))))
+
+(defun sort-package-configurations ()
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (re-search-forward "^;;; Package configuration:")
+    (forward-line)
+    (let ((beg (point)))
+      (re-search-forward "^;;; Package configuration ends here")
+      (forward-line -1)
+      (sort-sexps nil beg (point)))))
+
 (defun sexp-beginning-position ()
   "Return position of the first character inside the current sexp."
   (require 'smartparens)

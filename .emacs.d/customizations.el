@@ -137,6 +137,11 @@
  '(python-indent-offset 2)
  '(recentf-max-saved-items 200)
  '(require-final-newline t)
+ '(safe-local-variable-values
+   (quote
+    ((eval add-to-list
+           (quote before-save-hook)
+           (quote sort-package-configurations)))))
  '(savehist-mode t)
  '(sbt:program-name "~/repos/spark/sbt/sbt")
  '(scala-indent:align-parameters nil)
