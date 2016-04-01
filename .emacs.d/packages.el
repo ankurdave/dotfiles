@@ -242,8 +242,9 @@
   :init
   (add-hook 'emacs-lisp-mode-hook #'paredit-mode)
   :config
-  (bind-key "C-w" (make-backward-kill-word-fn paredit-backward-kill-word)
-            paredit-mode-map)
+  (with-eval-after-load 'utils
+    (bind-key "C-w" (make-backward-kill-word-fn paredit-backward-kill-word)
+              paredit-mode-map))
   :bind ("M-(" . paredit-wrap-round)
   :diminish paredit-mode)
 
@@ -259,6 +260,7 @@
             (visit-tags-table tags-file t)))))))
 
 (use-package python
+  :ensure nil
   :mode ("\\/TARGETS$" . python-mode))
 
 (use-package rainbow-mode
