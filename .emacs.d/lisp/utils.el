@@ -131,14 +131,16 @@ the sort order."
 
 (defun sort-package-configurations ()
   (interactive)
-  (save-excursion
-    (goto-char (point-min))
-    (re-search-forward "^;;; Package configuration:")
-    (forward-line)
-    (let ((beg (point)))
-      (re-search-forward "^;;; Package configuration ends here")
-      (forward-line -1)
-      (sort-sexps nil beg (point)))))
+  (let ((saved-pos (point)))
+    (save-excursion
+      (goto-char (point-min))
+      (re-search-forward "^;;; Package configuration:")
+      (forward-line)
+      (let ((beg (point)))
+        (re-search-forward "^;;; Package configuration ends here")
+        (forward-line -1)
+        (sort-sexps nil beg (point))))
+    (goto-char saved-pos)))
 
 (defun sexp-beginning-position ()
   "Return position of the first character inside the current sexp."

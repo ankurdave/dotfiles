@@ -122,8 +122,7 @@
   :if (memq window-system '(mac ns))
   :config
   (add-to-list 'exec-path-from-shell-variables "SCALA_HOME")
-  (exec-path-from-shell-initialize)
-  :defer 5)
+  (exec-path-from-shell-initialize))
 
 (use-package expand-region
   :bind ("C-=" . er/expand-region))
@@ -358,7 +357,7 @@
   (defun LaTeX-compile ()
     (TeX-command "LaTeX" 'TeX-master-file -1))
   (defun LaTeX-compile-after-save ()
-    (add-hook 'after-save-hook #'LaTeX-compile))
+    (add-hook 'after-save-hook #'LaTeX-compile nil t))
   (add-hook 'LaTeX-mode-hook #'LaTeX-compile-after-save)
   :defer t)
 
