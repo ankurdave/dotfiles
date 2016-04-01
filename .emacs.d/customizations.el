@@ -54,11 +54,7 @@
  '(find-function-recenter-line nil)
  '(flycheck-emacs-lisp-initialize-packages t)
  '(fringe-mode 0 nil (fringe))
- '(global-auto-revert-mode nil)
- '(global-auto-revert-non-file-buffers nil)
  '(global-git-commit-mode t)
- '(global-hl-line-mode nil)
- '(global-whitespace-mode nil)
  '(helm-M-x-fuzzy-match t)
  '(helm-buffers-fuzzy-matching t)
  '(helm-file-cache-fuzzy-match t)
@@ -123,7 +119,6 @@
      ("flagged"
       (notmuch-tag-format-image-data tag
                                      (notmuch-tag-star-icon))))))
- '(notmuch-unread-mode nil nil (notmuch))
  '(notmuch-unread-search-term
    "(tag:inbox OR tag:is-reply OR tag:graphx OR tag:notifications) AND is:unread")
  '(ns-alternate-modifier (quote meta))
@@ -133,12 +128,8 @@
  '(org-agenda-files (quote ("~/Dropbox/scratch")))
  '(org-src-fontify-natively t)
  '(org-startup-folded nil)
+ '(org-startup-indented t)
  '(org-startup-truncated nil)
- '(osx-key-mode nil)
- '(package-archives
-   (quote
-    (("gnu" . "http://elpa.gnu.org/packages/")
-     ("melpa" . "http://melpa.milkbox.net/packages/"))))
  '(pop-up-windows t)
  '(projectile-global-mode t)
  '(projectile-use-git-grep t)
@@ -159,7 +150,9 @@
  '(shift-select-mode nil)
  '(show-paren-delay 0.0)
  '(show-paren-mode t)
- '(smartparens-global-mode nil)
+ '(smtpmail-smtp-server "smtp.gmail.com")
+ '(smtpmail-smtp-service 465)
+ '(smtpmail-stream-type (quote ssl))
  '(sp-base-key-bindings (quote sp))
  '(sp-highlight-pair-overlay nil)
  '(sp-navigate-consider-symbols t)
@@ -219,4 +212,3 @@
  ;; If there is more than one, they won't work right.
  '(highlight-symbol-face ((t (:background "black" :foreground "yellow"))))
  '(magit-diff-add ((t (:inherit diff-added)))))
-(put 'narrow-to-region 'disabled nil)

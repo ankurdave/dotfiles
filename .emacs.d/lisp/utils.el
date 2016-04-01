@@ -13,30 +13,19 @@
       (split-window-right)))
   (balance-windows))
 
-(defun run-line-in-scala ()
-  "Run the current line in an inferior Scala shell."
+;; From http://emacsredux.com/blog/2013/05/04/rename-file-and-buffer/
+(defun rename-file-and-buffer ()
+  "Rename the current buffer and file it is visiting."
   (interactive)
-  (save-excursion
-    (copy-region-as-kill (line-beginning-position) (line-end-position))
-    (ensime-inf-switch)
-    (yank)
-    (newline)))
-
-;; source: http://steve.yegge.googlepages.com/my-dot-emacs-file
-(defun rename-file-and-buffer (new-name)
-  "Rename the current buffer and the file it's visiting to NEW-NAME."
-  (interactive "sNew name: ")
-  (let ((name (buffer-name))
-        (filename (buffer-file-name)))
-    (if (not filename)
-        (message "Buffer '%s' is not visiting a file!" name)
-      (if (get-buffer new-name)
-          (message "A buffer named '%s' already exists!" new-name)
-        (progn
-          (rename-file name new-name 1)
-          (rename-buffer new-name)
-          (set-visited-file-name new-name)
-          (set-buffer-modified-p nil))))))
+  (let ((filename (buffer-file-name)))
+    (if (not (and filename (file-exists-p filename)))
+        (message "Buffer is not visiting a file!")
+      (let ((new-name (read-file-name "New name: " filename)))
+        (cond
+         ((vc-backend filename) (vc-rename-file filename new-name))
+         (t
+          (rename-file filename new-name t)
+          (set-visited-file-name new-name t t)))))))
 
 (defun switch-to-other-buffer ()
   "Switch to the most recently used buffer."
@@ -55,7 +44,6 @@
    ((equal (count-windows) 1) (switch-to-buffer (other-buffer)))
    ((equal (count-windows) 2) (other-window 1))
    (t (select-window (get-2nd-mru-window)))))
-(global-set-key (kbd "C-x C-x") 'switch-to-other-buffer)
 
 (defun new-eshell (&optional name)
   "Opens an eshell in the current directory named according to NAME.
@@ -145,109 +133,6 @@ See `sort-words'."
   (sort-regexp-fields reverse "\\(\\sw\\|\\s_\\)+" "\\&"
                       (sexp-beginning-position) (sexp-end-position)))
 
-;; From misc-cmds.el: http://www.emacswiki.org/emacs/misc-cmds.el
-(defun goto-longest-line (beg end)
-  "Go to the first of the longest lines in the region or buffer.
-If the region is active, it is checked.
-If not, the buffer (or its restriction) is checked.
-
-Returns a list of three elements:
-
- (LINE LINE-LENGTH OTHER-LINES LINES-CHECKED)
-
-LINE is the first of the longest lines measured.
-LINE-LENGTH is the length of LINE.
-OTHER-LINES is a list of other lines checked that are as long as LINE.
-LINES-CHECKED is the number of lines measured.
-
-Interactively, a message displays this information.
-
-If there is only one line in the active region, then the region is
-deactivated after this command, and the message mentions only LINE and
-LINE-LENGTH.
-
-If this command is repeated, it checks for the longest line after the
-cursor.  That is *not* necessarily the longest line other than the
-current line.  That longest line could be before or after the current
-line.
-
-To search only from the current line forward, not throughout the
-buffer, you can use `C-SPC' to set the mark, then use this
-\(repeatedly)."
-  (interactive
-   (if (or (not mark-active) (null (mark)))
-       (list (point-min) (point-max))
-     (if (< (point) (mark))
-         (list (point) (mark))
-       (list (mark) (point)))))
-  (when (and (not mark-active) (= beg end))
-    (error "The buffer is empty"))
-  (when (and mark-active (> (point) (mark))) (exchange-point-and-mark))
-  (when (< end beg) (setq end (prog1 beg (setq beg end))))
-  (when (eq this-command last-command)
-    (forward-line 1) (setq beg (point)))
-  (goto-char beg)
-  (when (eobp) (error "End of buffer"))
-  (cond ((<= end (save-excursion (goto-char beg) (forward-line 1) (point)))
-         (let ((inhibit-field-text-motion  t))  (beginning-of-line))
-         (when (and (> emacs-major-version 21) (require 'hl-line nil t))
-           (let ((hl-line-mode  t))  (hl-line-highlight))
-           (add-hook 'pre-command-hook #'hl-line-unhighlight nil t))
-         (let ((lineno  (line-number-at-pos))
-               (chars   (let ((inhibit-field-text-motion t))
-                          (save-excursion (end-of-line) (current-column)))))
-           (message "Only line %d: %d chars" lineno chars)
-           (let ((visible-bell  t))  (ding))
-           (setq mark-active  nil)
-           (list lineno chars nil 1)))
-        (t
-         (let* ((start-line                 (line-number-at-pos))
-                (max-width                  0)
-                (line                       start-line)
-                (inhibit-field-text-motion  t)
-                long-lines col)
-           (when (eobp) (error "End of buffer"))
-           (while (and (not (eobp)) (< (point) end))
-             (end-of-line)
-             (setq col  (current-column))
-             (when (>= col max-width)
-               (setq long-lines  (if (= col max-width)
-                                     (cons line long-lines)
-                                   (list line))
-                     max-width   col))
-             (forward-line 1)
-             (setq line  (1+ line)))
-           (setq long-lines  (nreverse long-lines))
-           (let ((lines  long-lines))
-             (while (and lines (> start-line (car lines))) (pop lines))
-             (goto-char (point-min))
-             (when (car lines) (forward-line (1- (car lines)))))
-           (when (and (> emacs-major-version 21) (require 'hl-line nil t))
-             (let ((hl-line-mode  t))  (hl-line-highlight))
-             (add-hook 'pre-command-hook #'hl-line-unhighlight nil t))
-           (when (interactive-p)
-             (let ((others  (cdr long-lines)))
-               (message "Line %d: %d chars%s (%d lines measured)"
-                        (car long-lines) max-width
-                        (concat
-                         (and others
-                              (format ", Others: {%s}" (mapconcat
-                                                        (lambda (line) (format "%d" line))
-                                                        (cdr long-lines) ", "))))
-                        (- line start-line))))
-           (list (car long-lines) max-width (cdr long-lines) (- line start-line))))))
-
-(defun fit-frame-width-to-buffer ()
-  "Adjust width of current frame to fit longest line in current buffer."
-  (interactive)
-  (let ((longest-line-length
-         (save-excursion
-           (cadr (goto-longest-line (point-min) (point-max))))))
-    (set-frame-width (selected-frame)
-                     (max fill-column longest-line-length))))
-
-;; TODO: on TAB, auto complete if tab would not change indentation
-
 ;; From http://mgalgs.github.io/2011/11/30/elisp-pretty-numbers.html
 (defun my-thousands-separate (num)
   "Formats the (possibly floating point) number with a thousands
@@ -314,9 +199,9 @@ which is up to 10gb. Some files are larger than that.
       (push-mark)               ; Save the user's current position before moving
       (goto-char match-pos))))
 
- (defun date ()
-   (interactive)
-   (insert (format-time-string "%Y-%m-%d")))
+(defun date ()
+  (interactive)
+  (insert (format-time-string "%Y-%m-%d")))
 
 (defun simplify-time-at-point ()
   "Converts, e.g., \"12m34.6s\" to \"754.6 s\"."
@@ -341,24 +226,6 @@ which is up to 10gb. Some files are larger than that.
       (delete-region minutes-start (point))
       (insert (format "%f " (+ (* minutes 60) seconds))))))
 
-(defun rgrep-in-project ()
-  "Perform rgrep in the project on files with the same extension
-as the current one."
-  (interactive)
-  (let ((roots (projectile-get-project-directories))
-        (search-regexp (if (and transient-mark-mode mark-active)
-                           (buffer-substring (region-beginning) (region-end))
-                         (read-string (projectile-prepend-project-name "Grep for: ")
-                                      (projectile-symbol-at-point)))))
-    (dolist (root-dir roots)
-      (require 'grep)
-      ;; paths for find-grep should relative and without trailing /
-      (let ((grep-find-ignored-directories (-union (-map (lambda (dir) (s-chop-suffix "/" (s-chop-prefix root-dir dir)))
-                                                         (cdr (projectile-ignored-directories))) grep-find-ignored-directories))
-            (grep-find-ignored-files (-union (-map (lambda (file) (s-chop-prefix root-dir file)) (projectile-ignored-files)) grep-find-ignored-files)))
-        (grep-compute-defaults)
-        (rgrep search-regexp (format "*.%s" (file-name-extension buffer-file-name)) root-dir)))))
-
 (defun copy-filename-as-kill ()
   "Copy full path to current file into the kill ring."
   (interactive)
@@ -368,7 +235,8 @@ as the current one."
 (defun copy-relative-filename-as-kill ()
   "Copy project-relative path of current file into the kill ring."
   (interactive)
-  (require 's)
+  (eval-when-compile
+    (require 's))
   (let ((rel-name (s-chop-prefix (projectile-project-root) buffer-file-name)))
     (kill-new rel-name)
     (message "%s" rel-name)))
@@ -383,6 +251,8 @@ as the current one."
 (defun org-indent-item-or-cycle ()
   "If before a list, indent it, otherwise cycle visibility."
   (interactive)
+  (eval-when-compile
+    (require 'org-list))
   (if (org-at-item-p)
       (org-indent-item-tree)
     (org-cycle)))
@@ -390,37 +260,11 @@ as the current one."
 (defun org-outdent-item-or-shifttab ()
   "If before a list, outdent it, otherwise globally cycle visibility."
   (interactive)
+  (eval-when-compile
+    (require 'org-list))
   (if (org-at-item-p)
       (org-outdent-item-tree)
     (org-shifttab)))
-
-(define-minor-mode focus-on-buffer-mode
-  "Minor mode to center the buffer onscreen and display it in a narrow column.
-Currently only supports doing this in one frame at a time."
-  :init-value nil
-  :lighter " Focus"
-  (message "focus-on-buffer-mode is %s" (prin1-to-string focus-on-buffer-mode))
-  (if focus-on-buffer-mode
-      (progn
-        ;; (setq focus-on-buffer-mode:fullscreen (frame-parameter nil 'fullscreen))
-        ;; TODO: make focus-on-buffer-mode:config a set of configurations, one
-        ;; per frame
-        ;; (setq focus-on-buffer-mode:config (current-window-configuration))
-        (setq focus-on-buffer-mode:fringe fringe-mode)
-        (setq focus-on-buffer-mode:indicators fringe-indicator-alist)
-        (delete-other-windows)
-        ;; TODO: uncomment this once the Emacs bug is fixed where
-        ;; (frame-pixel-width) is unreliable in full screen
-        ;; (set-frame-parameter nil 'fullscreen 'fullboth)
-        (set-fringe-mode
-         (/ (- (frame-pixel-width)
-               (* 100 (frame-char-width)))
-            2))
-        (setq fringe-indicator-alist nil))
-    ;; (set-frame-parameter nil 'fullscreen focus-on-buffer-mode:fullscreen)
-    (setq fringe-indicator-alist focus-on-buffer-mode:indicators)
-    ;; (set-window-configuration focus-on-buffer-mode:config)
-    (set-fringe-mode focus-on-buffer-mode:fringe)))
 
 (defun screenshot-frame ()
   "Take a screenshot of the Emacs frame."
@@ -431,12 +275,12 @@ Currently only supports doing this in one frame at a time."
   "Prompt for name, then start entry with date and name in scratch."
   (interactive "MName of entry: ")
   (find-file "~/Dropbox/scratch")
-  (end-of-buffer)
+  (goto-char (point-max))
   (insert (format "* %s %s\n" (format-time-string "%Y-%m-%d") name)))
 
 (defun prompt-and-insert (string)
   (interactive "MInsert: ")
-  (insert-string string))
+  (insert string))
 
 ;; From http://www.emacswiki.org/emacs/InsertFileName
 (defun insert-file-name (filename &optional args)
@@ -526,7 +370,7 @@ See `american-to-iso'."
 ;;     (sp-rewrap-sexp new-paren-type)))
 
 ;; From http://www.emacswiki.org/emacs/BackToIndentationOrBeginning
-(defun point-in-comment ()
+(defun point-in-comment-p ()
   "Determine if the point is inside a comment"
   (let ((syn (syntax-ppss)))
     (and (nth 8 syn)
@@ -546,18 +390,10 @@ or else find the selected file."
      (t
       (helm-maybe-exit-minibuffer)))))
 
-(defun TeX-recenter-output-buffer (line)
-  "Redisplay buffer of TeX job output so that most recent output can be seen.
-The last line of the buffer is displayed on line LINE of the window, or
-at bottom if LINE is nil."
-  (interactive "P")
-  (let ((buffer (TeX-active-buffer)))
-    (if buffer
-        (let ((old-buffer (current-buffer)))
-          (TeX-pop-to-buffer buffer t t)
-          (goto-char (point-max))
-          (recenter -1))
-      (message "No process for this document."))))
+(defvar scala-project-code-buffer nil)
+(defvar scala-project-repl-file-name nil)
+(defvar scala-project-repl-buffer nil)
+(defvar scala-project-compilation-buffer nil)
 
 (defun scala-project-init (code-buffer)
   (interactive "bCode buffer: ")
@@ -584,26 +420,6 @@ at bottom if LINE is nil."
           (sit-for 5)
           (comint-send-string scala-project-repl-buffer code)))
 
-(defun workouts-cleanup-log ()
-  (interactive)
-  (goto-char (point-min))
-  (let ((cur-date nil))
-    (while (not (eobp))
-      (if (looking-at "[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\},")
-          (setq cur-date (match-string 0))
-        (when (looking-at "[a-z]") (insert cur-date)))
-      (forward-line)))
-  (goto-char (point-min))
-  (replace-regexp "^[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\},$" ""))
-
-(defun workouts-copy-weights-as-kill ()
-  (interactive)
-  (copy-matches-as-kill "^[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\},[^,\n]+$"))
-
-(defun workouts-copy-sets-as-kill ()
-  (interactive)
-  (copy-matches-as-kill "^[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\},[^0-9].*$"))
-
 (defun copy-matches-as-kill (regexp)
   "Copy all matches for REGEXP to the kill ring, one match per line."
   (interactive "sRegexp to match: ")
@@ -623,9 +439,11 @@ at bottom if LINE is nil."
 (defun find-symbol-at-point ()
   (interactive)
   (let ((symb (symbol-at-point)))
-    (if (functionp symb)
-        (find-function symb)
-      (find-variable symb))))
+    (cond
+     ((fboundp symb) (find-function symb))
+     ((boundp symb) (find-variable symb))
+     ((featurep symb) (find-library (symbol-name symb)))
+     (t (user-error "No match for %s" (symbol-name symb))))))
 
 (defun eval-last-sexp-other-buffer ()
   (interactive)
@@ -650,3 +468,5 @@ time is displayed."
          (let ((elapsed
                 (float-time (time-subtract (current-time) ,nowvar))))
            (message "%s... done (%.3fs)" ,title elapsed))))))
+
+(provide 'utils)

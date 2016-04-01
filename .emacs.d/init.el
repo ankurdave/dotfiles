@@ -1,26 +1,8 @@
-(setq gc-cons-threshold 50000000)
-
-(load "~/.emacs.d/compat.el")
-
-;; Load site-specific customization first to allow setting up `load-path' and
-;; similar.
 (load "~/.emacs.d/site-local.el" t)
-
-;; Calls (package-initialize).
 (load "~/.emacs.d/packages.el")
-
-(load "~/.emacs.d/utils.el")
-(load "~/.emacs.d/keys.el")
-(load "~/.emacs.d/hooks.el")
+(load "~/.emacs.d/misc.el")
 
 ;; Load customizations last so that setting them through Customize is
 ;; guaranteed to work.
 (setq custom-file "~/.emacs.d/customizations.el")
 (load custom-file)
-
-;; Finally, accept connections from emacsclient.
-(require 'server)
-(if (server-running-p)
-    (message "Server already running")
-  (message "Starting server")
-  (server-start))

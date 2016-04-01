@@ -5,3 +5,5 @@ FILE is normally a feature name, but it can also be a file name,
 in case that file does not provide any feature."
     (declare (indent 1) (debug t))
     `(eval-after-load ,file '(progn ,@body))))
+
+(provide 'compat)
