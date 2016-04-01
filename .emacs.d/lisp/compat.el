@@ -6,4 +6,10 @@ in case that file does not provide any feature."
     (declare (indent 1) (debug t))
     `(eval-after-load ,file '(progn ,@body))))
 
+(when (not (fboundp 'first))
+  (defalias 'first #'car))
+
+(when (not (fboundp 'second))
+  (defalias 'second #'cadr))
+
 (provide 'compat)

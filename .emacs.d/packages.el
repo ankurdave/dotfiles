@@ -62,6 +62,8 @@
   :load-path "lisp/"
   :ensure nil)
 
+(use-package dash)
+
 (use-package diminish)
 
 (use-package dired
@@ -259,6 +261,8 @@
 
 (use-package rainbow-mode
   :defer t)
+
+(use-package s)
 
 (use-package scala-import
   :load-path "lisp/"
