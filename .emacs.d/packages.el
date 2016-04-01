@@ -141,7 +141,9 @@
   :ensure nil
   :bind ("M-`" . other-frame))
 
-(use-package git-commit)
+(when (and (>= emacs-major-version 24)
+           (>= emacs-minor-version 5))
+  (use-package git-commit))
 
 (use-package gitconfig-mode)
 
@@ -178,7 +180,9 @@
   :diminish helm-mode
   :demand)
 
-(use-package helm-flx)
+(when (and (>= emacs-major-version 24)
+           (>= emacs-minor-version 5))
+  (use-package helm-flx))
 
 (use-package helm-git-grep)
 
@@ -210,9 +214,11 @@
 (use-package htmlize
   :defer t)
 
-(use-package magit
-  :bind ("C-x m" . magit-status)
-  :diminish magit-auto-revert-mode)
+(when (and (>= emacs-major-version 24)
+           (>= emacs-minor-version 5))
+  (use-package magit
+    :bind ("C-x m" . magit-status)
+    :diminish magit-auto-revert-mode))
 
 (use-package markdown-mode
   :defer t)
