@@ -34,24 +34,17 @@ then
 fi
 
 # Use colored prompt and ls
-case "$TERM" in
-    xterm*|rxvt*|eterm-color|screen)
-        SMART_TERM=yes
-        ;;
-    *)
-        ;;
-esac
-
-case "$SMART_TERM" in
-    yes)
-        TERM=xterm-256color
-
+PS1='\u@\h \D{%Y-%m-%d %H:%M:%S} \w\n\$ '
+term_colors=$(tput colors)
+if test -n "$term_colors"; then
+    if test $term_colors -ge 256; then
         hostname_colors=(146 141 152 228 210 117 218 156)
         hostname_crc=$(echo $HOSTNAME | tr 'A-Z' 'a-z' | cksum)
         hostname_crc=${hostname_crc%% *}
         hostname_color=${hostname_colors[${hostname_crc} % ${#hostname_colors[@]}]}
         PS1="\[\033[01;38;5;${hostname_color}m\]\u@\h\[\033[00m\] \D{%Y-%m-%d %H:%M:%S} \[\033[01;34m\]\w\[\033[00m\]\n\$ "
-
+    fi
+    if test $term_colors -ge 8; then
         case $(uname) in
             Darwin)
                 alias ls='ls -G'
@@ -61,11 +54,8 @@ case "$SMART_TERM" in
                 alias ls='ls --color=auto'
                 ;;
         esac
-        ;;
-    *)
-        PS1='\u@\h:\w\$ '
-        ;;
-esac
+    fi
+fi
 
 if [ -n "$SSH_CLIENT" ]; then
     export EDITOR='emacsclient -nw'
