@@ -14,6 +14,7 @@
      (output-dvi "xdvi")
      (output-pdf "open")
      (output-html "xdg-open"))))
+ '(ad-redefinition-action (quote accept))
  '(ansi-color-for-comint-mode t)
  '(ansi-color-names-vector
    ["#2e3436" "#a40000" "#4e9a06" "#c4a000" "#204a87" "#5c3566" "#729fcf" "#eeeeec"])
@@ -132,6 +133,7 @@
  '(org-startup-truncated nil)
  '(pop-up-windows t)
  '(projectile-global-mode t)
+ '(projectile-mode-line nil)
  '(projectile-use-git-grep t)
  '(py-indent-offset 2)
  '(python-indent-offset 2)

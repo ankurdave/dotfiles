@@ -77,7 +77,10 @@
 
 (use-package dtrt-indent
   :config
-  (dtrt-indent-mode t))
+  (setq global-mode-string
+        (remove 'dtrt-indent-mode-line-info global-mode-string))
+  (dtrt-indent-mode t)
+  :diminish dtrt-indent-mode)
 
 (use-package eldoc
   :init
@@ -227,7 +230,8 @@
 (use-package org
   :bind (:map org-mode-map
               ("<tab>" . org-indent-item-or-cycle)
-              ("<S-tab>" . org-outdent-item-or-shifttab)))
+              ("<S-tab>" . org-outdent-item-or-shifttab))
+  :diminish org-indent-mode)
 
 (use-package paredit
   :init
