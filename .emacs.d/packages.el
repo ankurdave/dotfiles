@@ -12,17 +12,16 @@
 
 (setq use-package-always-ensure t)
 
-;; Capture errors from installing packages
-(defun use-package-ensure-safe (orig-fun &rest args)
+(defadvice use-package-ensure-elpa (around use-package-ensure-safe activate)
+  "Capture errors from installing packages."
   (condition-case-unless-debug err
-      (apply orig-fun args)
+      ad-do-it
     (error
      (ignore
       (display-warning 'use-package
                        (format "Failed to install %s: %s"
-                               (car args) (error-message-string err))
+                               package (error-message-string err))
                        :warning)))))
-(advice-add 'use-package-ensure-elpa :around #'use-package-ensure-safe)
 
 ;;; Package configuration:
 
