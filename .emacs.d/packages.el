@@ -12,6 +12,18 @@
 
 (setq use-package-always-ensure t)
 
+;; Capture errors from installing packages
+(defun use-package-ensure-safe (orig-fun &rest args)
+  (condition-case-unless-debug err
+      (apply orig-fun args)
+    (error
+     (ignore
+      (display-warning 'use-package
+                       (format "Failed to install %s: %s"
+                               (car args) (error-message-string err))
+                       :warning)))))
+(advice-add 'use-package-ensure-elpa :around #'use-package-ensure-safe)
+
 ;;; Package configuration:
 
 (use-package ace-jump-mode
@@ -149,6 +161,8 @@
   :ensure nil
   :bind ("M-`" . other-frame))
 
+(use-package git-commit)
+
 (use-package gitconfig-mode)
 
 (use-package gitignore-mode)
@@ -184,6 +198,8 @@
   :diminish helm-mode
   :demand)
 
+(use-package helm-flx)
+
 (use-package helm-git-grep)
 
 (use-package helm-projectile
@@ -208,6 +224,10 @@
               ("M-p" . highlight-symbol-prev)
               ("M-." . find-symbol-at-point)
               ("C-c e" . eval-last-sexp-other-buffer)))
+
+(use-package magit
+  :bind ("C-x m" . magit-status)
+  :diminish magit-auto-revert-mode)
 
 (use-package markdown-mode
   :defer t)
@@ -440,20 +460,6 @@
   :diminish ws-butler-mode)
 
 (use-package zenburn-theme)
-
-(when (and (>= emacs-major-version 24)
-           (>= emacs-minor-version 5))
-  (use-package git-commit))
-
-(when (and (>= emacs-major-version 24)
-           (>= emacs-minor-version 5))
-  (use-package helm-flx))
-
-(when (and (>= emacs-major-version 24)
-           (>= emacs-minor-version 5))
-  (use-package magit
-    :bind ("C-x m" . magit-status)
-    :diminish magit-auto-revert-mode))
 
 ;;; Package configuration ends here
 
