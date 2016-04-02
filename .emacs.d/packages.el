@@ -180,11 +180,23 @@
 ;;; TODO move binds into :bind
 (use-package helm
   :config
+  (defun always-display-buffer-in-side-window (buffer alist)
+    (let ((result (display-buffer-in-side-window buffer alist))
+          (window (get-buffer-window buffer)))
+      ;; Avoid error when helm tries to make itself the only window despite being a
+      ;; side window, such as when invoking `helm-help'
+      (set-window-parameter
+       window 'delete-other-windows #'ignore)
+      result))
   (add-to-list 'display-buffer-alist
                `(,(rx bos "*helm" (* not-newline) "*" eos)
-                 (display-buffer-in-side-window)
+                 (always-display-buffer-in-side-window)
                  (inhibit-same-window . t)
                  (window-height . 0.4)))
+  ;; Prevent helm from splitting unrelated windows unnecessarily. The split will
+  ;; always be handled by the above entry in `display-buffer-alist'
+  (setq helm-split-window-preferred-function #'ignore)
+
   (bind-key "<tab>" #'helm-execute-persistent-action helm-map)
   (bind-key "C-i" #'helm-execute-persistent-action helm-map)
   (unbind-key "C-SPC" helm-map)
