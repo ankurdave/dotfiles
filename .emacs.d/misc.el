@@ -14,6 +14,8 @@
 ;; http://lists.gnu.org/archive/html/help-gnu-emacs/2013-04/msg00497.html
 (add-hook 'Buffer-menu-mode-hook 'buffer-disable-undo)
 
+(setq ring-bell-function 'ignore)
+
 (put 'narrow-to-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
