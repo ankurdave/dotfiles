@@ -199,6 +199,7 @@
 
   (bind-key "<tab>" #'helm-execute-persistent-action helm-map)
   (bind-key "C-i" #'helm-execute-persistent-action helm-map)
+  (bind-key "C-j" #'helm-select-action helm-map)
   (unbind-key "C-SPC" helm-map)
   (unbind-key "C-k" helm-map)
   (unbind-key "C-w" helm-map)
@@ -234,7 +235,10 @@
               ("M-n" . highlight-symbol-next)
               ("M-p" . highlight-symbol-prev)
               ("M-." . find-symbol-at-point)
-              ("C-c e" . eval-last-sexp-other-buffer)))
+              ("C-c e" . eval-last-sexp-other-buffer)
+              ("C-M-w" . backward-kill-sexp)
+              ("C-M-d" . kill-sexp)
+              ("C-w" . paredit-kill-region)))
 
 (use-package magit
   :bind ("C-x m" . magit-status)
@@ -272,7 +276,9 @@
   (with-eval-after-load 'utils
     (bind-key "C-w" (make-backward-kill-word-fn paredit-backward-kill-word)
               paredit-mode-map))
-  :bind ("M-(" . paredit-wrap-round)
+  :bind (("M-(" . paredit-wrap-round))
+  :bind (:map paredit-mode-map
+              ("C-M-d" . nil))
   :diminish paredit-mode)
 
 (use-package projectile
