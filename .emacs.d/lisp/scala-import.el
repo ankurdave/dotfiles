@@ -102,7 +102,9 @@ the choices to the user."
 
 (defun scala-import--parse-imports (str)
   "Return a list of imports in the given string."
-  (split-string str "^import " t "[[:space:]\n]+"))
+  (-filter #'s-present?
+           (-map #'s-trim
+                 (split-string str "^import " t))))
 
 (defun scala-import--get-package ()
   "Get the package of the current file."
