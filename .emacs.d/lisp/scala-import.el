@@ -196,7 +196,12 @@ the user. If CLASS is nil, present all available tags to the user."
             (with-timer "search tags"
               (shell-command-to-string command))))
          (matches-list (split-string matches-string "\n" t))
-         (matches-parsed (-map #'scala-import--parse-match-line matches-list)))
+         (matches-parsed
+          (append
+           (-map #'scala-import--parse-match-line matches-list)
+           (if class
+               (scala-import--get-locations-for-java-class class)
+             nil))))
     (pcase matches-parsed
       (`nil (user-error "No declaration found for %s" class))
       (`(,unique-match) unique-match)
@@ -204,6 +209,57 @@ the user. If CLASS is nil, present all available tags to the user."
        (assoc
         (completing-read "Fully qualified class: " match-list nil t)
         match-list)))))
+
+(defun scala-import--prefix-class-with-preceding-package
+    (class matches-parsed &optional cur-package)
+  "Prefix classes in MATCHES-PARSED with the preceding package."
+  (cond
+   ((not matches-parsed) nil)
+   ((string-match-p "^package\\>" (nth 2 (car matches-parsed)))
+    (scala-import--prefix-class-with-preceding-package
+     class
+     (cdr matches-parsed)
+     (s-trim
+      (replace-regexp-in-string
+       ";.*" ""
+       (replace-regexp-in-string "^package\\>" "" (nth 2 (car matches-parsed)))))))
+   (t
+    (let ((file (nth 0 (car matches-parsed)))
+          (line (string-to-number (nth 1 (car matches-parsed))))
+          (contents (nth 2 (car matches-parsed))))
+      (cons
+       (list file line (format "%s.%s" cur-package class))
+       (scala-import--prefix-class-with-preceding-package
+        class (cdr matches-parsed) cur-package))))))
+
+(defun scala-import--get-locations-for-java-class (class)
+  "Return all locations for the specified Java class.
+The location is represented as the list (fqid file line), where
+fqid is the fully-qualified version of CLASS."
+  (let* ((command
+          (format "git --no-pager grep --line-number --full-name --all-match --extended-regexp --no-color -e %s -e ^package -- %s"
+                  (shell-quote-argument (format "\\<class\\s+%s\\>" class))
+                   (shell-quote-argument "*.java")))
+         (matches-string
+          (let ((default-directory (projectile-project-root)))
+            (shell-command-to-string command)))
+         (matches-list (split-string matches-string "\n" t))
+         (matches-parsed
+          (-map (lambda (match-line) (split-string match-line ":"))
+                matches-list))
+         (fully-qualified-class-list
+          (scala-import--prefix-class-with-preceding-package
+           class matches-parsed))
+         (locations-absolute
+          (-map (lambda (location)
+                  (let ((file (nth 0 location))
+                        (line (nth 1 location))
+                        (fqid (nth 2 location)))
+                    (list fqid (concat (projectile-project-root) file) line)))
+                fully-qualified-class-list)))
+    locations-absolute))
+
+(scala-import--get-locations-for-java-class "TripletFields")
 
 (provide 'scala-import)
 
