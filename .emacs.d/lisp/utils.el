@@ -498,4 +498,14 @@ time is displayed."
                 (float-time (time-subtract (current-time) ,nowvar))))
            (message "%s... done (%.3fs)" ,title elapsed))))))
 
+;; From http://emacs.1067599.n5.nabble.com/Portable-dir-path-separator-tp290263p290268.html
+(defun split-path (path)
+  (split-path-1 path ()))
+(defun split-path-1 (path accum)
+  (let ((dir  (directory-file-name (file-name-directory path)))
+        (name (file-name-nondirectory path)))
+    (if (equal dir path)
+        accum
+      (split-path-1 dir (cons name accum)))))
+
 (provide 'utils)

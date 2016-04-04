@@ -73,6 +73,18 @@
   :load-path "lisp/"
   :ensure nil)
 
+(use-package conf-mode
+  :ensure nil
+  :config
+  (defun indent-ssh-config-line ()
+    (delete-horizontal-space)
+    (unless (looking-at "Host")
+      (indent-to (indent-next-tab-stop 0))))
+  (defun ssh-config-setup-indent ()
+    (when (s-ends-with-p "/.ssh/config" (buffer-file-name))
+      (setq indent-line-function #'indent-ssh-config-line)))
+  (add-hook 'conf-space-mode-hook #'ssh-config-setup-indent))
+
 (use-package dash)
 
 (use-package diminish)
