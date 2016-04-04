@@ -3,7 +3,7 @@
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives
-	     '("melpa" . "https://melpa.org/packages/"))
+             '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
 
 (unless (package-installed-p 'use-package)
@@ -387,8 +387,9 @@
   :ensure nil
   :commands subword-backward-kill
   :config
-  (bind-key "C-w" (make-backward-kill-word-fn subword-backward-kill (1))
-            subword-mode-map)
+  (with-eval-after-load 'utils
+    (bind-key "C-w" (make-backward-kill-word-fn subword-backward-kill (1))
+              subword-mode-map))
   :defer t)
 
 (use-package tex
