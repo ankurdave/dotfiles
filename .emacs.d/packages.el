@@ -182,12 +182,11 @@
   :mode "\\.plt\\'")
 
 (use-package god-mode
-  :disabled
-  :bind (("<escape>" . god-mode-all)
-         (:map god-local-mode-map
-               ("/" . undo-tree-undo)
-               ("." . repeat)
-               ("i" . prompt-and-insert))))
+  :bind (("<escape>" . god-mode-all))
+  :bind (:map god-local-mode-map
+              ("/" . undo-tree-undo)
+              ("." . repeat)
+              ("i" . prompt-and-insert)))
 
 ;;; TODO move binds into :bind
 (use-package helm
