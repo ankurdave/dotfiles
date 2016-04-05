@@ -489,7 +489,26 @@
 (use-package ws-butler
   :diminish ws-butler-mode)
 
-(use-package zenburn-theme)
+(use-package zenburn-theme
+  :init
+  (when (not window-system)
+    (defvar zenburn-override-colors-alist
+      '(("zenburn-fg-1"     . "#5f5f5f"))))
+  :config
+  (when (not window-system)
+    (zenburn-with-color-variables
+      (custom-theme-set-faces
+       'zenburn
+       `(diff-added          ((t (:background ,zenburn-bg :foreground ,zenburn-green))))
+       `(diff-changed        ((t (:background "#5F5F00" :foreground ,zenburn-yellow-1))))
+       `(diff-removed        ((t (:background ,zenburn-bg :foreground ,zenburn-red-2))))
+       `(diff-refine-added   ((t (:background "#5F875F" :foreground ,zenburn-green+4))))
+       `(diff-refine-change  ((t (:background "#878700" :foreground ,zenburn-yellow))))
+       `(diff-refine-removed ((t (:background "#875F5F" :foreground ,zenburn-red))))
+       `(magit-diff-added    ((t (:background ,zenburn-bg :foreground ,zenburn-green))))
+       `(magit-diff-added-highlight ((t (:background ,zenburn-bg+05 :foreground ,zenburn-green))))
+       `(magit-diff-removed  ((t (:background ,zenburn-bg :foreground ,zenburn-red-2))))
+       `(magit-diff-removed-highlight ((t (:background ,zenburn-bg+05 :foreground ,zenburn-red-2))))))))
 
 ;;; Package configuration ends here
 
