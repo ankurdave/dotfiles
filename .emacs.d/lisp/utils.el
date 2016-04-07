@@ -1,3 +1,5 @@
+(require 'cl-lib)
+
 (defun indent-buffer ()
   "Indent the whole buffer."
   (interactive)
@@ -27,18 +29,19 @@
           (rename-file filename new-name t)
           (set-visited-file-name new-name t t)))))))
 
+(defun get-2nd-mru-window ()
+  (let (best-window best-time time)
+    (dolist (window (window-list-1 nil 'nomini nil))
+      (when (not (equal window (selected-window)))
+        (setq time (window-use-time window))
+        (when (or (not best-time) (> time best-time))
+          (setq best-time time)
+          (setq best-window window))))
+    best-window))
+
 (defun switch-to-other-buffer ()
   "Switch to the most recently used buffer."
   (interactive)
-  (defun get-2nd-mru-window ()
-    (let (best-window best-time time)
-      (dolist (window (window-list-1 nil 'nomini nil))
-        (when (not (equal window (selected-window)))
-          (setq time (window-use-time window))
-          (when (or (not best-time) (> time best-time))
-            (setq best-time time)
-            (setq best-window window))))
-      best-window))
   (cond
    ((minibufferp) nil)
    ((equal (count-windows) 1) (switch-to-buffer (other-buffer)))
@@ -144,14 +147,12 @@ the sort order."
 
 (defun sexp-beginning-position ()
   "Return position of the first character inside the current sexp."
-  (require 'smartparens)
   (save-excursion
     (sp-beginning-of-sexp)
     (point)))
 
 (defun sexp-end-position ()
   "Return position of the last character inside the current sexp."
-  (require 'smartparens)
   (save-excursion
     (sp-end-of-sexp)
     (point)))
@@ -198,7 +199,7 @@ which is up to 10gb. Some files are larger than that.
 "
   (if (< file-size 1024)
       (format (if (zerop file-size) "0" "%d") file-size)
-    (do ((file-size (/ file-size 1024.0) (/ file-size 1024.0))
+    (cl-do ((file-size (/ file-size 1024.0) (/ file-size 1024.0))
          ;; kilo, mega, giga, tera, peta, exa
          (post-fixes (list "k" "M" "G" "T" "P" "E") (cdr post-fixes)))
         ((< file-size 1024) (format "%.1f%s" file-size (car post-fixes))))))
@@ -264,8 +265,6 @@ which is up to 10gb. Some files are larger than that.
 (defun copy-relative-filename-as-kill ()
   "Copy project-relative path of current file into the kill ring."
   (interactive)
-  (eval-when-compile
-    (require 's))
   (let ((rel-name (s-chop-prefix (projectile-project-root) buffer-file-name)))
     (kill-new rel-name)
     (message "%s" rel-name)))
@@ -273,24 +272,23 @@ which is up to 10gb. Some files are larger than that.
 (defun projectile-find-file-other-window ()
   "Jump to a project's file in another window."
   (interactive)
-  (require 'cl)
   (cl-letf (((symbol-function 'find-file) (symbol-function 'find-file-other-window)))
     (projectile-find-file)))
 
+(autoload 'org-at-item-p "org-list")
+(autoload 'org-indent-item-tree "org-list")
 (defun org-indent-item-or-cycle ()
   "If before a list, indent it, otherwise cycle visibility."
   (interactive)
-  (eval-when-compile
-    (require 'org-list))
   (if (org-at-item-p)
       (org-indent-item-tree)
     (org-cycle)))
 
+(autoload 'org-outdent-item-tree "org-list")
+(autoload 'org-shifttab "org")
 (defun org-outdent-item-or-shifttab ()
   "If before a list, outdent it, otherwise globally cycle visibility."
   (interactive)
-  (eval-when-compile
-    (require 'org-list))
   (if (org-at-item-p)
       (org-outdent-item-tree)
     (org-shifttab)))
@@ -333,12 +331,16 @@ which is up to 10gb. Some files are larger than that.
         (t
          (insert filename))))
 
+(autoload 'notmuch-search-remove-tag "notmuch")
+(autoload 'notmuch-search-next-thread "notmuch")
 (defun notmuch-search-mark-read ()
   "Mark this email as read."
   (interactive)
   (notmuch-search-remove-tag (list "-unread"))
   (notmuch-search-next-thread))
 
+(autoload 'notmuch-show-add-tag "notmuch-show")
+(autoload 'notmuch-show-next-thread "notmuch-show")
 (defun notmuch-mark-deleted ()
   "Mark this email as deleted."
   (interactive)
@@ -346,6 +348,8 @@ which is up to 10gb. Some files are larger than that.
     (notmuch-show-add-tag (list "+deleted"))
     (notmuch-show-next-thread)))
 
+(autoload 'notmuch-tree-next-matching-message "notmuch-tree")
+(autoload 'notmuch-tree-remove-tag "notmuch-tree")
 (defun notmuch-tree-next-matching-message-and-mark-read ()
   "Move to next matching message and mark it as read."
   (interactive)
@@ -362,8 +366,8 @@ current year is used."
          (day (string-to-number (second elems)))
          (year
           (string-to-number
-           (if (third elems)
-               (third elems)
+           (if (cl-third elems)
+               (cl-third elems)
              (format-time-string "%Y")))))
     (format "%d-%02d-%02d" year month day)))
 
@@ -459,11 +463,18 @@ or else find the selected file."
       (while (re-search-forward regexp nil t)
         (kill-append (concat (match-string 0) "\n") nil)))))
 
-(defun calc-eval-region (beg end)
-  (interactive "r")
-  (save-excursion
-    (goto-char end)
-    (insert " = " (calc-eval (buffer-substring-no-properties beg end)))))
+(defun calc-eval-region (beg end &optional in-place)
+  (interactive "r\nP")
+  (message "%s" in-place)
+  (let ((result (calc-eval (buffer-substring-no-properties beg end))))
+    (save-excursion
+      (if in-place
+          (progn
+            (goto-char beg)
+            (delete-region beg end)
+            (insert result))
+        (goto-char end)
+        (insert " = " result)))))
 
 (defun find-symbol-at-point ()
   (interactive)
