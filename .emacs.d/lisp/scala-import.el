@@ -176,6 +176,7 @@ returning a list of chunks."
 ;; TODO: store tags in sqlite with indexing
 ;; TODO: support Java
 ;; TODO: browse all tags more quickly by defining a helm source
+;; TODO: integrate with eldoc
 (defun scala-import--get-location-for-class (class)
   "Return the location for the specified class.
 The location is represented as the list (fqid file line), where

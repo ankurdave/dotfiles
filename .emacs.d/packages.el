@@ -276,10 +276,12 @@
               ("n" . notmuch-tree-next-matching-message-and-mark-read)))
 
 (use-package org
+  :init
+  (with-eval-after-load 'org-indent
+    (diminish 'org-indent-mode))
   :bind (:map org-mode-map
               ("<tab>" . org-indent-item-or-cycle)
-              ("<S-tab>" . org-outdent-item-or-shifttab))
-  :diminish org-indent-mode)
+              ("<S-tab>" . org-outdent-item-or-shifttab)))
 
 (use-package paredit
   :init
@@ -446,7 +448,8 @@
   (bind-key "C-w" (make-backward-kill-word-fn backward-kill-word (1)))
   :bind (("C-x 4 p" . projectile-find-file-other-window)
          ("C-x C-x" . switch-to-other-buffer)
-         ("C-c d" . date))
+         ("C-c d" . date)
+         ("C-c e" . calc-eval-region))
   :demand)
 
 (use-package vc-git
