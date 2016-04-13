@@ -1,0 +1,26 @@
+From 313e710b49426617e24fe2fb56ac527f626c710e Mon Sep 17 00:00:00 2001
+From: Ankur Dave <ankurdave@gmail.com>
+Date: Wed, 13 Apr 2016 11:10:12 -0700
+Subject: [PATCH] Hardcode OS X library path
+
+See http://notmuch.198994.n3.nabble.com/bug-Python-bindings-fail-to-load-shared-libraries-in-MacOS-El-Capitan-td4034181.html
+---
+ bindings/python/notmuch/globals.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/bindings/python/notmuch/globals.py b/bindings/python/notmuch/globals.py
+index 6872a29..5ae529f 100644
+--- a/bindings/python/notmuch/globals.py
++++ b/bindings/python/notmuch/globals.py
+@@ -25,7 +25,7 @@ from notmuch.version import SOVERSION
+ try:
+     from os import uname
+     if uname()[0] == 'Darwin':
+-        nmlib = CDLL("libnotmuch.{0:s}.dylib".format(SOVERSION))
++        nmlib = CDLL("/usr/local/lib/libnotmuch.{0:s}.dylib".format(SOVERSION))
+     else:
+         nmlib = CDLL("libnotmuch.so.{0:s}".format(SOVERSION))
+ except:
+-- 
+2.8.1
+
