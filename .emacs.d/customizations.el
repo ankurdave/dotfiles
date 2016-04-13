@@ -96,11 +96,6 @@
  '(mumamo-chunk-coloring 2)
  '(notmuch-fcc-dirs nil)
  '(notmuch-hello-thousands-separator ",")
- '(notmuch-saved-searches
-   (quote
-    ((:name "must-read" :query "(tag:inbox OR tag:is-reply OR tag:graphx) AND is:unread")
-     (:name "should-read" :query "(tag:notifications) AND is:unread")
-     (:name "may-read" :query "(tag:spark-dev OR tag:amplab-lists OR tag:berkeley-lists) AND is:unread"))))
  '(notmuch-search-line-faces
    (quote
     (("unread" :weight bold)

@@ -273,7 +273,19 @@
   :bind (:map notmuch-hello-mode-map
               ("g" . notmuch-refresh-this-buffer))
   :bind (:map notmuch-tree-mode-map
-              ("n" . notmuch-tree-next-matching-message-and-mark-read)))
+              ("n" . notmuch-tree-next-matching-message-and-mark-read))
+  :config
+  (setq notmuch-saved-searches
+        (let ((personal "(tag:is-reply OR (tag:inbox AND NOT (tag:notifications OR tag:amplab-lists OR tag:berkeley-lists OR tag:spark-lists)))")
+              (notifications "tag:notifications AND NOT (tag:is-reply)")
+              (amplab "tag:amplab-lists AND NOT (tag:is-reply OR tag:notifications)")
+              (berkeley "tag:berkeley-lists AND NOT (tag:is-reply OR tag:notifications OR tag:amplab-lists)")
+              (spark "tag:spark-lists AND NOT (tag:is-reply OR tag:notifications OR tag:amplab-lists OR tag:berkeley-lists)"))
+          `((:name "Personal" :query ,personal :count-query ,(format "is:unread AND %s" personal))
+            (:name "Notifications" :query ,notifications :count-query ,(format "is:unread AND %s" notifications))
+            (:name "AMPLab" :query ,amplab :count-query ,(format "is:unread AND %s" amplab))
+            (:name "Berkeley" :query ,berkeley :count-query ,(format "is:unread AND %s" berkeley))
+            (:name "Spark" :query ,spark :count-query ,(format "is:unread AND %s" spark))))))
 
 (use-package org
   :init

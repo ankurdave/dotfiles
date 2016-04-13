@@ -10,7 +10,7 @@ other_email=ankurdave@berkeley.edu;ankurd@eecs.berkeley.edu
 
 [new]
 tags=unread;inbox;new
-ignore=
+ignore=.git;.gitignore;.mbsyncstate;.uidvalidity
 
 [search]
 exclude_tags=deleted

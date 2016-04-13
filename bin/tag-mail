@@ -1,0 +1,138 @@
+#!/bin/bash
+
+set -x
+set -e
+
+notmuch new
+
+/usr/bin/time afew --tag --new -v
+
+/usr/bin/time notmuch tag +notifications -- tag:new AND \( \
+    \( "wallet.google.com" "view transaction details" \) \
+    OR from:aboutme@about.me \
+    OR from:AmericanExpress@welcome.aexp.com \
+    OR from:email@alerts.ally.com \
+    OR from:email@transfers.ally.com \
+    OR from:no-reply-aws@amazon.com \
+    OR from:ship-confirm@amazon.com \
+    OR from:auto-confirm@amazon.com \
+    OR from:do_not_reply@apple.com \
+    OR from:helpme@backblaze.com \
+    OR from:onlinebanking@ealerts.bankofamerica.com \
+    OR from:no_reply@bayareafastrak.org \
+    OR from:payesi@berkeley.edu \
+    OR from:billingnotice@berkeley.edu \
+    OR from:learningcenter@berkeley.edu \
+    OR from:contact@coffeemeetsbagel.com \
+    OR from:contact@coinbase.com \
+    OR from:online.communications@alerts.comcast.net \
+    OR from:eBay@reply1.ebay.com \
+    OR from:expedia@expediamail.com \
+    OR from:Fidelity.Investments@mail.fidelity.com \
+    OR from:noreply@github.com \
+    OR from:express-orders@google.com \
+    OR from:no-reply@accounts.google.com \
+    OR from:googleplay-noreply@google.com \
+    OR from:scholaralerts-noreply@google.com \
+    OR from:noreply@wallet.google.com \
+    OR from:voice-noreply@google.com \
+    OR from:hhonors@h1.hiltonhhonors.com \
+    OR from:no-reply@kongregate.com \
+    OR from:invitations@linkedin.com \
+    OR from:messages-noreply@linkedin.com \
+    OR from:invitations-noreply@linkedin.com \
+    OR from:notifications-noreply@linkedin.com \
+    OR from:member@linkedin.com \
+    OR from:noreply@medium.com \
+    OR from:info@meetup.com \
+    OR from:team@mint.com \
+    OR from:CustomerServiceOnline@pge.com \
+    OR from:noreply@em.pge.com \
+    OR from:digest-noreply@quora.com \
+    OR from:noreply@invite.quoramail.com \
+    OR from:info@sender.runkeeper.com \
+    OR from:Starbucks@e.starbucks.com \
+    OR from:noreply@steampowered.com \
+    OR from:organizers@spark-summit.org \
+    OR from:team@tilt-mail.com \
+    OR from:help@ting.com \
+    OR from:notify@twitter.com \
+    OR from:n-naxheqnir=tznvy.pbz-97586@postmaster.twitter.com \
+    OR from:uniqlo-usa@ml.store.uniqlo.com \
+    OR from:mcinfo@ups.com \
+    OR from:vbs@vanguard.com \
+    OR from:alerts@vanguard.com \
+    OR from:vanguardinvestments@vanguard.com \
+    OR from:venmo@venmo.com \
+    OR from:virginamerica@elevate.virginamerica.com \
+    OR from:no-reply@yelp.com \
+    OR from:noreply@youtube.com \
+    OR from:notifications+vvvowqwk20@zyngamail.com \
+\)
+
+/usr/bin/time notmuch tag +amplab-lists -- tag:new AND \( \
+    tag:lists/radlab-space.lists.eecs.berkeley.edu \
+    OR tag:lists/amp-research.lists.eecs.berkeley.edu \
+    OR tag:lists/dbseminar.lists.eecs.berkeley.edu \
+    OR tag:lists/netsyslab.lists.eecs.berkeley.edu \
+    OR tag:lists/networks-lunch.lists.eecs.berkeley.edu \
+    OR tag:lists/amp-ec2-users.eecs.berkeley.edu \
+    OR tag:lists/amp-sys-ml.eecs.berkeley.edu \
+    OR tag:lists/radlab-space.eecs.berkeley.edu \
+    OR tag:lists/amp-research.eecs.berkeley.edu \
+    OR tag:lists/amp-jobs.eecs.berkeley.edu \
+    OR tag:lists/radlab-chat.eecs.berkeley.edu \
+\)
+
+/usr/bin/time notmuch tag +berkeley-lists -- tag:new AND \( \
+    from:CALmessages@berkeley.edu \
+    OR from:careermail3@berkeley.edu \
+    OR from:equity_inclusion@berkeley.edu \
+    OR from:ga@ga.berkeley.edu \
+    OR from:graddiv@berkeley.edu \
+    OR from:gradweb@berkeley.edu \
+    OR from:lvh@berkeley.edu \
+    OR from:noreply@berkeley.edu \
+    OR from:president@ga.berkeley.edu \
+    OR from:recruit@berkeley.edu \
+    OR from:summerfair@berkeley.edu \
+    OR from:university-of-california-police-department-berkeley@emails.nixle.com \
+    OR to:CALmessages@berkeley.edu \
+    OR tag:lists/coe-grads.lists.eecs.berkeley.edu \
+    OR tag:lists/cs-grads-food.lists.eecs.berkeley.edu \
+    OR tag:lists/cs-grads-social.lists.eecs.berkeley.edu \
+    OR tag:lists/cs-grads.lists.eecs.berkeley.edu \
+    OR tag:lists/cs-msphd.lists.eecs.berkeley.edu \
+    OR tag:lists/csua-newmembers.mail.csua.berkeley.edu \
+    OR tag:lists/eecs-announce.lists.eecs.berkeley.edu \
+    OR tag:lists/eecs-grads-misc.lists.eecs.berkeley.edu \
+    OR tag:lists/eecs-grads.lists.eecs.berkeley.edu \
+    OR tag:lists/iris-accounts.lists.eecs.berkeley.edu \
+    OR tag:lists/not-another-teen-movie.lists.eecs.berkeley.edu \
+    OR tag:lists/soda-info.lists.eecs.berkeley.edu \
+    OR tag:lists/sysadmins-announce.lists.eecs.berkeley.edu \
+    OR tag:lists/sysadmins-windows-announce.lists.eecs.berkeley.edu \
+\)
+
+/usr/bin/time notmuch tag +spark-lists -- tag:new AND \( \
+    tag:lists/dev.spark.apache.org \
+    OR tag:lists/private.spark.apache.org \
+    OR to:committers@apache.org \
+    OR from:do_not_reply@databricks.com \
+    OR to:infrastructure@apache.org \
+    OR to:apachecon-discuss@apache.org \
+\)
+
+# Tag replies to things I've sent:
+# 1. Find threads with new mail
+# 2. Filter those to threads containing mail sent by me
+# 3. Tag the new mail in those threads as replies
+/usr/bin/time notmuch search --output=threads tag:new |
+    /usr/bin/time xargs -J {} notmuch search --output=threads {} is:sent |
+    /usr/bin/time xargs -J {} notmuch tag +is-reply -- {} tag:new AND NOT is:sent
+
+# Databricks mail
+/usr/bin/time notmuch tag +databricks -- tag:new AND 'path:databricks/**'
+
+# Unmark new
+/usr/bin/time notmuch tag -new -- tag:new

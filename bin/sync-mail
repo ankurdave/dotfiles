@@ -1,8 +1,11 @@
 #!/bin/bash
 
-# For gtimeout on OS X: brew install coreutils
-while true; do
-    gtimeout --signal=QUIT 30m offlineimap -o
-    echo "=== Sleeping..."
-    sleep 3600
-done
+cd ~/mail
+
+set -x
+set -e
+
+date
+
+/usr/bin/time mbsync -Va
+/usr/bin/time ~/repos/dotfiles/bin/tag-mail

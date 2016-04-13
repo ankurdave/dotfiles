@@ -1,0 +1,32 @@
+Sync Pull PushFlags
+Expunge Slave
+Create Slave
+SyncState *
+
+IMAPAccount gmail
+Host imap.gmail.com
+User ankurdave@gmail.com
+PassCmd "python -c 'import netrc;print(netrc.netrc().authenticators(\"imap.gmail.com\")[2])'"
+CertificateFile /Users/ankurdave/repos/dotfiles/misc/dummycert.pem
+SSLType IMAPS
+AuthMechs LOGIN
+PipelineDepth 50
+
+IMAPStore gmail-remote
+Account gmail
+
+MaildirStore gmail-local
+Path ~/mail/
+Inbox ~/mail/inbox
+
+Channel gmail-all
+Master ":gmail-remote:[Gmail]/All Mail"
+Slave :gmail-local:all
+
+Channel gmail-sent
+Master ":gmail-remote:[Gmail]/Sent Mail"
+Slave :gmail-local:sent
+
+Group gmail
+Channel gmail-all
+Channel gmail-sent
