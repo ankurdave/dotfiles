@@ -13,7 +13,8 @@ find "$dotfiles" -mindepth 1 -maxdepth 1 -not \( \
     -iname '.git' -or \
     -iname '.gitmodules' -or \
     -iname 'bin' -or \
-    -iname 'misc' \
+    -iname 'misc' -or \
+    -iname 'afew' \
     \) | while read file; do
         target=~/"$(basename "$file")"
 
@@ -34,6 +35,17 @@ find "$dotfiles" -mindepth 1 -maxdepth 1 -not \( \
         echo "Linking $target"
         ln -s "$file" "$target"
     done
+
+mkdir -p ~/.config/afew
+find "$dotfiles"/misc/afew -mindepth 1 -maxdepth 1 | while read file; do
+    target=~/.config/afew/"$(basename "$file")"
+    if [[ -L "$target" ]]
+    then
+        rm "$target"
+    fi
+    echo "Linking $target"
+    ln -s "$file" "$target"
+done
 
 # OS X setup
 command_exists () {
