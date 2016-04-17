@@ -4,6 +4,12 @@ set -e
 
 notmuch new
 
+num_new=$(notmuch count tag:new)
+if (( $num_new > 0 )); then
+    new_summary=$(notmuch search --limit=2 tag:new | perl -pe 's/^.*\](.*)\(.*$/\1/; s/,.*?; / - /; s/^\s*//')
+    osascript -e "display notification \"${new_summary//\"\\\"}\" with title \"$num_new new\""
+fi
+
 afew --tag --new
 
 notmuch tag +notifications -- tag:new AND \( \
