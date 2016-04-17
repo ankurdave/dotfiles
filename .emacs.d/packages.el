@@ -124,6 +124,8 @@
 (use-package ensime
   :disabled
   :init
+  (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
+  :config
   (setq ensime-sem-high-faces
         '((var . font-lock-variable-name-face)
           (val . font-lock-variable-name-face)
@@ -134,9 +136,7 @@
           (class . font-lock-type-face)
           (trait . font-lock-type-face)
           (object . font-lock-type-face)
-          (package . font-lock-preprocessor-face)))
-  :config
-  (add-hook 'scala-mode-hook 'ensime-scala-mode-hook))
+          (package . font-lock-preprocessor-face))))
 
 (use-package esh-mode
   :ensure nil
@@ -183,7 +183,7 @@
   :mode "\\.plt\\'")
 
 (use-package god-mode
-  :bind (("<escape>" . god-mode-all))
+  ;; :bind (("<escape>" . god-mode-all))
   :bind (:map god-local-mode-map
               ("/" . undo-tree-undo)
               ("." . repeat)
@@ -447,11 +447,6 @@
   (add-hook 'LaTeX-mode-hook #'LaTeX-compile-after-save)
   :defer t)
 
-(use-package typing-test
-  :load-path "lisp/"
-  :ensure nil
-  :commands typing-test)
-
 (use-package undo-tree
   :bind (("C--" . undo-tree-undo)
          ("C-?" . undo-tree-redo))
@@ -472,14 +467,26 @@
   :demand)
 
 (use-package utils
+  :init
+  (autoload 'profiler-report "profiler")
+  (autoload 'profiler-stop "profiler")
   :load-path "lisp/"
   :ensure nil
   :config
   (bind-key "C-w" (make-backward-kill-word-fn backward-kill-word (1)))
+  (defun my-profiler-start ()
+    (interactive)
+    (profiler-start 'cpu))
+  (defun my-profiler-stop ()
+    (interactive)
+    (profiler-report)
+    (profiler-stop))
   :bind (("C-x 4 p" . projectile-find-file-other-window)
          ("C-x C-x" . switch-to-other-buffer)
          ("C-c d" . date)
-         ("C-c e" . calc-eval-region))
+         ("C-c e" . calc-eval-region)
+         ("C-c r" . my-profiler-start)
+         ("C-c s" . my-profiler-stop))
   :demand)
 
 (use-package vc-git
@@ -487,33 +494,13 @@
   :commands vc-git-grep)
 
 (use-package visual-regexp
-  :disabled)
+  :init
+  (unbind-key "C-w" isearch-mode-map))
 
-(use-package visual-regexp-steroids
-  :disabled)
+(use-package visual-regexp-steroids)
 
-(use-package w3m
-  :disabled)
-
-(use-package w3m-hacker-news
-  :disabled
-  :load-path "lisp/"
-  :ensure nil
-  :after w3m
-  :defines w3m-mode-map
-  :bind (:map w3m-mode-map
-              ("n" . next-hn-comment)
-              ("p" . previous-hn-comment)
-              ("P" . parent-hn-comment)
-              ("C-c n" . next-sibling-hn-comment)
-              ("C-x n c" . narrow-to-hn-comment-at-point)))
-
-(use-package w3m-isearch-links
-  :disabled
-  :load-path "lisp/"
-  :ensure nil
-  :bind (:map w3m-mode-map
-              ("/" . w3m-isearch-links)))
+(use-package which-key
+  :bind (("C-c k" . which-key-show-top-level)))
 
 (use-package whitespace
   :diminish global-whitespace-mode

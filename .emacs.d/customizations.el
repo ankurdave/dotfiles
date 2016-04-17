@@ -104,17 +104,8 @@
  '(notmuch-show-all-tags-list t)
  '(notmuch-show-indent-messages-width 1)
  '(notmuch-show-indent-multipart nil)
+ '(notmuch-show-logo nil)
  '(notmuch-show-part-button-default-action (quote notmuch-show-interactively-view-part))
- '(notmuch-tag-formats
-   (quote
-    (("unread"
-      (propertize tag
-                  (quote face)
-                  (quote
-                   (:foreground "#CC9393"))))
-     ("flagged"
-      (notmuch-tag-format-image-data tag
-                                     (notmuch-tag-star-icon))))))
  '(notmuch-unread-search-term
    "(tag:inbox OR tag:is-reply OR tag:graphx OR tag:notifications) AND is:unread")
  '(ns-alternate-modifier (quote meta))
@@ -200,6 +191,10 @@
  '(w3m-use-cookies t)
  '(w3m-use-favicon nil)
  '(w3m-use-title-buffer-name t)
+ '(which-key-lighter "")
+ '(which-key-mode t)
+ '(which-key-side-window-max-height 0.5)
+ '(which-key-side-window-max-width 0.5)
  '(whitespace-global-modes (quote (scala-mode)))
  '(whitespace-line-column nil)
  '(winner-mode t)
