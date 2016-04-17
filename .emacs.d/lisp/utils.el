@@ -519,4 +519,22 @@ time is displayed."
         accum
       (split-path-1 dir (cons name accum)))))
 
+(autoload 'with-current-notmuch-show-message "notmuch-show")
+(autoload 'notmuch-foreach-mime-part "notmuch")
+(autoload 'mm-handle-media-type "mm-decode")
+(autoload 'mm-display-external "mm-decode")
+(defun notmuch-view-html ()
+  "Open the HTML parts of a mail in a web browser."
+  (interactive)
+  (with-current-notmuch-show-message
+   (let ((mm-handle (mm-dissect-buffer)))
+     (notmuch-foreach-mime-part
+      (lambda (p)
+        (if (string-equal (mm-handle-media-type p) "text/html")
+            (mm-display-external p (lambda ()
+                                     (message "Opening web browser...")
+                                     (browse-url-of-buffer)
+                                     (bury-buffer)))))
+      mm-handle))))
+
 (provide 'utils)

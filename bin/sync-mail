@@ -11,19 +11,20 @@ def imap_password():
 
 m = None
 first_run = True
-try:
-    while m is None:
-        try:
-            print 'Opening connection'
-            m = imaplib2.IMAP4_SSL('imap.gmail.com')
-        except socket.error as e:
-            print 'Error: %s' % (e,)
-        if m is None:
-            print 'Retrying in 60 seconds'
-            time.sleep(5)
+timeout=5*60
+while True:
+    try:
+        while m is None or m.state == 'LOGOUT':
+            try:
+                print 'Opening connection'
+                m = imaplib2.IMAP4_SSL('imap.gmail.com', timeout=timeout)
+            except socket.error as e:
+                print 'Error: %s' % (e,)
+            if m is None:
+                print 'Retrying in 60 seconds'
+                time.sleep(60)
 
-    while True:
-        try:
+        while True:
             if m.state == 'NONAUTH':
                 print 'Logging in'
                 print m.login('ankurdave@gmail.com', imap_password())
@@ -35,17 +36,20 @@ try:
                 first_run = False
             else:
                 print 'Waiting for new mail'
-                r = m.idle()
+                r = m.idle(timeout)
                 print 'New mail or timeout: %s' % (r,)
             subprocess.Popen('/Users/ankurdave/repos/dotfiles/bin/sync-mail-once').wait()
             print 'Done syncing'
-        except m.abort as e:
-            print 'Error: %s' % (e,)
-            print 'Retrying in 60 seconds'
-            time.sleep(5)
-finally:
-    if m:
-        print 'Cleaning up'
-        print m.close()
-        print m.logout()
-        print 'Done.'
+    except m.abort as e:
+        print 'Error: %s' % (e,)
+        print 'Retrying in 60 seconds'
+        time.sleep(60)
+    finally:
+        if m:
+            try:
+                print 'Cleaning up'
+                print m.close()
+                print m.logout()
+                print 'Done.'
+            except m.abort as e:
+                print 'Error while closing: %s' % (e,)

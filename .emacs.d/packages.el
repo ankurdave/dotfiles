@@ -226,6 +226,8 @@
 
 (use-package helm-git-grep)
 
+(use-package helm-notmuch)
+
 (use-package helm-projectile
   :config
   (helm-projectile-on))
@@ -269,23 +271,39 @@
               ("g" . notmuch-refresh-this-buffer))
   :bind (:map notmuch-show-mode-map
               ("d" . notmuch-mark-deleted)
-              ("o" . goto-address-at-point))
+              ("o" . goto-address-at-point)
+              ("v" . notmuch-view-html))
   :bind (:map notmuch-hello-mode-map
               ("g" . notmuch-refresh-this-buffer))
   :bind (:map notmuch-tree-mode-map
-              ("n" . notmuch-tree-next-matching-message-and-mark-read))
+              ("n" . notmuch-tree-next-matching-message-and-mark-read)
+              ("g" . notmuch-refresh-this-buffer))
   :config
   (setq notmuch-saved-searches
-        (let ((personal "(tag:is-reply OR (tag:inbox AND NOT (tag:notifications OR tag:amplab-lists OR tag:berkeley-lists OR tag:spark-lists)))")
-              (notifications "tag:notifications AND NOT (tag:is-reply)")
-              (amplab "tag:amplab-lists AND NOT (tag:is-reply OR tag:notifications)")
-              (berkeley "tag:berkeley-lists AND NOT (tag:is-reply OR tag:notifications OR tag:amplab-lists)")
-              (spark "tag:spark-lists AND NOT (tag:is-reply OR tag:notifications OR tag:amplab-lists OR tag:berkeley-lists)"))
-          `((:name "Personal" :query ,personal :count-query ,(format "is:unread AND %s" personal))
-            (:name "Notifications" :query ,notifications :count-query ,(format "is:unread AND %s" notifications))
-            (:name "AMPLab" :query ,amplab :count-query ,(format "is:unread AND %s" amplab))
-            (:name "Berkeley" :query ,berkeley :count-query ,(format "is:unread AND %s" berkeley))
-            (:name "Spark" :query ,spark :count-query ,(format "is:unread AND %s" spark))))))
+        '((:name "Unread" :query "is:unread AND tag:inbox" :search-type tree)
+          (:name "Inbox" :query "(tag:inbox OR tag:is-reply) AND date:3months..")
+          (:name "Sent" :query "tag:sent AND date:3months..")
+          (:name "Archive" :query "NOT (tag:inbox OR tag:sent) AND date:3months..")))
+  (setq notmuch-search-result-format
+   `(("date" . "%12s ")
+     ("count" . "%-7s ")
+     ("authors" . "%-20s ")
+     ("tags" . "%-20.20s ")
+     ("subject" . "%s")))
+  (setq notmuch-tag-formats
+        '(("inbox")
+          ("notifications" "notif")
+          ("lists")
+          ("berkeley-lists" "berk")
+          ("amplab-lists" "amp")
+          ("spark-lists" "spark")
+          ("attachment" "attach")
+          ("lists/.*" (substring tag 6 (s-index-of "." tag)))
+          ("unread" (propertize tag 'face '(:foreground "#CC9393")))
+          ("flagged"
+           (propertize tag 'face '(:foreground "blue"))
+           (notmuch-tag-format-image-data
+            tag (notmuch-tag-star-icon))))))
 
 (use-package org
   :init
