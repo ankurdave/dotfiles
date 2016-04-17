@@ -1,13 +1,12 @@
 #!/bin/bash
 
-set -x
 set -e
 
 notmuch new
 
-/usr/bin/time afew --tag --new -v
+afew --tag --new
 
-/usr/bin/time notmuch tag +notifications -- tag:new AND \( \
+notmuch tag +notifications -- tag:new AND \( \
     \( "wallet.google.com" "view transaction details" \) \
     OR from:aboutme@about.me \
     OR from:AmericanExpress@welcome.aexp.com \
@@ -51,6 +50,8 @@ notmuch new
     OR from:digest-noreply@quora.com \
     OR from:noreply@invite.quoramail.com \
     OR from:info@sender.runkeeper.com \
+    OR from:feedback@slack.com \
+    OR from:no-reply@slack.com \
     OR from:Starbucks@e.starbucks.com \
     OR from:noreply@steampowered.com \
     OR from:organizers@spark-summit.org \
@@ -70,7 +71,7 @@ notmuch new
     OR from:notifications+vvvowqwk20@zyngamail.com \
 \)
 
-/usr/bin/time notmuch tag +amplab-lists -- tag:new AND \( \
+notmuch tag +amplab-lists -- tag:new AND \( \
     tag:lists/radlab-space.lists.eecs.berkeley.edu \
     OR tag:lists/amp-research.lists.eecs.berkeley.edu \
     OR tag:lists/dbseminar.lists.eecs.berkeley.edu \
@@ -84,7 +85,7 @@ notmuch new
     OR tag:lists/radlab-chat.eecs.berkeley.edu \
 \)
 
-/usr/bin/time notmuch tag +berkeley-lists -- tag:new AND \( \
+notmuch tag +berkeley-lists -- tag:new AND \( \
     from:CALmessages@berkeley.edu \
     OR from:careermail3@berkeley.edu \
     OR from:equity_inclusion@berkeley.edu \
@@ -114,7 +115,7 @@ notmuch new
     OR tag:lists/sysadmins-windows-announce.lists.eecs.berkeley.edu \
 \)
 
-/usr/bin/time notmuch tag +spark-lists -- tag:new AND \( \
+notmuch tag +spark-lists -- tag:new AND \( \
     tag:lists/dev.spark.apache.org \
     OR tag:lists/private.spark.apache.org \
     OR to:committers@apache.org \
@@ -127,12 +128,12 @@ notmuch new
 # 1. Find threads with new mail
 # 2. Filter those to threads containing mail sent by me
 # 3. Tag the new mail in those threads as replies
-/usr/bin/time notmuch search --output=threads tag:new |
-    /usr/bin/time xargs -J {} notmuch search --output=threads {} is:sent |
-    /usr/bin/time xargs -J {} notmuch tag +is-reply -- {} tag:new AND NOT is:sent
+notmuch search --output=threads tag:new |
+    xargs -J {} notmuch search --output=threads {} is:sent |
+    xargs -J {} notmuch tag +is-reply -- {} tag:new AND NOT is:sent
 
 # Databricks mail
-/usr/bin/time notmuch tag +databricks -- tag:new AND 'path:databricks/**'
+notmuch tag +databricks -- tag:new AND 'path:databricks/**'
 
 # Unmark new
-/usr/bin/time notmuch tag -new -- tag:new
+notmuch tag -new -- tag:new
