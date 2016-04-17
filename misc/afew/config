@@ -1,3 +1,16 @@
-[SentMailsFilter]
-sent_tag=sent
+[HeaderMatchingFilter.1]
+message=Tagging backed up phone call records
+header=X-smssync-datatype
+pattern=CALLLOG
+tags=+call;-inbox;-new
+
+[HeaderMatchingFilter.2]
+message=Tagging backed up text messages
+header=X-smssync-datatype
+pattern=SMS|MMS
+tags=+sms;-inbox;-new
+
 [FullListNameFilter]
+
+[ArchiveSentMailsFilter]
+sent_tag=sent
