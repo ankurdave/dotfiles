@@ -22,11 +22,3 @@ Inbox ~/mail/inbox
 Channel gmail-all
 Master ":gmail-remote:[Gmail]/All Mail"
 Slave :gmail-local:all
-
-Channel gmail-sent
-Master ":gmail-remote:[Gmail]/Sent Mail"
-Slave :gmail-local:sent
-
-Group gmail
-Channel gmail-all
-Channel gmail-sent
