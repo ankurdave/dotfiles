@@ -72,6 +72,15 @@ if [ -d ~/Library ] && command_exists defaults; then
 
     ln "$dotfiles"/misc/com.googlecode.iterm2.plist "$target"
 
+    mkdir -p ~/Library/LaunchAgents
+    target=~/Library/LaunchAgents/com.ankurdave.sync-mail.plist
+    if [[ -e "$target" ]]
+    then
+        rm "$target"
+    fi
+
+    ln "$dotfiles"/misc/com.ankurdave.sync-mail.plist "$target"
+
     # Other prefs
     defaults write -app Skim SKAutoReloadFileUpdate -boolean true
 fi

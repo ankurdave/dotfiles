@@ -1,10 +1,7 @@
 #!/bin/bash
 
-cd ~/mail
-
 set -e
 
-date
-
-/usr/bin/time gtimeout --signal=QUIT 10m mbsync -a
-/usr/bin/time ~/repos/dotfiles/bin/tag-mail
+cd ~/mail
+gtimeout --signal=QUIT 10m mbsync -a
+~/repos/dotfiles/bin/tag-mail
