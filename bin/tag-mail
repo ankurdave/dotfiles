@@ -1,10 +1,18 @@
 #!/bin/bash
 
-set -e
+set -eu
+
+notmuch_tag_new='tag:new AND'
+notmuch_tag_all=''
+afew_tag_new='--new'
+afew_tag_all='--all'
+
+afew_tag_arg=$afew_tag_new
+notmuch_tag_arg=$notmuch_tag_new
 
 notmuch new --quiet
 
-afew --tag --new
+afew --tag $afew_tag_arg
 
 num_new=$(notmuch count tag:new)
 if (( $num_new > 0 )); then
@@ -12,7 +20,7 @@ if (( $num_new > 0 )); then
     osascript -e "display notification \"${new_summary//\"/\\\"}\" with title \"$num_new new\""
 fi
 
-notmuch tag +notifications -- tag:new AND \( \
+notmuch tag +notifications -- $notmuch_tag_arg \( \
     \( "wallet.google.com" "view transaction details" \) \
     OR from:aboutme@about.me \
     OR from:AmericanExpress@welcome.aexp.com \
@@ -77,21 +85,22 @@ notmuch tag +notifications -- tag:new AND \( \
     OR from:notifications+vvvowqwk20@zyngamail.com \
 \)
 
-notmuch tag +amplab-lists -- tag:new AND \( \
-    tag:lists/radlab-space.lists.eecs.berkeley.edu \
+notmuch tag +amplab-lists -- $notmuch_tag_arg \( \
+    tag:lists/amp-ccn.lists.eecs.berkeley.edu \
+    OR tag:lists/amp-ec2-users.eecs.berkeley.edu \
+    OR tag:lists/amp-jobs.eecs.berkeley.edu \
+    OR tag:lists/amp-research.eecs.berkeley.edu \
     OR tag:lists/amp-research.lists.eecs.berkeley.edu \
+    OR tag:lists/amp-sys-ml.eecs.berkeley.edu \
     OR tag:lists/dbseminar.lists.eecs.berkeley.edu \
     OR tag:lists/netsyslab.lists.eecs.berkeley.edu \
     OR tag:lists/networks-lunch.lists.eecs.berkeley.edu \
-    OR tag:lists/amp-ec2-users.eecs.berkeley.edu \
-    OR tag:lists/amp-sys-ml.eecs.berkeley.edu \
-    OR tag:lists/radlab-space.eecs.berkeley.edu \
-    OR tag:lists/amp-research.eecs.berkeley.edu \
-    OR tag:lists/amp-jobs.eecs.berkeley.edu \
     OR tag:lists/radlab-chat.eecs.berkeley.edu \
+    OR tag:lists/radlab-space.eecs.berkeley.edu \
+    OR tag:lists/radlab-space.lists.eecs.berkeley.edu \
 \)
 
-notmuch tag +berkeley-lists -- tag:new AND \( \
+notmuch tag +berkeley-lists -- $notmuch_tag_arg \( \
     from:CALmessages@berkeley.edu \
     OR from:careermail3@berkeley.edu \
     OR from:equity_inclusion@berkeley.edu \
@@ -106,6 +115,7 @@ notmuch tag +berkeley-lists -- tag:new AND \( \
     OR from:university-of-california-police-department-berkeley@emails.nixle.com \
     OR to:CALmessages@berkeley.edu \
     OR tag:lists/coe-grads.lists.eecs.berkeley.edu \
+    OR tag:lists/coeemployees.lists.erso.berkeley.edu \
     OR tag:lists/cs-grads-food.lists.eecs.berkeley.edu \
     OR tag:lists/cs-grads-social.lists.eecs.berkeley.edu \
     OR tag:lists/cs-grads.lists.eecs.berkeley.edu \
@@ -121,7 +131,7 @@ notmuch tag +berkeley-lists -- tag:new AND \( \
     OR tag:lists/sysadmins-windows-announce.lists.eecs.berkeley.edu \
 \)
 
-notmuch tag +spark-lists -- tag:new AND \( \
+notmuch tag +spark-lists -- $notmuch_tag_arg \( \
     tag:lists/dev.spark.apache.org \
     OR tag:lists/private.spark.apache.org \
     OR to:committers@apache.org \
@@ -139,7 +149,7 @@ notmuch search --output=threads tag:new |
     xargs -J {} notmuch tag +is-reply -- {} tag:new AND NOT is:sent
 
 # Databricks mail
-notmuch tag +databricks -- tag:new AND 'path:databricks/**'
+notmuch tag +databricks -- $notmuch_tag_arg 'path:databricks/**'
 
 # Unmark new
 notmuch tag -new -- tag:new
