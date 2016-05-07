@@ -272,7 +272,8 @@
   :bind (:map notmuch-show-mode-map
               ("d" . notmuch-mark-deleted)
               ("o" . goto-address-at-point)
-              ("v" . notmuch-view-html))
+              ("v" . notmuch-view-html)
+              ("g" . notmuch-refresh-this-buffer))
   :bind (:map notmuch-hello-mode-map
               ("g" . notmuch-refresh-this-buffer))
   :bind (:map notmuch-tree-mode-map
@@ -281,6 +282,7 @@
   :config
   (setq notmuch-saved-searches
         '((:name "Unread" :query "is:unread AND tag:inbox" :search-type tree)
+          (:name "Personal" :query "tag:inbox AND NOT tag:notifications AND NOT tag:spark-lists AND NOT tag:berkeley-lists AND NOT tag:amplab-lists AND date:3months..")
           (:name "Inbox" :query "(tag:inbox OR tag:is-reply) AND date:3months..")
           (:name "Sent" :query "tag:sent AND date:3months..")
           (:name "Archive" :query "NOT (tag:inbox OR tag:sent) AND date:3months..")))
