@@ -85,7 +85,7 @@ if ! shopt -oq posix; then
 fi
 
 stty werase undef
-bind '"\C-w": backward-kill-word'
+bind '"\C-w": unix-filename-rubout'
 
 export JAVA_OPTS="-Dscala.color"
 
