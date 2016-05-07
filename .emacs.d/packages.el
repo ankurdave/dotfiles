@@ -526,9 +526,10 @@
        `(diff-refine-change  ((t (:background "#878700" :foreground ,zenburn-yellow))))
        `(diff-refine-removed ((t (:background "#875F5F" :foreground ,zenburn-red))))
        `(magit-diff-added    ((t (:background ,zenburn-bg :foreground ,zenburn-green))))
-       `(magit-diff-added-highlight ((t (:background ,zenburn-bg+05 :foreground ,zenburn-green))))
+       `(magit-diff-added-highlight ((t (:background ,zenburn-bg-1 :foreground ,zenburn-green))))
        `(magit-diff-removed  ((t (:background ,zenburn-bg :foreground ,zenburn-red-2))))
-       `(magit-diff-removed-highlight ((t (:background ,zenburn-bg+05 :foreground ,zenburn-red-2))))))))
+       `(magit-diff-removed-highlight ((t (:background ,zenburn-bg-1 :foreground ,zenburn-red-2))))
+       `(magit-diff-context-highlight ((t (:background ,zenburn-bg-1))))))))
 
 ;;; Package configuration ends here
 
