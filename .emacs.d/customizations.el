@@ -56,6 +56,7 @@
  '(flycheck-emacs-lisp-initialize-packages t)
  '(fringe-mode 0 nil (fringe))
  '(global-git-commit-mode t)
+ '(global-paren-face-mode t)
  '(helm-M-x-fuzzy-match t)
  '(helm-buffers-fuzzy-matching t)
  '(helm-file-cache-fuzzy-match t)

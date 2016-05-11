@@ -327,6 +327,14 @@
               ("C-M-d" . nil))
   :diminish paredit-mode)
 
+(use-package paren-face
+  :config
+  (with-eval-after-load 'zenburn-theme
+    (zenburn-with-color-variables
+      (custom-theme-set-faces
+       'zenburn
+       `(parenthesis ((t (:foreground ,zenburn-fg-1))))))))
+
 (use-package projectile
   :config
   ;; file-exists-p -> file-regular-p
