@@ -537,4 +537,16 @@ time is displayed."
                                      (bury-buffer)))))
       mm-handle))))
 
+;; From http://superuser.com/questions/176627/in-emacs-dired-how-can-i-run-a-command-on-multiple-marked-files
+(defun dired-do-command (command)
+  "Run COMMAND on marked files. Any files not already open will be opened.
+After this command has been run, any buffers it's modified will remain
+open and unsaved."
+  (interactive "CRun on marked files M-x ")
+  (save-window-excursion
+    (mapc (lambda (filename)
+            (find-file filename)
+            (call-interactively command))
+          (dired-get-marked-files))))
+
 (provide 'utils)
