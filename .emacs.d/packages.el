@@ -44,7 +44,9 @@
 
 (use-package c++-mode
   :ensure cc-mode
-  :mode "\\.h\\'")
+  :mode "\\.h\\'"
+  :bind (:map c++-mode-map
+              ("C-c C-c" . print-line-counters)))
 
 (use-package color-identifiers-mode
   :init

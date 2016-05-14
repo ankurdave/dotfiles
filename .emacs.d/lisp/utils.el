@@ -549,4 +549,7 @@ open and unsaved."
             (call-interactively command))
           (dired-get-marked-files))))
 
+(fset 'print-line-counters
+      (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ("	printf(\" xkmacros-in-insert-counter\\n\");" 5 "%d")) arg)))
+
 (provide 'utils)
