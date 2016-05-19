@@ -366,7 +366,7 @@
    scala-import-class-at-point
    scala-import-goto-class-at-point))
 
-(use-package scala-mode2
+(use-package scala-mode
   :init
   (add-hook 'scala-mode-hook
             (lambda ()
