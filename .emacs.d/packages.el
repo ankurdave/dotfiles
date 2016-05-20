@@ -45,6 +45,8 @@
 (use-package c++-mode
   :ensure cc-mode
   :mode "\\.h\\'"
+  :init
+  (add-hook 'c++-mode-hook (lambda () (toggle-truncate-lines 1)))
   :bind (:map c++-mode-map
               ("C-c C-c" . print-line-counters)))
 
