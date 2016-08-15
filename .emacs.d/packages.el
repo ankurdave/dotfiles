@@ -25,8 +25,12 @@
 
 ;;; Package configuration:
 
+(use-package abbrev
+  :ensure nil
+  :diminish abbrev-mode)
+
 (use-package ace-jump-mode
-  :bind ("C-c SPC" . ace-jump-mode))
+  :bind ("M-j" . ace-jump-mode))
 
 (use-package adaptive-wrap
   :init
@@ -47,8 +51,14 @@
   :mode "\\.h\\'"
   :init
   (add-hook 'c++-mode-hook (lambda () (toggle-truncate-lines 1)))
+  (add-hook 'c++-mode-hook (lambda () (set-fill-column 100)))
+  (add-hook 'c++-mode-hook #'turn-on-auto-fill)
   :bind (:map c++-mode-map
-              ("C-c C-c" . print-line-counters)))
+              ("C-c C-c" . print-line-counters)
+              ("M-j" . ace-jump-mode)
+              ("M-n" . highlight-symbol-next)
+              ("M-p" . highlight-symbol-prev)
+              ("M-." . dumb-jump-go)))
 
 (use-package color-identifiers-mode
   :init
@@ -111,6 +121,8 @@
         (remove 'dtrt-indent-mode-line-info global-mode-string))
   (dtrt-indent-mode t)
   :diminish dtrt-indent-mode)
+
+(use-package dumb-jump)
 
 (use-package eldoc
   :init
@@ -242,6 +254,7 @@
   :init
   (add-hook 'emacs-lisp-mode-hook #'highlight-symbol-mode)
   (add-hook 'scala-mode-hook #'highlight-symbol-mode)
+  (add-hook 'c++-mode-hook #'highlight-symbol-mode)
   :diminish highlight-symbol-mode)
 
 (use-package htmlize
@@ -428,6 +441,10 @@
   :init
   (add-hook 'html-mode-hook (lambda () (toggle-word-wrap 0)))
   :defer t)
+
+(use-package simple
+  :ensure nil
+  :diminish auto-fill-function)
 
 (use-package smartparens
   :init
