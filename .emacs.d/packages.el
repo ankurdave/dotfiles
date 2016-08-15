@@ -231,6 +231,8 @@
   (unbind-key "C-SPC" helm-map)
   (unbind-key "C-k" helm-map)
   (unbind-key "C-w" helm-map)
+  (with-eval-after-load 'helm-grep
+    (unbind-key "C-w" helm-grep-map))
   (helm-mode 1)
   :bind (("M-x" . helm-M-x)
          ("C-x b" . helm-mini)
@@ -249,6 +251,10 @@
   (helm-projectile-on))
 
 (use-package helm-themes)
+
+(use-package help-fns+
+  :init
+  (autoload 'describe-keymap "help-fns+"))
 
 (use-package highlight-symbol
   :init
@@ -553,7 +559,7 @@
      `(diff-changed        ((t (:background "#5F5F00" :foreground ,zenburn-yellow-1))))
      `(diff-removed        ((t (:background ,zenburn-bg :foreground ,zenburn-red-2))))
      `(diff-refine-added   ((t (:background "#5F875F" :foreground ,zenburn-green+4))))
-     `(diff-refine-change  ((t (:background "#878700" :foreground ,zenburn-yellow))))
+     `(diff-refine-changed ((t (:background "#878700" :foreground ,zenburn-yellow))))
      `(diff-refine-removed ((t (:background "#875F5F" :foreground ,zenburn-red))))
      `(magit-diff-added    ((t (:background ,zenburn-bg :foreground ,zenburn-green))))
      `(magit-diff-added-highlight ((t (:background ,zenburn-bg-1 :foreground ,zenburn-green))))

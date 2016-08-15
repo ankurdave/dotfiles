@@ -84,6 +84,7 @@
  '(large-file-warning-threshold 100000000)
  '(linum-format " %7i ")
  '(load-prefer-newer t)
+ '(mac-option-modifier (quote meta))
  '(menu-bar-mode nil)
  '(message-citation-line-format "At %Y-%m-%d %T %z, %f wrote:")
  '(message-citation-line-function (quote message-insert-formatted-citation-line))
