@@ -1,6 +1,8 @@
 #!/bin/bash
 
-ln -s $HOME/Dropbox/history ~/history
+if [ -d "$HOME/Dropbox/history" ]; then
+    ln -s $HOME/Dropbox/history ~/history
+fi
 mkdir -p ~/history
 
 dotfiles=$(cd $(dirname $0)/.. && pwd)
