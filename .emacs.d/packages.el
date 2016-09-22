@@ -296,10 +296,6 @@
   :bind ("C-x m" . magit-status)
   :diminish magit-auto-revert-mode)
 
-(use-package magit-gh-pulls
-  :init
-  (add-hook 'magit-mode-hook #'turn-on-magit-gh-pulls))
-
 (use-package markdown-mode
   :defer t)
 
