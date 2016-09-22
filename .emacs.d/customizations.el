@@ -29,7 +29,7 @@
  '(c-default-style "k&r")
  '(column-number-mode t)
  '(company-idle-delay nil)
- '(compilation-auto-jump-to-first-error t)
+ '(compilation-auto-jump-to-first-error nil)
  '(compilation-scroll-output (quote first-error))
  '(confirm-kill-emacs (quote y-or-n-p))
  '(cs164-basic-offset 2)
@@ -58,6 +58,7 @@
  '(global-git-commit-mode t)
  '(global-paren-face-mode t)
  '(helm-M-x-fuzzy-match t)
+ '(helm-bibtex-full-frame nil)
  '(helm-buffers-fuzzy-matching t)
  '(helm-file-cache-fuzzy-match t)
  '(helm-flx-mode t)
@@ -85,6 +86,7 @@
  '(linum-format " %7i ")
  '(load-prefer-newer t)
  '(mac-option-modifier (quote meta))
+ '(magit-diff-refine-hunk (quote all))
  '(menu-bar-mode nil)
  '(message-citation-line-format "At %Y-%m-%d %T %z, %f wrote:")
  '(message-citation-line-function (quote message-insert-formatted-citation-line))
@@ -116,6 +118,7 @@
  '(ns-tool-bar-size-mode (quote regular) t)
  '(org-agenda-files (quote ("~/Dropbox/scratch")))
  '(org-src-fontify-natively t)
+ '(org-src-tab-acts-natively t)
  '(org-startup-folded nil)
  '(org-startup-indented t)
  '(org-startup-truncated nil)
@@ -139,6 +142,7 @@
  '(scala-indent:align-parameters nil)
  '(scala-indent:use-javadoc-style t)
  '(scroll-bar-mode nil)
+ '(select-enable-clipboard t)
  '(semantic-default-submodes
    (quote
     (global-semantic-highlight-func-mode global-semantic-decoration-mode global-semantic-stickyfunc-mode global-semantic-idle-completions-mode global-semantic-idle-scheduler-mode global-semanticdb-minor-mode global-semantic-mru-bookmark-mode)))
@@ -205,7 +209,7 @@
  '(winsize-desired-width 80)
  '(word-wrap t)
  '(ws-butler-global-mode t)
- '(x-select-enable-clipboard t))
+ '(xterm-mouse-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

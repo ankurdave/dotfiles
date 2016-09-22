@@ -16,3 +16,5 @@ export SCALA_HOME=$(/usr/local/bin/brew --prefix scala)/libexec
 export TEXMFHOME=$HOME/repos/latex
 
 export SHELL=/usr/local/bin/bash
+
+export ANDROID_HOME=/usr/local/opt/android-sdk

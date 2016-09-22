@@ -14,12 +14,6 @@ notmuch new --quiet
 
 afew --tag $afew_tag_arg
 
-num_new=$(notmuch count tag:new)
-if (( $num_new > 0 )); then
-    new_summary=$(notmuch search --limit=2 tag:new | perl -pe 's/^[^\]]*\] ([^|,;]*)[^;]*; (.*)/\1 - \2/; s/\s*\([^(]*$/\n/;')
-    osascript -e "display notification \"${new_summary//\"/\\\"}\" with title \"$num_new new\""
-fi
-
 notmuch tag +notifications -- $notmuch_tag_arg \( \
     \( "wallet.google.com" "view transaction details" \) \
     OR from:aboutme@about.me \
@@ -150,6 +144,12 @@ notmuch search --output=threads tag:new |
 
 # Databricks mail
 notmuch tag +databricks -- $notmuch_tag_arg 'path:databricks/**'
+
+num_new=$(notmuch count tag:new AND NOT tag:spark-lists)
+if (( $num_new > 0 )); then
+    new_summary=$(notmuch search --limit=2 tag:new AND NOT tag:spark-lists | perl -pe 's/^[^\]]*\] ([^|,;]*)[^;]*; (.*)/\1 - \2/; s/\s*\([^(]*$/\n/;')
+    osascript -e "display notification \"${new_summary//\"/\\\"}\" with title \"$num_new new\""
+fi
 
 # Unmark new
 notmuch tag -new -- tag:new

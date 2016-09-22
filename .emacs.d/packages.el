@@ -53,6 +53,7 @@
   (add-hook 'c++-mode-hook (lambda () (toggle-truncate-lines 1)))
   (add-hook 'c++-mode-hook (lambda () (set-fill-column 100)))
   (add-hook 'c++-mode-hook #'turn-on-auto-fill)
+  (eval-when-compile (require 'cc-mode))
   :bind (:map c++-mode-map
               ("C-c C-c" . print-line-counters)
               ("M-j" . ace-jump-mode)
@@ -86,6 +87,14 @@
 (use-package compat
   :load-path "lisp/"
   :ensure nil)
+
+(use-package compile
+  :ensure nil
+  :init
+  (defun bury-successful-compilation-buffer (buf str)
+    (if (null (string-match ".*exited abnormally.*" str))
+        (bury-buffer buf)))
+  (add-hook 'compilation-finish-functions #'bury-successful-compilation-buffer))
 
 (use-package conf-mode
   :ensure nil
@@ -185,9 +194,15 @@
   (add-hook 'python-mode-hook #'turn-on-fci-mode)
   (add-hook 'scala-mode-hook #'turn-on-fci-mode))
 
+(use-package flycheck)
+
+(use-package flycheck-package)
+
 (use-package frame
   :ensure nil
   :bind ("M-`" . other-frame))
+
+(use-package gist)
 
 (use-package git-commit)
 
@@ -280,6 +295,10 @@
 (use-package magit
   :bind ("C-x m" . magit-status)
   :diminish magit-auto-revert-mode)
+
+(use-package magit-gh-pulls
+  :init
+  (add-hook 'magit-mode-hook #'turn-on-magit-gh-pulls))
 
 (use-package markdown-mode
   :defer t)

@@ -487,11 +487,11 @@ or else find the selected file."
 
 (defun eval-last-sexp-other-buffer ()
   (interactive)
-  (let ((sexp (preceding-sexp))
+  (let ((sexp (elisp--preceding-sexp))
         (lexical-binding-saved lexical-binding))
     (save-selected-window
       (switch-to-other-buffer)
-      (eval-last-sexp-print-value
+      (elisp--eval-last-sexp-print-value
        (eval sexp lexical-binding-saved)))))
 
 ;; From http://emacs.stackexchange.com/questions/539/how-do-i-measure-performance-of-elisp-code
