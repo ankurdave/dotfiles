@@ -86,6 +86,7 @@
  '(linum-format " %7i ")
  '(load-prefer-newer t)
  '(mac-option-modifier (quote meta))
+ '(magit-diff-arguments (quote ("--stat")))
  '(magit-diff-refine-hunk (quote all))
  '(menu-bar-mode nil)
  '(message-citation-line-format "At %Y-%m-%d %T %z, %f wrote:")
