@@ -7,10 +7,10 @@
   (indent-region (point-min) (point-max) nil))
 
 (defun smart-split ()
-  "Split the frame into as many 80-column windows as possible."
+  "Split the frame into as many `fill-column' width windows as possible."
   (interactive)
   (delete-other-windows)
-  (let ((num-windows (/ (frame-width) 80)))
+  (let ((num-windows (/ (frame-width) fill-column)))
     (dotimes (i (1- num-windows))
       (split-window-right)))
   (balance-windows))
