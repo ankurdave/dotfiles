@@ -32,6 +32,14 @@
 (use-package ace-jump-mode
   :bind ("M-j" . ace-jump-mode))
 
+(use-package ace-window
+  :bind (("M-o" . ace-window))
+  :config
+  (setq aw-keys '(?a ?e ?u ?h ?t ?n ?s))
+  (setq aw-dispatch-alist
+        '((?o aw-flip-window)))
+  (setq aw-dispatch-always t))
+
 (use-package adaptive-wrap
   :init
   (add-hook 'html-mode-hook #'adaptive-wrap-prefix-mode)
@@ -520,6 +528,11 @@
 
 (use-package ws-butler
   :diminish ws-butler-mode)
+
+(use-package xt-mouse
+  :ensure nil
+  :bind (("<mouse-4>" . scroll-down-line)
+         ("<mouse-5>" . scroll-up-line)))
 
 (use-package zenburn-theme
   :init
