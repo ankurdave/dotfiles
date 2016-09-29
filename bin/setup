@@ -49,6 +49,9 @@ find "$dotfiles"/misc/afew -mindepth 1 -maxdepth 1 | while read file; do
     ln -s "$file" "$target"
 done
 
+mkdir -p ~/.sbt/0.13
+ln -s "$dotfiles"/misc/ctags.sbt ~/.sbt/0.13/ctags.sbt
+
 # OS X setup
 command_exists () {
     type "$1" &> /dev/null ;
