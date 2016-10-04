@@ -2,6 +2,7 @@ val ctagsTask = TaskKey[Unit]("ctags", "Builds Scala tags")
 
 ctagsTask := {
   import sys.process._
+  baseDirectory(_ / ".tags").value.mkdir()
   val ret = Seq(
     "sctags", "-e",
     "-f", baseDirectory(_ / ".tags/project.tags").value.getAbsolutePath,
