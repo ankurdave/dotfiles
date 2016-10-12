@@ -38,6 +38,7 @@ brew 'parallel'
 brew 'python'
 brew 'python3'
 brew 'railwaycat/emacsmacport/emacs-mac', args: ['with-gnutls', 'with-official-icon']
+brew 'rsnapshot'
 brew 's3cmd'
 brew 'sbt'
 brew 'scala'

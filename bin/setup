@@ -103,8 +103,8 @@ if [ -d ~/Library ] && command_exists defaults; then
     defaults write NSGlobalDomain KeyRepeat -int 2
     defaults write NSGlobalDomain InitialKeyRepeat -int 15
     # Finder: show hidden files by default
-    defaults write com.apple.finder AppleShowAllFiles -bool true
-    defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+    defaults write com.apple.finder AppleShowAllFiles YES
+    defaults write NSGlobalDomain AppleShowAllExtensions YES
     # Disable the warning when changing a file extension
     defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
     # Use list view in all Finder windows by default
@@ -114,6 +114,12 @@ if [ -d ~/Library ] && command_exists defaults; then
     defaults write com.apple.dock expose-animation-duration -float 0.1
     # Prevent Photos from opening automatically when devices are plugged in
     defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true
+    # Disable local Time Machine backups
+    hash tmutil &> /dev/null && sudo tmutil disablelocal
+    # Disable Spotlight indexing for any volume that gets mounted and has not yet
+    # been indexed before.
+    # Use `sudo mdutil -i off "/Volumes/foo"` to stop indexing any volume.
+    sudo defaults write /.Spotlight-V100/VolumeConfiguration Exclusions -array "/Volumes"
     # Don’t prompt for confirmation before downloading
     defaults write org.m0k.transmission DownloadAsk -bool false
     defaults write org.m0k.transmission MagnetOpenAsk -bool false
