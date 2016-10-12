@@ -6,7 +6,10 @@
  '(TeX-PDF-mode t)
  '(TeX-master (quote dwim))
  '(TeX-save-query nil)
- '(TeX-view-program-list (quote (("open" "open -a Skim %o"))))
+ '(TeX-source-correlate-mode t)
+ '(TeX-view-program-list
+   (quote
+    (("open" "/Applications/Skim.app/Contents/SharedSupport/displayline -g %n %o %b"))))
  '(TeX-view-program-selection
    (quote
     (((output-dvi style-pstricks)
