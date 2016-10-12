@@ -57,6 +57,9 @@ command_exists () {
     type "$1" &> /dev/null ;
 }
 if [ -d ~/Library ] && command_exists defaults; then
+    brew bundle install --global
+    pip install -r "$dotfiles"/misc/pip-global-requirements.txt
+
     # Hard-link ~/Library/KeyBindings/DefaultKeyBinding.dict
     mkdir -p ~/Library/KeyBindings
     target=~/Library/KeyBindings/DefaultKeyBinding.dict
@@ -86,6 +89,45 @@ if [ -d ~/Library ] && command_exists defaults; then
 
     ln "$dotfiles"/misc/com.ankurdave.sync-mail.plist "$target"
 
+    ## From https://github.com/mathiasbynens/dotfiles/blob/master/.macos:
+    # Disable the sound effects on boot
+    sudo nvram SystemAudioVolume=" "
+    # Disable transparency in the menu bar and elsewhere on Yosemite
+    defaults write com.apple.universalaccess reduceTransparency -bool true
+    # Disable Resume system-wide
+    defaults write com.apple.systempreferences NSQuitAlwaysKeepsWindows -bool false
+    # Enable full keyboard access for all controls
+    # (e.g. enable Tab in modal dialogs)
+    defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
+    # Faster keyboard repeat rate
+    defaults write NSGlobalDomain KeyRepeat -int 2
+    defaults write NSGlobalDomain InitialKeyRepeat -int 15
+    # Finder: show hidden files by default
+    defaults write com.apple.finder AppleShowAllFiles -bool true
+    defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+    # Disable the warning when changing a file extension
+    defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+    # Use list view in all Finder windows by default
+    # Four-letter codes for the other view modes: `icnv`, `clmv`, `Flwv`
+    defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
+    # Speed up Mission Control animations
+    defaults write com.apple.dock expose-animation-duration -float 0.1
+    # Prevent Photos from opening automatically when devices are plugged in
+    defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true
+    # Don’t prompt for confirmation before downloading
+    defaults write org.m0k.transmission DownloadAsk -bool false
+    defaults write org.m0k.transmission MagnetOpenAsk -bool false
+    # IP block list.
+    # Source: https://giuliomac.wordpress.com/2014/02/19/best-blocklist-for-transmission/
+    defaults write org.m0k.transmission BlocklistNew -bool true
+    defaults write org.m0k.transmission BlocklistURL -string "http://john.bitsurge.net/public/biglist.p2p.gz"
+    defaults write org.m0k.transmission BlocklistAutoUpdate -bool true
+
+    # Bottom left screen corner puts display to sleep
+    defaults write com.apple.dock wvous-bl-corner -int 10
+    defaults write com.apple.dock wvous-bl-modifier -int 0
+
     # Other prefs
+    defaults write com.apple.finder CreateDesktop false
     defaults write -app Skim SKAutoReloadFileUpdate -boolean true
 fi
