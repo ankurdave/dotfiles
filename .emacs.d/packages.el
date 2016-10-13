@@ -265,7 +265,8 @@
 
 (use-package helm-flx)
 
-(use-package helm-git-grep)
+(use-package helm-git-grep
+  :bind ("C-c p g" . helm-git-grep))
 
 (use-package helm-notmuch)
 
