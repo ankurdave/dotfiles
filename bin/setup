@@ -1,11 +1,58 @@
 #!/bin/bash
 
-if [ -d "$HOME/Dropbox/history" ]; then
-    ln -s $HOME/Dropbox/history ~/history
-fi
-mkdir -p ~/history
+set -eu
 
 dotfiles=$(cd $(dirname $0)/.. && pwd)
+
+command_exists () {
+    type "$1" &> /dev/null ;
+}
+
+symlink () {
+    file=$1
+    target=$2
+
+    # Back up real files (not symlinks) to ~/config-old/
+    if [[ -e "$target" && ! -L "$target" ]]
+    then
+        echo "Moving old version of $target to ~/config-old/$(basename "$file")"
+        mkdir -p ~/config-old/
+        mv "$target" ~/config-old/
+    fi
+
+    # Just delete symlinks, because they are probably from a previous run
+    if [[ -L "$target" ]]
+    then
+        rm "$target"
+    fi
+
+    echo "Symlinking $target"
+    ln -s "$file" "$target"
+}
+
+hardlink () {
+    file="$1"
+    target="$2"
+
+    # Back up files to ~/config-old/
+    if [[ -e "$target" ]]
+    then
+        echo "Moving old version of $target to ~/config-old/$(basename "$file")"
+        mkdir -p ~/config-old/
+        if ! [[ "$target" -ef ~/config-old/"$(basename "$target")" ]]; then
+            mv "$target" ~/config-old/
+        fi
+    fi
+
+    echo "Hardlinking $target"
+    ln -f "$file" "$target"
+}
+
+if [ -d "$HOME/Dropbox/history" ]; then
+    symlink $HOME/Dropbox/history ~/history
+else
+    mkdir -p ~/history
+fi
 
 # Link dotfiles into ~ and back up the old dotfiles into ~/config-old
 find "$dotfiles" -mindepth 1 -maxdepth 1 -not \( \
@@ -18,86 +65,35 @@ find "$dotfiles" -mindepth 1 -maxdepth 1 -not \( \
     -iname 'misc' -or \
     -iname 'afew' \
     \) | while read file; do
-        target=~/"$(basename "$file")"
-
-        # Back up real files (not symlinks) to ~/config-old/
-        if [[ -e "$target" && ! -L "$target" ]]
-        then
-            echo "Moving old version of $target to ~/config-old/$(basename "$file")"
-            mkdir -p ~/config-old/
-            mv "$target" ~/config-old/
-        fi
-
-        # Just delete symlinks, because they are probably from a previous run
-        if [[ -L "$target" ]]
-        then
-            rm "$target"
-        fi
-
-        echo "Linking $target"
-        ln -s "$file" "$target"
-    done
+    symlink "$file" ~/"$(basename "$file")"
+done
 
 mkdir -p ~/.config/afew
 find "$dotfiles"/misc/afew -mindepth 1 -maxdepth 1 | while read file; do
-    target=~/.config/afew/"$(basename "$file")"
-    if [[ -L "$target" ]]
-    then
-        rm "$target"
-    fi
-    echo "Linking $target"
-    ln -s "$file" "$target"
+    symlink "$file" ~/.config/afew/"$(basename "$file")"
 done
 
 mkdir -p ~/.sbt/0.13
-target=~/.sbt/0.13/ctags.sbt
-if [[ -L "$target" ]]
-then
-    rm "$target"
-fi
-ln -s "$dotfiles"/misc/ctags.sbt "$target"
+symlink "$dotfiles"/misc/ctags.sbt ~/.sbt/0.13/ctags.sbt
 
 # OS X setup
-command_exists () {
-    type "$1" &> /dev/null ;
-}
 if [ -d ~/Library ] && command_exists defaults; then
     brew bundle install --global --verbose
     pip install --upgrade -r "$dotfiles"/misc/pip-global-requirements.txt
 
-    # Hard-link ~/Library/KeyBindings/DefaultKeyBinding.dict
     mkdir -p ~/Library/KeyBindings
-    target=~/Library/KeyBindings/DefaultKeyBinding.dict
-    if [[ -e "$target" ]]
-    then
-        rm "$target"
-    fi
+    hardlink "$dotfiles"/misc/DefaultKeyBinding.dict \
+             ~/Library/KeyBindings/DefaultKeyBinding.dict
 
-    ln "$dotfiles"/misc/DefaultKeyBinding.dict "$target"
-
-    # Hard-link ~/Library/Preferences/com.googlecode.iterm2.plist
     mkdir -p ~/Library/Preferences
-    target=~/Library/Preferences/com.googlecode.iterm2.plist
-    if [[ -e "$target" ]]
-    then
-        rm "$target"
-    fi
+    hardlink "$dotfiles"/misc/com.googlecode.iterm2.plist \
+             ~/Library/Preferences/com.googlecode.iterm2.plist
 
-    ln "$dotfiles"/misc/com.googlecode.iterm2.plist "$target"
-
-    mkdir -p ~/Library/LaunchAgents
-    target=~/Library/LaunchAgents/com.ankurdave.sync-mail.plist
-    if [[ -e "$target" ]]
-    then
-        rm "$target"
-    fi
-    ln "$dotfiles"/misc/com.ankurdave.sync-mail.plist "$target"
-    target=~/Library/LaunchAgents/com.ankurdave.calsquash-rankings.plist
-    if [[ -e "$target" ]]
-    then
-        rm "$target"
-    fi
-    ln "$dotfiles"/misc/com.ankurdave.calsquash-rankings.plist "$target"
+    # Launch agents
+    find "$dotfiles"/misc -mindepth 1 -maxdepth 1 \
+         -name 'com.ankurdave.*.plist' | while read file; do
+        hardlink "$file" ~/Library/LaunchAgents/"$(basename "$file")"
+    done
 
     ## From https://github.com/mathiasbynens/dotfiles/blob/master/.macos:
     # Disable the sound effects on boot
