@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>Label</key>
+    <string>com.ankurdave.snapshot-mail</string>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>Program</key>
+    <string>/Users/ankurdave/repos/dotfiles/bin/snapshot-mail</string>
+    <key>StandardOutPath</key>
+    <string>/Users/ankurdave/mail-log.txt</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/ankurdave/mail-log.txt</string>
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Minute</key>
+        <integer>55</integer>
+        <key>Hour</key>
+        <integer>23</integer>
+    </dict>
+  </dict>
+</plist>

@@ -1,11 +1,11 @@
 #!/bin/bash
 
-cd ~/mail
+set -eux
 
-set -x
-set -e
+cd ~/mail
 
 date
 
 /usr/bin/time git add .
 /usr/bin/time git commit -m 'Autocommit'
+/usr/bin/time git gc --auto
