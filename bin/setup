@@ -91,8 +91,13 @@ if [ -d ~/Library ] && command_exists defaults; then
     then
         rm "$target"
     fi
-
     ln "$dotfiles"/misc/com.ankurdave.sync-mail.plist "$target"
+    target=~/Library/LaunchAgents/com.ankurdave.calsquash-rankings.plist
+    if [[ -e "$target" ]]
+    then
+        rm "$target"
+    fi
+    ln "$dotfiles"/misc/com.ankurdave.calsquash-rankings.plist "$target"
 
     ## From https://github.com/mathiasbynens/dotfiles/blob/master/.macos:
     # Disable the sound effects on boot

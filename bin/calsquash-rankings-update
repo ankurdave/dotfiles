@@ -1,10 +1,12 @@
 #!/bin/bash
 
-set -e
+set -eu
 
-cd /Users/ankurdave/repos/calsquash-rankings-cron
+date
+
+cd /Users/ankurdave/calsquash-rankings
 git pull --ff-only
-./scraper.py
-./skill.py
+./scraper
+./skill
 git autocommit
 git push origin master
