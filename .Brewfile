@@ -3,14 +3,17 @@ tap 'caskroom/fonts'
 tap 'homebrew/bundle'
 tap 'homebrew/core'
 tap 'homebrew/gui'
+tap 'homebrew/head-only'
 tap 'homebrew/python'
 tap 'homebrew/science'
 tap 'homebrew/x11'
 tap 'railwaycat/emacsmacport'
+tap 'ankurdave/ankurdave'
 
 cask 'mactex'
 cask 'java'
 
+brew 'afew', args: ['HEAD']
 brew 'aspell', args: ['with-lang-en']
 brew 'automake'
 brew 'bash'
@@ -45,6 +48,7 @@ brew 'rsnapshot'
 brew 's3cmd'
 brew 'sbt'
 brew 'scala'
+brew 'sctags', args: ['HEAD']
 brew 'wget'
 
 cask 'backblaze'
