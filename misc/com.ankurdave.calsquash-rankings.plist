@@ -8,11 +8,8 @@
     <true/>
     <key>Program</key>
     <string>/Users/ankurdave/repos/dotfiles/bin/calsquash-rankings-update</string>
-    <key>StartCalendarInterval</key>
-    <dict>
-      <key>Minute</key>
-      <integer>0</integer>
-    </dict>
+    <key>StartInterval</key>
+    <integer>120</integer>
     <key>StandardOutPath</key>
     <string>/Users/ankurdave/calsquash-rankings-log.txt</string>
     <key>StandardErrorPath</key>

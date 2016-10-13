@@ -5,8 +5,24 @@ set -eu
 date
 
 cd /Users/ankurdave/calsquash-rankings
+
 git pull --ff-only
+
+function checksum_scraped_dir {
+    for file in scraped/*; do
+        grep -v 'Generated on' $file | md5
+    done | md5
+}
+
+scraped_before_fetch=$(checksum_scraped_dir)
 ./scraper
+scraped_after_fetch=$(checksum_scraped_dir)
+if [ "$scraped_before_fetch" == "$scraped_after_fetch" ]; then
+    echo "No new games"
+    exit 0
+fi
+
 ./skill
+
 git autocommit
 git push origin master
