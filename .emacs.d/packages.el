@@ -270,6 +270,7 @@
 (use-package helm-notmuch)
 
 (use-package helm-projectile
+  :bind (("C-c p f" . helm-projectile-find-file))
   :config
   (helm-projectile-on))
 
