@@ -4,14 +4,7 @@ PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:/Library/TeX/Root/bin/x86_64-darw
 export PATH
 launchctl setenv PATH $PATH
 
-PYTHONPATH=/usr/local/lib/python2.7/site-packages:$HOME/.local/lib/python2.7/site-packages
-export PYTHONPATH
-launchctl setenv PYTHONPATH $PYTHONPATH
-
 export JAVA_HOME=$(/usr/libexec/java_home)
-export HADOOP_HOME=$HOME/hadoop/
-export MAHOUT_HOME=$HOME/mahout/
-# export SCALA_HOME=$(brew --repository)/Library/LinkedKegs/scala/libexec
 export SCALA_HOME=$(/usr/local/bin/brew --prefix scala)/libexec
 export TEXMFHOME=$HOME/repos/latex
 

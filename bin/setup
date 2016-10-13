@@ -50,14 +50,19 @@ find "$dotfiles"/misc/afew -mindepth 1 -maxdepth 1 | while read file; do
 done
 
 mkdir -p ~/.sbt/0.13
-ln -s "$dotfiles"/misc/ctags.sbt ~/.sbt/0.13/ctags.sbt
+target=~/.sbt/0.13/ctags.sbt
+if [[ -L "$target" ]]
+then
+    rm "$target"
+fi
+ln -s "$dotfiles"/misc/ctags.sbt "$target"
 
 # OS X setup
 command_exists () {
     type "$1" &> /dev/null ;
 }
 if [ -d ~/Library ] && command_exists defaults; then
-    brew bundle install --global
+    brew bundle install --global --verbose
     pip install -r "$dotfiles"/misc/pip-global-requirements.txt
 
     # Hard-link ~/Library/KeyBindings/DefaultKeyBinding.dict
