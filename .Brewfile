@@ -13,7 +13,7 @@ tap 'ankurdave/ankurdave'
 cask 'mactex'
 cask 'java'
 
-brew 'afew', args: ['HEAD']
+brew 'ankurdave/ankurdave/afew', args: ['HEAD']
 brew 'aspell', args: ['with-lang-en']
 brew 'automake'
 brew 'bash'

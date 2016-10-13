@@ -2,3 +2,7 @@ autopep8
 docformatter
 virtualenv
 yapf
+
+# For mail syncing
+notmuch
+imaplib2
