@@ -3,22 +3,16 @@
 <plist version="1.0">
   <dict>
     <key>Label</key>
-    <string>com.ankurdave.rsnapshot.daily</string>
+    <string>com.ankurdave.rsnapshot</string>
     <key>LowPriorityIO</key>
     <true/>
     <key>Nice</key>
     <integer>1</integer>
     <key>ProgramArguments</key>
     <array>
-      <string>/usr/local/bin/rsnapshot</string>
-      <string>-c</string>
-      <string>/Users/ankurdave/repos/dotfiles/misc/rsnapshot.conf</string>
-      <string>daily</string>
+      <string>/Users/ankurdave/repos/dotfiles/bin/rsnapshot-all</string>
     </array>
-    <key>StartCalendarInterval</key>
-    <dict>
-      <key>Hour</key>
-      <integer>0</integer>
-    </dict>
+    <key>StartInterval</key>
+    <integer>120</integer>
   </dict>
 </plist>

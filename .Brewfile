@@ -45,6 +45,7 @@ brew 'python'
 brew 'python3'
 brew 'railwaycat/emacsmacport/emacs-mac', args: ['with-gnutls', 'with-official-icon']
 brew 'rsnapshot'
+brew 'rsnapshot-once', args: ['HEAD']
 brew 's3cmd'
 brew 'sbt'
 brew 'scala'
