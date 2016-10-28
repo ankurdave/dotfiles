@@ -4,8 +4,6 @@
   <dict>
     <key>Label</key>
     <string>com.ankurdave.snapshot-mail</string>
-    <key>RunAtLoad</key>
-    <true/>
     <key>Program</key>
     <string>/Users/ankurdave/repos/dotfiles/bin/snapshot-mail</string>
     <key>StandardOutPath</key>
