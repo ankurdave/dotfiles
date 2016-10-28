@@ -117,6 +117,8 @@
       (setq-local indent-line-function #'indent-ssh-config-line)))
   (add-hook 'conf-space-mode-hook #'ssh-config-setup-indent))
 
+(use-package csv-mode)
+
 (use-package dash)
 
 (use-package diminish)
@@ -351,9 +353,7 @@
           ("lists/.*" (substring tag 6 (s-index-of "." tag)))
           ("unread" (propertize tag 'face '(:foreground "#CC9393")))
           ("flagged"
-           (propertize tag 'face '(:foreground "blue"))
-           (notmuch-tag-format-image-data
-            tag (notmuch-tag-star-icon))))))
+           (propertize tag 'face '(:foreground "blue"))))))
 
 (use-package org
   :init
