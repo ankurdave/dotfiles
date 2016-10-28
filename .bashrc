@@ -62,7 +62,8 @@ if [ -n "$SSH_CLIENT" ]; then
 else
     export EDITOR='emacsclient'
 fi
-alias e=$EDITOR
+alias e='emacsclient -n'
+alias magit='emacsclient -n --eval '\''(let ((display-buffer-alist `(("^\\*magit: " display-buffer-same-window) ,display-buffer-alist))) (magit-status))'\'''
 
 # Enhance less
 [ -x /usr/bin/lesspipe ] && eval "$(lesspipe)"
