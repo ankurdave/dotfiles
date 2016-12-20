@@ -7,7 +7,7 @@ tap 'homebrew/head-only'
 tap 'homebrew/python'
 tap 'homebrew/science'
 tap 'homebrew/x11'
-tap 'railwaycat/emacsmacport'
+tap 'd12frosted/emacs-plus'
 tap 'ankurdave/ankurdave'
 
 cask 'mactex'
@@ -43,7 +43,7 @@ brew 'pandoc'
 brew 'parallel'
 brew 'python'
 brew 'python3'
-brew 'railwaycat/emacsmacport/emacs-mac', args: ['with-gnutls', 'with-official-icon']
+brew 'emacs-plus', args: ['without-spacemacs-icon']
 brew 'rsnapshot'
 brew 'rsnapshot-once', args: ['HEAD']
 brew 's3cmd'
