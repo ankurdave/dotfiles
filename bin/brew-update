@@ -1,0 +1,7 @@
+#!/bin/bash
+
+brew update
+brew upgrade --fetch-HEAD
+brew cleanup
+brew prune
+brew doctor
