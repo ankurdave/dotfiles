@@ -26,6 +26,7 @@
  '(aquamacs-tool-bar-user-customization nil t)
  '(auto-compile-on-load-mode t)
  '(auto-compile-on-save-mode t)
+ '(auto-package-update-interval 1)
  '(auto-revert-verbose nil)
  '(blink-cursor-mode nil)
  '(c-basic-offset 4)

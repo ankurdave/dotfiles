@@ -47,6 +47,10 @@
 
 (use-package auto-compile)
 
+(use-package auto-package-update
+  :config
+  (auto-package-update-maybe))
+
 (use-package autorevert
   :diminish auto-revert-mode
   :defer t)
