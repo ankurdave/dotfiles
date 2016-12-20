@@ -13,6 +13,7 @@ tap 'ankurdave/ankurdave'
 cask 'mactex'
 cask 'java'
 
+brew 'ammonite-repl'
 brew 'ankurdave/ankurdave/afew', args: ['HEAD']
 brew 'aspell', args: ['with-lang-en']
 brew 'automake'
@@ -31,6 +32,7 @@ brew 'gnuplot', args: ['with-cairo', 'with-pdflib-lite', 'with-tex', 'with-wxmac
 brew 'homebrew/gui/inkscape'
 brew 'htop'
 brew 'imagemagick'
+brew 'ispell'
 brew 'isync'
 brew 'matplotlib'
 brew 'maven'
@@ -70,6 +72,7 @@ cask 'skype'
 cask 'slack'
 cask 'spectacle'
 cask 'spotify'
+cask 'spotify-notifications'
 cask 'transmission'
 cask 'viber'
 cask 'virtualbox'

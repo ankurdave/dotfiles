@@ -1,3 +1,4 @@
+pip
 autopep8
 docformatter
 virtualenv
@@ -7,3 +8,6 @@ ipython
 # For mail syncing
 notmuch
 imaplib2
+
+# For merging Spark PRs
+jira
