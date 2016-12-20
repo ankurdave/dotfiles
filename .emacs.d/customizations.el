@@ -132,7 +132,8 @@
  '(projectile-mode-line nil)
  '(projectile-use-git-grep t)
  '(py-indent-offset 2)
- '(python-indent-offset 2)
+ '(python-fill-docstring-style (quote onetwo))
+ '(python-indent-offset 4)
  '(recentf-max-saved-items 200)
  '(require-final-newline t)
  '(safe-local-variable-values
