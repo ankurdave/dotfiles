@@ -398,6 +398,9 @@
           (with-demoted-errors "Error loading tags-file: %s"
             (visit-tags-table tags-file t)))))))
 
+(use-package protobuf-mode
+  :mode "\\.fbs\\'")
+
 (use-package python
   :ensure nil
   :mode ("\\/TARGETS$" . python-mode))
