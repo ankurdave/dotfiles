@@ -15,7 +15,7 @@ function checksum_scraped_dir {
 }
 
 scraped_before_fetch=$(checksum_scraped_dir)
-./scraper
+gtimeout --signal=QUIT 10m ./scraper
 scraped_after_fetch=$(checksum_scraped_dir)
 if [ "$scraped_before_fetch" == "$scraped_after_fetch" ]; then
     echo "No new games"
