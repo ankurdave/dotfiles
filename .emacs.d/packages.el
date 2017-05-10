@@ -4,6 +4,8 @@
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/"))
+(add-to-list 'package-archives
+             '("org" . "http://orgmode.org/elpa/"))
 (package-initialize)
 
 (unless (package-installed-p 'use-package)
@@ -359,7 +361,10 @@
           ("flagged"
            (propertize tag 'face '(:foreground "blue"))))))
 
-(use-package org
+(use-package org-notmuch
+  :ensure org-plus-contrib)
+
+(use-package org-plus-contrib
   :init
   (with-eval-after-load 'org-indent
     (diminish 'org-indent-mode))
