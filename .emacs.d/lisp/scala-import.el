@@ -262,8 +262,6 @@ fqid is the fully-qualified version of CLASS."
                 fully-qualified-class-list)))
     locations-absolute))
 
-(scala-import--get-locations-for-java-class "TripletFields")
-
 (provide 'scala-import)
 
 ;;; scala-import.el ends here
