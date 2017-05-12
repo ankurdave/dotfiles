@@ -21,6 +21,7 @@
 	excludesfile = ~/.gitignore_global
 [rerere]
 	enabled = 1
+	autoupdate = true
 [receive]
 	denyCurrentBranch = warn
 [web]
