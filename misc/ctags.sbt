@@ -18,4 +18,4 @@ ctagsTask := {
 
 baseDirectory in ctagsTask := (baseDirectory in ThisBuild).value
 
-compile in Compile <<= (compile in Compile).dependsOn(ctagsTask)
+compile in Compile := { (compile in Compile).dependsOn(ctagsTask).value }
