@@ -240,7 +240,7 @@ the user. If CLASS is nil, present all available tags to the user."
 The location is represented as the list (fqid file line), where
 fqid is the fully-qualified version of CLASS."
   (let* ((command
-          (format "git --no-pager grep --line-number --full-name --all-match --extended-regexp --no-color -e %s -e ^package -- %s"
+          (format "git --no-pager grep --line-number --full-name --all-match --extended-regexp --no-color --untracked --no-exclude-standard -e %s -e ^package -- %s"
                   (shell-quote-argument (format "\\<(class|enum)\\s+%s\\>" class))
                    (shell-quote-argument "*.java")))
          (matches-string
