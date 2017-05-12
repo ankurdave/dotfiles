@@ -75,6 +75,8 @@
               ("M-p" . highlight-symbol-prev)
               ("M-." . dumb-jump-go)))
 
+(use-package cmake-mode)
+
 (use-package color-identifiers-mode
   :init
   (add-hook 'emacs-lisp-mode-hook #'color-identifiers-mode)
