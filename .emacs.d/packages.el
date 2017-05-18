@@ -125,6 +125,13 @@
       (setq-local indent-line-function #'indent-ssh-config-line)))
   (add-hook 'conf-space-mode-hook #'ssh-config-setup-indent))
 
+(use-package counsel
+  :bind (:map counsel-find-file-map
+              ("C-l" . counsel-up-directory)))
+
+(use-package counsel-projectile
+  :bind (("C-c p f" . counsel-projectile)))
+
 (use-package csv-mode)
 
 (use-package dash)
@@ -212,6 +219,8 @@
   (add-hook 'python-mode-hook #'turn-on-fci-mode)
   (add-hook 'scala-mode-hook #'turn-on-fci-mode))
 
+(use-package flx)
+
 (use-package flycheck)
 
 (use-package flycheck-package)
@@ -238,55 +247,6 @@
               ("." . repeat)
               ("i" . prompt-and-insert)))
 
-;;; TODO move binds into :bind
-(use-package helm
-  :config
-  (defun always-display-buffer-in-side-window (buffer alist)
-    (let ((result (display-buffer-in-side-window buffer alist))
-          (window (get-buffer-window buffer)))
-      ;; Avoid error when helm tries to make itself the only window despite being a
-      ;; side window, such as when invoking `helm-help'
-      (set-window-parameter
-       window 'delete-other-windows #'ignore)
-      result))
-  (add-to-list 'display-buffer-alist
-               `(,(rx bos "*helm" (* not-newline) "*" eos)
-                 (always-display-buffer-in-side-window)
-                 (inhibit-same-window . t)
-                 (window-height . 0.4)))
-  ;; Prevent helm from splitting unrelated windows unnecessarily. The split will
-  ;; always be handled by the above entry in `display-buffer-alist'
-  (setq helm-split-window-preferred-function #'ignore)
-
-  (bind-key "<tab>" #'helm-execute-persistent-action helm-map)
-  (bind-key "C-i" #'helm-execute-persistent-action helm-map)
-  (bind-key "C-j" #'helm-select-action helm-map)
-  (unbind-key "C-SPC" helm-map)
-  (unbind-key "C-k" helm-map)
-  (unbind-key "C-w" helm-map)
-  (with-eval-after-load 'helm-grep
-    (unbind-key "C-w" helm-grep-map))
-  (helm-mode 1)
-  :bind (("M-x" . helm-M-x)
-         ("C-x b" . helm-mini)
-         ("C-x C-f" . helm-find-files))
-  :diminish helm-mode
-  :demand)
-
-(use-package helm-flx)
-
-(use-package helm-git-grep
-  :bind ("C-c p g" . helm-git-grep))
-
-(use-package helm-notmuch)
-
-(use-package helm-projectile
-  :bind (("C-c p f" . helm-projectile-find-file))
-  :config
-  (helm-projectile-on))
-
-(use-package helm-themes)
-
 (use-package help-fns+
   :init
   (autoload 'describe-keymap "help-fns+"))
@@ -300,6 +260,21 @@
 
 (use-package htmlize
   :defer t)
+
+(use-package ivy
+  :diminish ivy-mode
+  :config
+  (ivy-mode 1)
+  ;; add ‘recentf-mode’ and bookmarks to ‘ivy-switch-buffer’.
+  (setq ivy-use-virtual-buffers t)
+  ;; number of result lines to display
+  (setq ivy-height 10)
+  ;; does not count candidates
+  (setq ivy-count-format "")
+  (setq ivy-re-builders-alist
+        '((t . ivy--regex-fuzzy)))
+  (setq ivy-initial-inputs-alist nil)
+  :bind (("C-x b" . ivy-switch-buffer)))
 
 (use-package lisp-mode
   :ensure nil
@@ -462,6 +437,8 @@
 
 (use-package smartparens-config
   :ensure smartparens)
+
+(use-package smex)
 
 (use-package subword
   :ensure nil
