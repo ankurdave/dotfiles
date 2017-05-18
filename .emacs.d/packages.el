@@ -127,7 +127,8 @@
 
 (use-package counsel
   :bind (:map counsel-find-file-map
-              ("C-l" . counsel-up-directory)))
+              ("C-l" . counsel-up-directory))
+  :diminish counsel-mode)
 
 (use-package counsel-projectile
   :bind (("C-c p f" . counsel-projectile)))
