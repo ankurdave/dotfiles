@@ -127,7 +127,8 @@
 
 (use-package counsel
   :bind (:map counsel-find-file-map
-              ("C-l" . counsel-up-directory))
+              ("C-l" . counsel-up-directory)
+              ("<tab>" . ivy-alt-done))
   :diminish counsel-mode)
 
 (use-package counsel-projectile
@@ -265,17 +266,13 @@
 (use-package ivy
   :diminish ivy-mode
   :config
-  (ivy-mode 1)
-  ;; add ‘recentf-mode’ and bookmarks to ‘ivy-switch-buffer’.
-  (setq ivy-use-virtual-buffers t)
-  ;; number of result lines to display
-  (setq ivy-height 10)
-  ;; does not count candidates
-  (setq ivy-count-format "")
-  (setq ivy-re-builders-alist
-        '((t . ivy--regex-fuzzy)))
   (setq ivy-initial-inputs-alist nil)
+  (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
   :bind (("C-x b" . ivy-switch-buffer)))
+
+(use-package ivy-rich
+  :config
+  (ivy-set-display-transformer 'ivy-switch-buffer 'ivy-rich-switch-buffer-transformer))
 
 (use-package lisp-mode
   :ensure nil
