@@ -126,9 +126,15 @@
   (add-hook 'conf-space-mode-hook #'ssh-config-setup-indent))
 
 (use-package counsel
-  :bind (:map counsel-find-file-map
-              ("C-l" . counsel-up-directory)
-              ("<tab>" . ivy-alt-done))
+  :config
+  (defun ankurdave--counsel-delete-filename-or-up-directory ()
+    (interactive)
+    (if (string-empty-p ivy-text)
+        (counsel-up-directory)
+      (ivy-kill-line)))
+  :bind ("C-c p g" . counsel-git-grep)
+  :bind (:map ivy-minibuffer-map
+              ("C-l" . ankurdave--counsel-delete-filename-or-up-directory))
   :diminish counsel-mode)
 
 (use-package counsel-projectile
@@ -267,8 +273,10 @@
   :diminish ivy-mode
   :config
   (setq ivy-initial-inputs-alist nil)
-  (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
-  :bind (("C-x b" . ivy-switch-buffer)))
+  (setq ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
+  :bind (("C-x b" . ivy-switch-buffer))
+  :bind (:map ivy-minibuffer-map
+              ("<tab>" . ivy-alt-done)))
 
 (use-package ivy-rich
   :config

@@ -127,6 +127,7 @@
  '(org-startup-indented t)
  '(org-startup-truncated nil)
  '(pop-up-windows t)
+ '(projectile-completion-system (quote ivy))
  '(projectile-global-mode t)
  '(projectile-mode-line nil)
  '(projectile-use-git-grep t)
