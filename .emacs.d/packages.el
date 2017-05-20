@@ -430,6 +430,9 @@
 
 (use-package simple
   :ensure nil
+  :init
+  ;; C-x C-n is bound to `set-goal-column' by default
+  (unbind-key "C-x C-n")
   :diminish auto-fill-function)
 
 (use-package smartparens
