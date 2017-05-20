@@ -79,6 +79,8 @@
  '(inhibit-startup-screen t)
  '(initial-scratch-message nil)
  '(ivy-count-format "(%d/%d) ")
+ '(ivy-extra-directories nil)
+ '(ivy-fixed-height-minibuffer t)
  '(ivy-format-function (quote ivy-format-function-line))
  '(ivy-height 20)
  '(ivy-mode t)
