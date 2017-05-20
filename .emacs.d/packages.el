@@ -22,7 +22,7 @@
      (ignore
       (display-warning 'use-package
                        (format "Failed to install %s: %s"
-                               package (error-message-string err))
+                               name (error-message-string err))
                        :warning)))))
 
 ;;; Package configuration:
