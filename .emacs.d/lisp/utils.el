@@ -552,4 +552,8 @@ open and unsaved."
 (fset 'print-line-counters
       (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ("	printf(\" xkmacros-in-insert-counter\\n\");" 5 "%d")) arg)))
 
+(defun ankurdave-counsel-git-grep-all ()
+  (interactive)
+  (counsel-git-grep "git --no-pager grep --full-name -n --no-color -i --untracked --no-exclude-standard -e '%s'"))
+
 (provide 'utils)
