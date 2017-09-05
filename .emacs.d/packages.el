@@ -148,6 +148,8 @@
 
 (use-package csv-mode)
 
+(use-package cuda-mode)
+
 (use-package dash)
 
 (use-package diminish)
