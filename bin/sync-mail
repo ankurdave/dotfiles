@@ -2,4 +2,16 @@
 
 source ~/.bashrc
 
+set -ue
+cd "$(dirname "$0")"
+
+set +u
+if [ ! -d .env ]; then
+    virtualenv .env
+fi
+PS1=''
+source .env/bin/activate
+set -u
+pip install -q -r requirements.txt
+
 python "$(dirname "$0")"/sync_mail.py

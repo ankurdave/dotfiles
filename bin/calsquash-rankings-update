@@ -6,7 +6,7 @@ date
 
 cd /Users/ankurdave/calsquash-rankings
 
-git pull --ff-only
+git pull --ff-only --rebase --autostash
 
 function checksum_scraped_dir {
     for file in scraped/*; do

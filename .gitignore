@@ -31,3 +31,5 @@
 .emacs.d/.litable-lists.el
 .emacs.d/bookmarks
 .emacs.d/games/
+
+.env
