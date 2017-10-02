@@ -69,6 +69,7 @@
 (use-package c++-mode
   :ensure cc-mode
   :mode "\\.h\\'"
+  :mode "\\.ino\\'"
   :init
   (add-hook 'c++-mode-hook (lambda () (toggle-truncate-lines 1)))
   (add-hook 'c++-mode-hook (lambda () (set-fill-column 100)))

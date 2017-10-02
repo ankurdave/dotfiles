@@ -1,6 +1,7 @@
 #!/bin/bash
 
 PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:/Library/TeX/Root/bin/x86_64-darwin:$PATH
+PATH=$HOME/gcc-arm/bin:$PATH
 export PATH
 launchctl setenv PATH $PATH
 

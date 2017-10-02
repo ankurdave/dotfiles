@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Builds a project for the Particle Electron and flashes it over USB using DFU.
+# Must be invoked from the project directory. Assumes a clone of
+# https://github.com/spark/firmware is already checked out and the path to it is
+# passed as the first argument.
+
+set -eux
+
+FIRMWARE_DIR="$1"
+PROJECT_DIR="$PWD"
+
+particle library copy
+
+pushd "$FIRMWARE_DIR"/main
+make all PLATFORM=electron program-dfu APPDIR="$PROJECT_DIR"
+popd
