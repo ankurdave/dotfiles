@@ -24,5 +24,7 @@ fi
 
 ./skill
 
-git autocommit
+git add .
+git commit -m 'Autocommit'
 git push origin master
+git gc --auto
