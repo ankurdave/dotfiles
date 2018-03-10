@@ -186,9 +186,7 @@ the user. If CLASS is nil, present all available tags to the user."
   (let* ((command-template
           (if (not class)
               "cat *.tags"
-            (if (executable-find "ag")
-                "ag --nofilename --follow --case-sensitive %s *.tags"
-              "grep -h -e %s *.tags")))
+            "grep -h -e %s *.tags"))
          (command
           (format command-template
                   (shell-quote-argument (format "\\b%s\t" class))))
