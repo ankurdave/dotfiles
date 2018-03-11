@@ -139,13 +139,11 @@
     (if (string-empty-p ivy-text)
         (counsel-up-directory)
       (ivy-kill-line)))
-  :bind ("C-c p g" . counsel-git-grep)
   :bind (:map ivy-minibuffer-map
               ("C-l" . ankurdave--counsel-delete-filename-or-up-directory))
   :diminish counsel-mode)
 
-(use-package counsel-projectile
-  :bind (("C-c p f" . counsel-projectile)))
+(use-package counsel-projectile)
 
 (use-package csv-mode)
 
