@@ -467,6 +467,10 @@
               subword-mode-map))
   :defer t)
 
+(use-package terraform-mode
+  :config
+  (terraform-format-on-save-mode 1))
+
 (use-package tex
   :ensure auctex
   :init
