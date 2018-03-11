@@ -556,4 +556,18 @@ open and unsaved."
   (interactive)
   (counsel-git-grep "git --no-pager grep --full-name -n --no-color -i --untracked --no-exclude-standard -e '%s'"))
 
+;; From https://stackoverflow.com/questions/25437069/how-can-i-mark-org-habits-as-done-in-the-past
+(defun org-todo-custom-date (&optional arg)
+  "Like org-todo-yesterday, but prompt the user for a date. The time
+of change will be 23:59 on that day"
+  (interactive "P")
+  (let* ((hour (nth 2 (decode-time
+               (org-current-time))))
+     (daysback (- (date-to-day (current-time-string)) (org-time-string-to-absolute (org-read-date))))
+     (org-extend-today-until (+ 1 (* 24 (- daysback 1)) hour))
+     (org-use-effective-time t)) ; use the adjusted timestamp for logging
+    (if (eq major-mode 'org-agenda-mode)
+    (org-agenda-todo arg)
+      (org-todo arg))))
+
 (provide 'utils)
