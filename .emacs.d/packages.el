@@ -450,7 +450,8 @@
   (add-hook 'html-mode-hook #'turn-on-show-smartparens-mode)
   (add-hook 'scala-mode-hook #'turn-on-smartparens-mode)
   :bind (:map smartparens-mode-map
-              ("<M-up>" . sp-splice-sexp-killing-backward))
+              ("<M-up>" . sp-splice-sexp-killing-backward)
+              ("C-M-w"))
   :diminish smartparens-mode)
 
 (use-package smartparens-config
