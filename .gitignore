@@ -31,5 +31,6 @@
 .emacs.d/.litable-lists.el
 .emacs.d/bookmarks
 .emacs.d/games/
-
+.emacs.d/.last-package-update-day
+.emacs.d/smex-items
 .env
