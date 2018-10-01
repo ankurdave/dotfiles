@@ -533,6 +533,8 @@
 
 (use-package visual-regexp-steroids)
 
+(use-package web-mode)
+
 (use-package which-key
   :bind (("C-c k" . which-key-show-top-level)))
 
