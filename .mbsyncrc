@@ -1,5 +1,5 @@
-Sync PullNew PullReNew PullFlags PushFlags
-Expunge None
+Sync PullNew PullReNew PullFlags PullDelete PushFlags
+Expunge Slave
 Create Slave
 SyncState *
 
