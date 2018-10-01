@@ -126,6 +126,8 @@ if [ -d ~/Library ] && command_exists defaults; then
     # been indexed before.
     # Use `sudo mdutil -i off "/Volumes/foo"` to stop indexing any volume.
     sudo defaults write /.Spotlight-V100/VolumeConfiguration Exclusions -array "/Volumes"
+    # Re-enable subpixel font rendering on Mojave
+    defaults write -g CGFontRenderingFontSmoothingDisabled -bool NO
     # Don’t prompt for confirmation before downloading
     defaults write org.m0k.transmission DownloadAsk -bool false
     defaults write org.m0k.transmission MagnetOpenAsk -bool false
