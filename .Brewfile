@@ -62,6 +62,7 @@ brew 'tg'
 brew 'wget'
 
 cask 'backblaze'
+cask 'coconutbattery'
 cask 'darktable'
 cask 'docker'
 cask 'dropbox'
