@@ -287,7 +287,7 @@
 
 (use-package ivy-rich
   :config
-  (ivy-set-display-transformer 'ivy-switch-buffer 'ivy-rich-switch-buffer-transformer))
+  (ivy-rich-mode 1))
 
 (use-package lisp-mode
   :ensure nil
