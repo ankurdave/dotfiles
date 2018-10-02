@@ -3,5 +3,5 @@
 set -eu
 
 cd ~/mail
-gtimeout --signal=QUIT 10m mbsync -a
+gtimeout --signal=QUIT 10m mbsync --all --verbose
 ~/repos/dotfiles/bin/tag-mail

@@ -6,6 +6,7 @@ import netrc
 import socket
 import subprocess
 import sys
+import threading
 import time
 
 logging.basicConfig(
@@ -39,6 +40,11 @@ def ensure_mailbox_selected(m):
     logging.info('Selecting mailbox')
     logging.debug(m.examine('[Gmail]/All Mail'))
 
+def log_output(pipe):
+    with pipe:
+        for line in iter(pipe.readline, b''):
+            logging.info('  %s', line.strip())
+
 def cleanup_connection(m):
     try:
         if m is not None:
@@ -62,7 +68,11 @@ def main():
             else:
                 logging.info('Waiting for new mail')
                 logging.debug(m.idle(timeout))
-            subprocess.Popen('/Users/ankurdave/repos/dotfiles/bin/sync-mail-once').wait()
+
+            p = subprocess.Popen('/Users/ankurdave/repos/dotfiles/bin/sync-mail-once',
+                                 stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            threading.Thread(target=log_output, args=[p.stdout]).start()
+            p.wait()
         except KeyboardInterrupt:
             m = cleanup_connection(m)
             raise
