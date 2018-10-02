@@ -382,6 +382,8 @@
        'zenburn
        `(parenthesis ((t (:foreground ,zenburn-fg-1))))))))
 
+(use-package php-mode)
+
 (use-package projectile
   :config
   ;; file-exists-p -> file-regular-p
