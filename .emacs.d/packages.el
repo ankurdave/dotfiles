@@ -391,7 +391,8 @@
       (let ((tags-file (projectile-expand-root projectile-tags-file-name)))
         (when (file-regular-p tags-file)
           (with-demoted-errors "Error loading tags-file: %s"
-            (visit-tags-table tags-file t)))))))
+            (visit-tags-table tags-file t))))))
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
 
 (use-package protobuf-mode
   :mode "\\.fbs\\'")
