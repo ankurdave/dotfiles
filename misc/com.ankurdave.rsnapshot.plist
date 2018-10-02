@@ -13,6 +13,6 @@
       <string>/Users/ankurdave/repos/dotfiles/bin/rsnapshot-all</string>
     </array>
     <key>StartInterval</key>
-    <integer>120</integer>
+    <integer>300</integer>
   </dict>
 </plist>
