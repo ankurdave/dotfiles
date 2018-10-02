@@ -30,10 +30,12 @@ notmuch tag +notifications -- $notmuch_tag_arg \( \
     OR from:payesi@berkeley.edu \
     OR from:billingnotice@berkeley.edu \
     OR from:learningcenter@berkeley.edu \
+    OR from:no-reply@alertsp.chase.com \
     OR from:contact@coffeemeetsbagel.com \
     OR from:contact@coinbase.com \
     OR from:online.communications@alerts.comcast.net \
     OR from:eBay@reply1.ebay.com \
+    OR from:ebay@ebay.com \
     OR from:expedia@expediamail.com \
     OR from:Fidelity.Investments@mail.fidelity.com \
     OR from:noreply@github.com \
@@ -54,6 +56,7 @@ notmuch tag +notifications -- $notmuch_tag_arg \( \
     OR from:info@meetup.com \
     OR from:team@mint.com \
     OR from:CustomerServiceOnline@pge.com \
+    OR from:CustomerServiceOnline@billpay.pge.com \
     OR from:noreply@em.pge.com \
     OR from:digest-noreply@quora.com \
     OR from:noreply@invite.quoramail.com \
@@ -77,21 +80,45 @@ notmuch tag +notifications -- $notmuch_tag_arg \( \
     OR from:no-reply@yelp.com \
     OR from:noreply@youtube.com \
     OR from:notifications+vvvowqwk20@zyngamail.com \
+    OR tag:lists/banggood.com \
+    OR from:noreply@uber.com \
+    OR from:USPSInformedDelivery@usps.gov \
 \)
 
 notmuch tag +amplab-lists -- $notmuch_tag_arg \( \
-    tag:lists/amp-ccn.lists.eecs.berkeley.edu \
+    tag:lists/amp-announce.lists.eecs.berkeley.edu \
+    OR tag:lists/amp-ccn.lists.eecs.berkeley.edu \
+    OR tag:lists/amp-cloud.eecs.berkeley.edu \
+    OR tag:lists/amp-cloud.lists.eecs.berkeley.edu \
     OR tag:lists/amp-ec2-users.eecs.berkeley.edu \
     OR tag:lists/amp-jobs.eecs.berkeley.edu \
     OR tag:lists/amp-research.eecs.berkeley.edu \
     OR tag:lists/amp-research.lists.eecs.berkeley.edu \
+    OR tag:lists/amp-retreat.eecs.berkeley.edu \
+    OR tag:lists/amp-retreat.lists.eecs.berkeley.edu \
     OR tag:lists/amp-sys-ml.eecs.berkeley.edu \
+    OR tag:lists/ccn.lists.eecs.berkeley.edu \
     OR tag:lists/dbseminar.lists.eecs.berkeley.edu \
     OR tag:lists/netsyslab.lists.eecs.berkeley.edu \
     OR tag:lists/networks-lunch.lists.eecs.berkeley.edu \
+    OR tag:lists/radlab-announce.lists.eecs.berkeley.edu \
     OR tag:lists/radlab-chat.eecs.berkeley.edu \
+    OR tag:lists/radlab-chat.lists.eecs.berkeley.edu \
     OR tag:lists/radlab-space.eecs.berkeley.edu \
     OR tag:lists/radlab-space.lists.eecs.berkeley.edu \
+    OR tag:lists/rise-announce.lists.eecs.berkeley.edu \
+    OR tag:lists/rise-chat.lists.eecs.berkeley.edu \
+    OR tag:lists/rise-jobs.lists.eecs.berkeley.edu \
+    OR tag:lists/rise-research.lists.eecs.berkeley.edu \
+    OR tag:lists/rise-retreat-ucb.lists.eecs.berkeley.edu \
+    OR tag:lists/rise-seminar.lists.eecs.berkeley.edu \
+    OR tag:lists/rise-social.lists.eecs.berkeley.edu \
+    OR tag:lists/rise-space.lists.eecs.berkeley.edu \
+    OR tag:lists/rise-students.lists.eecs.berkeley.edu \
+    OR tag:lists/dblunch.lists.eecs.berkeley.edu \
+    OR tag:lists/ps2.lists.eecs.berkeley.edu \
+    OR tag:lists/syslunch.lists.eecs.berkeley.edu \
+    OR tag:lists/syssec.lists.eecs.berkeley.edu \
 \)
 
 notmuch tag +berkeley-lists -- $notmuch_tag_arg \( \
@@ -114,7 +141,6 @@ notmuch tag +berkeley-lists -- $notmuch_tag_arg \( \
     OR tag:lists/cs-grads-social.lists.eecs.berkeley.edu \
     OR tag:lists/cs-grads.lists.eecs.berkeley.edu \
     OR tag:lists/cs-msphd.lists.eecs.berkeley.edu \
-    OR tag:lists/csua-newmembers.mail.csua.berkeley.edu \
     OR tag:lists/eecs-announce.lists.eecs.berkeley.edu \
     OR tag:lists/eecs-grads-misc.lists.eecs.berkeley.edu \
     OR tag:lists/eecs-grads.lists.eecs.berkeley.edu \
@@ -123,12 +149,30 @@ notmuch tag +berkeley-lists -- $notmuch_tag_arg \( \
     OR tag:lists/soda-info.lists.eecs.berkeley.edu \
     OR tag:lists/sysadmins-announce.lists.eecs.berkeley.edu \
     OR tag:lists/sysadmins-windows-announce.lists.eecs.berkeley.edu \
+    OR tag:lists/cal-eecs-2013.googlegroups.com \
+    OR tag:lists/coe-admits-2010.lists.berkeley.edu \
+    OR tag:lists/coe-commencement-13-undergrads.lists.berkeley.edu \
+    OR tag:lists/coe-commencement-sp13.lists.berkeley.edu \
+    OR tag:lists/coe-freshmen.lists.berkeley.edu \
+    OR tag:lists/coeemployees.lists.erso.berkeley.edu \
+    OR tag:lists/coegsr.erso-sympa2.eecs.berkeley.edu \
+    OR tag:lists/coeresearch.erso-sympa2.eecs.berkeley.edu \
+    OR tag:lists/coeresearch.lists.erso.berkeley.edu \
+    OR tag:lists/cs-gsi-list.lists.eecs.berkeley.edu \
+    OR tag:lists/cs-new-grads.lists.eecs.berkeley.edu \
+    OR tag:lists/cybersecurity_incomplete_reminder.lists.berkeley.edu \
+    OR tag:lists/eecs-gsi-list.lists.eecs.berkeley.edu \
+    OR tag:lists/eecs-ugrads-jobs.lists.eecs.berkeley.edu \
+    OR tag:lists/eecs-ugrads.lists.eecs.berkeley.edu \
 \)
 
 notmuch tag +spark-lists -- $notmuch_tag_arg \( \
     tag:lists/dev.spark.apache.org \
     OR tag:lists/private.spark.apache.org \
+    OR tag:lists/spark-users.googlegroups.com \
+    OR tag:lists/user.spark.apache.org \
     OR to:committers@apache.org \
+    OR tag:lists/committers.apache.org \
     OR from:do_not_reply@databricks.com \
     OR to:infrastructure@apache.org \
     OR to:apachecon-discuss@apache.org \
