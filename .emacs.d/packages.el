@@ -158,12 +158,6 @@
   :init
   (add-hook 'dired-mode-hook (lambda () (toggle-truncate-lines 1))))
 
-(use-package dired-details
-  :functions dired-details-install
-  :config
-  (dired-details-install)
-  :demand)
-
 (use-package dockerfile-mode)
 
 (use-package dtrt-indent
