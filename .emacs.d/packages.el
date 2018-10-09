@@ -258,10 +258,6 @@
               ("." . repeat)
               ("i" . prompt-and-insert)))
 
-(use-package help-fns+
-  :init
-  (autoload 'describe-keymap "help-fns+"))
-
 (use-package highlight-symbol
   :init
   (add-hook 'emacs-lisp-mode-hook #'highlight-symbol-mode)
