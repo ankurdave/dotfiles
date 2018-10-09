@@ -20,17 +20,6 @@
 
 (setq use-package-always-ensure t)
 
-(defadvice use-package-ensure-elpa (around use-package-ensure-safe activate)
-  "Capture errors from installing packages."
-  (condition-case-unless-debug err
-      ad-do-it
-    (error
-     (ignore
-      (display-warning 'use-package
-                       (format "Failed to install %s: %s"
-                               name (error-message-string err))
-                       :warning)))))
-
 ;;; Package configuration:
 
 (use-package abbrev
