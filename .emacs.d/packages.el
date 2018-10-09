@@ -164,6 +164,8 @@
   (dired-details-install)
   :demand)
 
+(use-package dockerfile-mode)
+
 (use-package dtrt-indent
   :config
   (setq global-mode-string
