@@ -49,6 +49,7 @@
  '(delete-selection-mode t)
  '(dired-details-hidden-string "")
  '(doc-view-continuous t)
+ '(dumb-jump-selector (quote ivy))
  '(edit-server-new-frame nil)
  '(electric-indent-mode t)
  '(enable-recursive-minibuffers t)

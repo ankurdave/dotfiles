@@ -68,8 +68,7 @@
               ("C-c C-c" . print-line-counters)
               ("M-j" . ace-jump-mode)
               ("M-n" . highlight-symbol-next)
-              ("M-p" . highlight-symbol-prev)
-              ("M-." . dumb-jump-go)))
+              ("M-p" . highlight-symbol-prev)))
 
 (use-package cmake-mode)
 
@@ -156,7 +155,8 @@
   (dtrt-indent-mode t)
   :diminish dtrt-indent-mode)
 
-(use-package dumb-jump)
+(use-package dumb-jump
+  :bind (("M-." . dumb-jump-go)))
 
 (use-package eldoc
   :init
