@@ -270,6 +270,10 @@
   :config
   (ivy-rich-mode 1))
 
+(use-package lisp-extra-font-lock
+  :config
+  (lisp-extra-font-lock-global-mode 1))
+
 (use-package lisp-mode
   :ensure nil
   :bind (:map emacs-lisp-mode-map
