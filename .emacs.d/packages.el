@@ -4,8 +4,8 @@
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/"))
-(add-to-list 'package-archives
-             '("org" . "https://orgmode.org/elpa/"))
+;; (add-to-list 'package-archives
+;;              '("org" . "https://orgmode.org/elpa/"))
 ;; Do not save the value of package-selected-packages to customizations.el
 ;; because it interferes with version control.
 (defun package--save-selected-packages (&optional value)
@@ -21,10 +21,6 @@
 (setq use-package-always-ensure t)
 
 ;;; Package configuration:
-
-(use-package abbrev
-  :ensure nil
-  :diminish abbrev-mode)
 
 (use-package ace-jump-mode
   :bind ("M-j" . ace-jump-mode))
@@ -51,9 +47,6 @@
 (use-package autorevert
   :diminish auto-revert-mode
   :defer t)
-
-(use-package browse-kill-ring
-  :bind ("C-M-y" . browse-kill-ring))
 
 (use-package c++-mode
   :ensure cc-mode
@@ -152,7 +145,7 @@
   :config
   (setq global-mode-string
         (remove 'dtrt-indent-mode-line-info global-mode-string))
-  (dtrt-indent-mode t)
+  (dtrt-indent-global-mode)
   :diminish dtrt-indent-mode)
 
 (use-package dumb-jump
@@ -170,23 +163,6 @@
   :config
   (eshell-smart-initialize)
   :defer t)
-
-(use-package ensime
-  :disabled
-  :init
-  (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
-  :config
-  (setq ensime-sem-high-faces
-        '((var . font-lock-variable-name-face)
-          (val . font-lock-variable-name-face)
-          (varField . font-lock-variable-name-face)
-          (valField . font-lock-variable-name-face)
-          (functionCall . default)
-          (param . font-lock-variable-name-face)
-          (class . font-lock-type-face)
-          (trait . font-lock-type-face)
-          (object . font-lock-type-face)
-          (package . font-lock-preprocessor-face))))
 
 (use-package esh-mode
   :ensure nil
@@ -221,15 +197,9 @@
 
 (use-package flx)
 
-(use-package flycheck)
-
-(use-package flycheck-package)
-
 (use-package frame
   :ensure nil
   :bind ("M-`" . other-frame))
-
-(use-package gist)
 
 (use-package git-commit)
 
@@ -239,13 +209,6 @@
 
 (use-package gnuplot-mode
   :mode "\\.plt\\'")
-
-(use-package god-mode
-  ;; :bind (("<escape>" . god-mode-all))
-  :bind (:map god-local-mode-map
-              ("/" . undo-tree-undo)
-              ("." . repeat)
-              ("i" . prompt-and-insert)))
 
 (use-package highlight-symbol
   :init
@@ -336,16 +299,15 @@
           ("flagged"
            (propertize tag 'face '(:foreground "blue"))))))
 
-(use-package org-notmuch
-  :ensure org-plus-contrib)
-
-(use-package org-plus-contrib
-  :init
-  (with-eval-after-load 'org-indent
-    (diminish 'org-indent-mode))
+(use-package org
+  :ensure nil
   :bind (:map org-mode-map
               ("<tab>" . org-indent-item-or-cycle)
               ("<S-tab>" . org-outdent-item-or-shifttab)))
+
+(use-package org-indent
+  :ensure nil
+  :diminish org-indent-mode)
 
 (use-package paredit
   :init
@@ -382,6 +344,7 @@
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
 
 (use-package protobuf-mode
+  ;; Use protobuf-mode for Flatbuffers schema files
   :mode "\\.fbs\\'")
 
 (use-package python
@@ -443,6 +406,7 @@
 (use-package smartparens-config
   :ensure smartparens)
 
+;; Enables counsel-M-x to sort by recently used
 (use-package smex)
 
 (use-package subword
@@ -511,24 +475,10 @@
          ("C-c s" . my-profiler-stop))
   :demand)
 
-(use-package vc-git
-  :ensure vc
-  :commands vc-git-grep)
-
-(use-package visual-regexp
-  :init
-  (unbind-key "C-w" isearch-mode-map))
-
-(use-package visual-regexp-steroids)
-
 (use-package web-mode)
 
 (use-package which-key
   :bind (("C-c k" . which-key-show-top-level)))
-
-(use-package whitespace
-  :diminish global-whitespace-mode
-  :defer t)
 
 (use-package ws-butler
   :diminish ws-butler-mode)
