@@ -187,14 +187,6 @@
   (setq auto-save-file-name-transforms
         `((".*" ,temporary-file-directory t))))
 
-(use-package fill-column-indicator
-  :if window-system
-  :init
-  (add-hook 'c-mode-common-hook #'turn-on-fci-mode)
-  (add-hook 'emacs-lisp-mode-hook #'turn-on-fci-mode)
-  (add-hook 'python-mode-hook #'turn-on-fci-mode)
-  (add-hook 'scala-mode-hook #'turn-on-fci-mode))
-
 (use-package flx)
 
 (use-package frame
