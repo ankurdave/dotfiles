@@ -92,6 +92,7 @@
  '(large-file-warning-threshold 100000000)
  '(linum-format " %7i ")
  '(load-prefer-newer t)
+ '(mac-frame-tabbing nil)
  '(mac-option-modifier (quote meta))
  '(magit-diff-arguments (quote ("--stat")))
  '(magit-diff-refine-hunk (quote all))
