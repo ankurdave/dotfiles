@@ -60,7 +60,6 @@
  '(ffap-machine-p-known (quote reject))
  '(fill-column 80)
  '(find-function-recenter-line nil)
- '(flycheck-emacs-lisp-initialize-packages t)
  '(fringe-mode 0 nil (fringe))
  '(global-git-commit-mode t)
  '(global-paren-face-mode t)
