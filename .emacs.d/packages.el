@@ -80,14 +80,6 @@
       (put-text-property comint-last-output-start output-end 'read-only t)))
   (add-hook 'comint-output-filter-functions #'make-my-shell-output-read-only))
 
-(use-package company
-  :bind ("M-/" . company-complete-common)
-  :bind (:map company-active-map
-              ("C-w" . nil))
-  :config (global-company-mode)
-  :demand
-  :diminish company-mode)
-
 (use-package compat
   :load-path "lisp/"
   :ensure nil)
@@ -177,9 +169,6 @@
   :config
   (add-to-list 'exec-path-from-shell-variables "SCALA_HOME")
   (exec-path-from-shell-initialize))
-
-(use-package expand-region
-  :bind ("C-=" . er/expand-region))
 
 (use-package files
   :ensure nil
