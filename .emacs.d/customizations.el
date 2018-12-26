@@ -211,6 +211,7 @@
  '(w3m-use-cookies t)
  '(w3m-use-favicon nil)
  '(w3m-use-title-buffer-name t)
+ '(web-mode-enable-auto-indentation nil)
  '(which-key-lighter "")
  '(which-key-mode t)
  '(which-key-side-window-max-height 0.5)
