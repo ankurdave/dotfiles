@@ -175,7 +175,7 @@
  '(tab-width 4)
  '(tool-bar-mode nil)
  '(transient-mark-mode t)
- '(undo-tree-auto-save-history t)
+ '(undo-tree-auto-save-history nil)
  '(undo-tree-history-directory-alist (quote (("." . "~/.emacs.d/undo-history/"))))
  '(undo-tree-mode-lighter "")
  '(uniquify-buffer-name-style (quote forward) nil (uniquify))
