@@ -34,4 +34,5 @@
 .emacs.d/.last-package-update-day
 .emacs.d/smex-items
 .emacs.d/projectile.cache
+.emacs.d/transient
 .env
