@@ -143,7 +143,11 @@
  '(require-final-newline t)
  '(safe-local-variable-values
    (quote
-    ((eval add-to-list
+    ((eval add-hook
+           (quote before-save-hook)
+           (quote sort-package-configurations)
+           nil t)
+     (eval add-to-list
            (quote before-save-hook)
            (quote sort-package-configurations)))))
  '(savehist-ignored-variables (quote (helm-M-x-input-history)))

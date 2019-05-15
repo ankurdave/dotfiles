@@ -495,5 +495,5 @@
 ;;; Package configuration ends here
 
 ;; Local Variables:
-;; eval: (add-to-list (quote before-save-hook) (quote sort-package-configurations))
+;; eval: (add-hook (quote before-save-hook) (quote sort-package-configurations) nil t)
 ;; End:
