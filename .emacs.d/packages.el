@@ -243,6 +243,7 @@
   :bind ("M-z" . zap-up-to-char))
 
 (use-package notmuch
+  :disabled
   :bind (:map notmuch-search-mode-map
               ("I" . notmuch-search-mark-read)
               ("g" . notmuch-refresh-this-buffer))
@@ -406,6 +407,7 @@
   (terraform-format-on-save-mode 1))
 
 (use-package tex
+  :disabled
   :ensure auctex
   :init
   (autoload 'TeX-command "tex-buf" nil nil)
