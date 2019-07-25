@@ -48,6 +48,8 @@
   :diminish auto-revert-mode
   :defer t)
 
+(use-package bazel-mode)
+
 (use-package c++-mode
   :ensure cc-mode
   :mode "\\.h\\'"
@@ -145,6 +147,20 @@
 (use-package dumb-jump
   :bind (("M-." . dumb-jump-go)))
 
+(use-package edit-server
+  :config
+  ;; Back up buffers to local directory before exiting.
+  ;; From https://emacs.stackexchange.com/a/16539.
+  (defvar edit-server-save-dir (locate-user-emacs-file "edit-server-saves"))
+  (unless (file-exists-p edit-server-save-dir)
+    (make-directory edit-server-save-dir))
+  (defun save-edit-server-buffer ()
+    (let ((backup-directory-alist (list (cons "." edit-server-save-dir))))
+      (save-excursion
+        (write-region nil nil (car (find-backup-file-name (buffer-name))) nil 0))))
+  (add-hook 'edit-server-done-hook #'save-edit-server-buffer)
+  (edit-server-start))
+
 (use-package eldoc
   :init
   (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)
@@ -192,6 +208,9 @@
 
 (use-package gnuplot-mode
   :mode "\\.plt\\'")
+
+(use-package google-c-style
+  :hook (c++-mode . google-set-c-style))
 
 (use-package highlight-symbol
   :init
