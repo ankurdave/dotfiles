@@ -375,7 +375,6 @@
               (setq fill-column 100)
               (toggle-truncate-lines 1)))
   :bind (:map scala-mode-map
-              ("M-." . scala-import-goto-class-at-point)
               ("M-," . scala-import-class-at-point)
               ("M-n" . highlight-symbol-next)
               ("M-p" . highlight-symbol-prev)))
