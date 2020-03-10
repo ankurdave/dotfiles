@@ -101,8 +101,6 @@ if [ -d ~/Library ] && command_exists defaults; then
     ## From https://github.com/mathiasbynens/dotfiles/blob/master/.macos:
     # Disable the sound effects on boot
     sudo nvram SystemAudioVolume=" "
-    # Disable transparency in the menu bar and elsewhere on Yosemite
-    defaults write com.apple.universalaccess reduceTransparency -bool true
     # Disable Resume system-wide
     defaults write com.apple.systempreferences NSQuitAlwaysKeepsWindows -bool false
     # Enable full keyboard access for all controls
@@ -124,11 +122,11 @@ if [ -d ~/Library ] && command_exists defaults; then
     # Prevent Photos from opening automatically when devices are plugged in
     defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true
     # Disable local Time Machine backups
-    hash tmutil &> /dev/null && sudo tmutil disablelocal
+    #hash tmutil &> /dev/null && sudo tmutil disablelocal
     # Disable Spotlight indexing for any volume that gets mounted and has not yet
     # been indexed before.
     # Use `sudo mdutil -i off "/Volumes/foo"` to stop indexing any volume.
-    sudo defaults write /.Spotlight-V100/VolumeConfiguration Exclusions -array "/Volumes"
+    #sudo defaults write /.Spotlight-V100/VolumeConfiguration Exclusions -array "/Volumes"
     # Don’t prompt for confirmation before downloading
     defaults write org.m0k.transmission DownloadAsk -bool false
     defaults write org.m0k.transmission MagnetOpenAsk -bool false
