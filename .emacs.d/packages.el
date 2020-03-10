@@ -250,6 +250,10 @@
               ("C-M-d" . kill-sexp)
               ("C-w" . paredit-kill-region)))
 
+(use-package mac-win
+  :ensure nil
+  :bind ("<C-tab>" . mac-next-tab))
+
 (use-package magit
   :bind ("C-x m" . magit-status)
   :diminish magit-auto-revert-mode)
