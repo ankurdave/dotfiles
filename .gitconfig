@@ -31,7 +31,7 @@
 [help]
 	autocorrect = 1
 [pull]
-	rebase = true
+	rebase = false
 [magit]
 	hideCampaign = true
 [rebase]
