@@ -100,9 +100,15 @@
  '(magit-diff-highlight-trailing nil)
  '(magit-diff-paint-whitespace nil)
  '(magit-diff-refine-hunk t)
- '(magit-refresh-status-buffer nil)
+ '(magit-refresh-status-buffer t)
  '(magit-refresh-verbose t)
  '(magit-revision-insert-related-refs nil)
+ '(magit-status-headers-hook
+   (quote
+    (magit-insert-error-header magit-insert-diff-filter-header magit-insert-head-branch-header magit-insert-upstream-branch-header magit-insert-push-branch-header)))
+ '(magit-status-sections-hook
+   (quote
+    (magit-insert-status-headers magit-insert-merge-log magit-insert-rebase-sequence magit-insert-am-sequence magit-insert-sequencer-sequence magit-insert-bisect-output magit-insert-bisect-rest magit-insert-bisect-log magit-insert-untracked-files magit-insert-unstaged-changes magit-insert-staged-changes magit-insert-stashes)))
  '(menu-bar-mode nil)
  '(message-citation-line-format "At %Y-%m-%d %T %z, %f wrote:")
  '(message-citation-line-function (quote message-insert-formatted-citation-line))
