@@ -348,7 +348,10 @@
 
 (use-package protobuf-mode
   ;; Use protobuf-mode for Flatbuffers schema files
-  :mode "\\.fbs\\'")
+  :mode "\\.fbs\\'"
+  :init
+  (add-hook 'protobuf-mode-hook
+            (lambda () (setq c-basic-offset 2))))
 
 (use-package python
   :ensure nil
