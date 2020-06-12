@@ -518,16 +518,19 @@
   (zenburn-with-color-variables
     (custom-theme-set-faces
      'zenburn
-     `(diff-added          ((t (:background ,zenburn-bg :foreground ,zenburn-green))))
+     `(diff-added          ((t (:background ,zenburn-green-5))))
+     `(magit-diff-added    ((t (:background ,zenburn-green-5))))
+     `(magit-diff-added-highlight ((t (:background ,zenburn-green-5))))
+     `(diff-refine-added   ((t (:background ,zenburn-green-3))))
+
      `(diff-changed        ((t (:background "#5F5F00" :foreground ,zenburn-yellow-1))))
-     `(diff-removed        ((t (:background ,zenburn-bg :foreground ,zenburn-red-2))))
-     `(diff-refine-added   ((t (:background "#5F875F" :foreground ,zenburn-green+4))))
      `(diff-refine-changed ((t (:background "#878700" :foreground ,zenburn-yellow))))
-     `(diff-refine-removed ((t (:background "#875F5F" :foreground ,zenburn-red))))
-     `(magit-diff-added    ((t (:background ,zenburn-bg :foreground ,zenburn-green))))
-     `(magit-diff-added-highlight ((t (:background ,zenburn-bg-1 :foreground ,zenburn-green))))
-     `(magit-diff-removed  ((t (:background ,zenburn-bg :foreground ,zenburn-red-2))))
-     `(magit-diff-removed-highlight ((t (:background ,zenburn-bg-1 :foreground ,zenburn-red-2))))
+
+     `(diff-removed        ((t (:background ,zenburn-red-6))))
+     `(magit-diff-removed  ((t (:background ,zenburn-red-6))))
+     `(magit-diff-removed-highlight ((t (:background ,zenburn-red-6))))
+     `(diff-refine-removed ((t (:background ,zenburn-red-4))))
+
      `(magit-diff-context-highlight ((t (:background ,zenburn-bg-1)))))))
 
 ;;; Package configuration ends here
