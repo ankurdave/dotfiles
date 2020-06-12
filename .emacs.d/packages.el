@@ -221,6 +221,7 @@
   (add-hook 'emacs-lisp-mode-hook #'highlight-symbol-mode)
   (add-hook 'scala-mode-hook #'highlight-symbol-mode)
   (add-hook 'c++-mode-hook #'highlight-symbol-mode)
+  (add-hook 'java-mode-hook #'highlight-symbol-mode)
   :diminish highlight-symbol-mode)
 
 (use-package htmlize
@@ -238,6 +239,12 @@
 (use-package ivy-rich
   :config
   (ivy-rich-mode 1))
+
+(use-package java-mode
+  :ensure cc-mode
+  :bind (:map java-mode-map
+              ("M-n" . highlight-symbol-next)
+              ("M-p" . highlight-symbol-prev)))
 
 (use-package lisp-extra-font-lock
   :config
