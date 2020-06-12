@@ -50,6 +50,10 @@
 
 (use-package bazel-mode)
 
+(use-package beancount-mode
+  :ensure nil
+  :mode ("\\.beancount\\'"))
+
 (use-package c++-mode
   :ensure cc-mode
   :mode "\\.h\\'"
