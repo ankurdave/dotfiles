@@ -9,6 +9,7 @@
     "~b" = "moveWordBackward:";
     "~<" = "moveToBeginningOfDocument:";
     "~>" = "moveToEndOfDocument:";
+    "^v" = "pageDown:";
     "~v" = "pageUp:";
     "~/" = "complete:";
     "~c" = ("capitalizeWord:",
@@ -17,7 +18,6 @@
             "moveForward:");
     "~l" = ("lowercaseWord:",
             "moveForward:");
-    "^w" = "copy:";
     "~d" = "deleteWordForward:";
     "~t" = "transposeWords:";
     "^x" = {
