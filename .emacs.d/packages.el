@@ -238,7 +238,9 @@
 
 (use-package ivy-rich
   :config
-  (ivy-rich-mode 1))
+  (ivy-rich-mode 1)
+  ;; Highlight the full line of the current selection, not just the text portion.
+  (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line))
 
 (use-package java-mode
   :ensure cc-mode

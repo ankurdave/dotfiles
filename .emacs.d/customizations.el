@@ -87,7 +87,6 @@
  '(ivy-format-function (quote ivy-format-function-line) t)
  '(ivy-height 20)
  '(ivy-mode t)
- '(ivy-rich-switch-buffer-align-virtual-buffer t)
  '(ivy-use-virtual-buffers t)
  '(ivy-virtual-abbreviate (quote full))
  '(large-file-warning-threshold 100000000)
