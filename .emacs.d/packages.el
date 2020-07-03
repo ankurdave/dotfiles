@@ -38,15 +38,22 @@
   (add-hook 'html-mode-hook #'adaptive-wrap-prefix-mode)
   (add-hook 'LaTeX-mode-hook #'adaptive-wrap-prefix-mode))
 
-(use-package auto-compile)
+(use-package auto-compile
+  :custom
+  (auto-compile-on-load-mode t)
+  (auto-compile-on-save-mode t))
 
 (use-package auto-package-update
+  :custom
+  (auto-package-update-interval 1)
   :config
   (auto-package-update-maybe))
 
 (use-package autorevert
   :diminish auto-revert-mode
-  :defer t)
+  :defer t
+  :custom
+  (auto-revert-verbose nil))
 
 (use-package bazel-mode)
 
@@ -65,9 +72,7 @@
   (eval-when-compile (require 'cc-mode))
   :bind (:map c++-mode-map
               ("C-c C-c" . print-line-counters)
-              ("M-j" . ace-jump-mode)
-              ("M-n" . highlight-symbol-next)
-              ("M-p" . highlight-symbol-prev)))
+              ("M-j" . ace-jump-mode)))
 
 (use-package cmake-mode)
 
@@ -112,6 +117,8 @@
   (add-hook 'conf-space-mode-hook #'ssh-config-setup-indent))
 
 (use-package counsel
+  :custom
+  (counsel-mode t)
   :config
   (defun ankurdave--counsel-delete-filename-or-up-directory ()
     (interactive)
@@ -122,7 +129,9 @@
               ("C-l" . ankurdave--counsel-delete-filename-or-up-directory))
   :diminish counsel-mode)
 
-(use-package counsel-projectile)
+(use-package counsel-projectile
+  :custom
+  (counsel-projectile-mode t))
 
 (use-package csv-mode)
 
@@ -149,9 +158,14 @@
   :diminish dtrt-indent-mode)
 
 (use-package dumb-jump
+  :custom
+  (dumb-jump-selector 'ivy)
   :bind (("M-." . dumb-jump-go)))
 
 (use-package edit-server
+  :custom
+  (edit-server-default-major-mode 'gfm-mode)
+  (edit-server-new-frame nil)
   :config
   ;; Back up buffers to local directory before exiting.
   ;; From https://emacs.stackexchange.com/a/16539.
@@ -192,6 +206,8 @@
 
 (use-package files
   :ensure nil
+  :custom
+  (confirm-kill-emacs 'y-or-n-p)
   :config
   (setq backup-directory-alist
         `(("." . ,temporary-file-directory)))
@@ -202,9 +218,13 @@
 
 (use-package frame
   :ensure nil
-  :bind ("M-`" . other-frame))
+  :bind ("M-`" . other-frame)
+  :custom
+  (blink-cursor-mode nil))
 
-(use-package git-commit)
+(use-package git-commit
+  :custom
+  (global-git-commit-mode t))
 
 (use-package gitconfig-mode)
 
@@ -214,7 +234,7 @@
   :mode "\\.plt\\'")
 
 (use-package google-c-style
-  :hook (c++-mode . google-set-c-style))
+  :hook (c-mode-common-hook . google-set-c-style))
 
 (use-package highlight-symbol
   :init
@@ -222,13 +242,30 @@
   (add-hook 'scala-mode-hook #'highlight-symbol-mode)
   (add-hook 'c++-mode-hook #'highlight-symbol-mode)
   (add-hook 'java-mode-hook #'highlight-symbol-mode)
-  :diminish highlight-symbol-mode)
+  :diminish highlight-symbol-mode
+  :custom
+  (highlight-symbol-idle-delay 1.5)
+  (highlight-symbol-on-navigation-p t)
+  :custom-face
+  (highlight-symbol-face ((t (:background "black" :foreground "yellow"))))
+  :bind (("M-n" . highlight-symbol-next)
+         ("M-p" . highlight-symbol-prev)))
 
 (use-package htmlize
   :defer t)
 
 (use-package ivy
   :diminish ivy-mode
+  :custom
+  (ivy-mode t)
+  (ivy-use-virtual-buffers t)
+  (ivy-virtual-abbreviate 'full)
+  (ivy-count-format "(%d/%d) ")
+  (ivy-extra-directories nil)
+  (ivy-fixed-height-minibuffer t)
+  (ivy-height 20)
+  :custom-face
+  (ivy-current-match ((t (:background "#4F4F4F" :foreground "#F0DFAF" :underline nil :weight normal))))
   :config
   (setq ivy-initial-inputs-alist nil)
   (setq ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
@@ -242,12 +279,6 @@
   ;; Highlight the full line of the current selection, not just the text portion.
   (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line))
 
-(use-package java-mode
-  :ensure cc-mode
-  :bind (:map java-mode-map
-              ("M-n" . highlight-symbol-next)
-              ("M-p" . highlight-symbol-prev)))
-
 (use-package lisp-extra-font-lock
   :config
   (lisp-extra-font-lock-global-mode 1))
@@ -255,21 +286,43 @@
 (use-package lisp-mode
   :ensure nil
   :bind (:map emacs-lisp-mode-map
-              ("M-n" . highlight-symbol-next)
-              ("M-p" . highlight-symbol-prev)
               ("M-." . find-symbol-at-point)
               ("C-c e" . eval-last-sexp-other-buffer)
               ("C-M-w" . backward-kill-sexp)
               ("C-M-d" . kill-sexp)
               ("C-w" . paredit-kill-region)))
 
-(use-package mac-win
-  :ensure nil
-  :bind ("<C-tab>" . mac-next-tab))
-
 (use-package magit
   :bind ("C-x m" . magit-status)
-  :diminish magit-auto-revert-mode)
+  :diminish magit-auto-revert-mode
+  :custom
+  (magit-diff-arguments '("--stat"))
+  (magit-diff-highlight-hunk-body t)
+  (magit-diff-highlight-trailing nil)
+  (magit-diff-paint-whitespace nil)
+  (magit-diff-refine-hunk t)
+  (magit-refresh-status-buffer t)
+  (magit-refresh-verbose t)
+  (magit-revision-insert-related-refs nil)
+  (magit-status-headers-hook
+   '(magit-insert-error-header
+     magit-insert-diff-filter-header
+     magit-insert-head-branch-header
+     magit-insert-upstream-branch-header
+     magit-insert-push-branch-header))
+  (magit-status-sections-hook
+   '(magit-insert-status-headers
+     magit-insert-merge-log
+     magit-insert-rebase-sequence
+     magit-insert-am-sequence
+     magit-insert-sequencer-sequence
+     magit-insert-bisect-output
+     magit-insert-bisect-rest
+     magit-insert-bisect-log
+     magit-insert-untracked-files
+     magit-insert-unstaged-changes
+     magit-insert-staged-changes
+     magit-insert-stashes)))
 
 (use-package markdown-mode
   :defer t)
@@ -293,6 +346,21 @@
   :bind (:map notmuch-tree-mode-map
               ("n" . notmuch-tree-next-matching-message-and-mark-read)
               ("g" . notmuch-refresh-this-buffer))
+  :custom
+  (notmuch-fcc-dirs nil)
+  (notmuch-hello-thousands-separator ",")
+  (notmuch-search-line-faces
+   '(("unread" :weight bold)
+     ("flagged" :foreground "#8CD0D3")))
+  (notmuch-search-oldest-first nil)
+  (notmuch-show-all-tags-list t)
+  (notmuch-show-indent-messages-width 1)
+  (notmuch-show-indent-multipart nil)
+  (notmuch-show-logo nil)
+  (notmuch-show-part-button-default-action (quote notmuch-show-interactively-view-part))
+  (notmuch-unread-search-term
+   "(tag:inbox OR tag:is-reply OR tag:graphx OR tag:notifications) AND is:unread")
+
   :config
   (setq notmuch-saved-searches
         '((:name "Unread" :query "is:unread AND tag:inbox" :search-type tree)
@@ -323,7 +391,13 @@
   :ensure nil
   :bind (:map org-mode-map
               ("<tab>" . org-indent-item-or-cycle)
-              ("<S-tab>" . org-outdent-item-or-shifttab)))
+              ("<S-tab>" . org-outdent-item-or-shifttab))
+  :custom
+  (org-src-fontify-natively t)
+  (org-src-tab-acts-natively t)
+  (org-startup-folded nil)
+  (org-startup-indented t)
+  (org-startup-truncated nil))
 
 (use-package org-indent
   :ensure nil
@@ -342,6 +416,8 @@
   :diminish paredit-mode)
 
 (use-package paren-face
+  :custom
+  (global-paren-face-mode t)
   :config
   (with-eval-after-load 'zenburn-theme
     (zenburn-with-color-variables
@@ -352,6 +428,12 @@
 (use-package php-mode)
 
 (use-package projectile
+  :custom
+  (projectile-completion-system 'ivy)
+  (projectile-global-mode t)
+  (projectile-mode t)
+  (projectile-mode-line nil)
+  (projectile-use-git-grep t)
   :config
   ;; file-exists-p -> file-regular-p
   (defun projectile-visit-project-tags-table ()
@@ -395,9 +477,10 @@
               (setq fill-column 100)
               (toggle-truncate-lines 1)))
   :bind (:map scala-mode-map
-              ("M-," . scala-import-class-at-point)
-              ("M-n" . highlight-symbol-next)
-              ("M-p" . highlight-symbol-prev)))
+              ("M-," . scala-import-class-at-point))
+  :custom
+  (scala-indent:align-parameters nil)
+  (scala-indent:use-javadoc-style t))
 
 (use-package server
   :init
@@ -413,7 +496,11 @@
   :init
   ;; C-x C-n is bound to `set-goal-column' by default
   (unbind-key "C-x C-n")
-  :diminish auto-fill-function)
+  :diminish auto-fill-function
+  :custom
+  (compilation-auto-jump-to-first-error nil)
+  (column-number-mode t)
+  (shift-select-mode nil))
 
 (use-package smartparens
   :init
@@ -423,7 +510,11 @@
   :bind (:map smartparens-mode-map
               ("<M-up>" . sp-splice-sexp-killing-backward)
               ("C-M-w"))
-  :diminish smartparens-mode)
+  :diminish smartparens-mode
+  :custom
+  (sp-base-key-bindings 'sp)
+  (sp-highlight-pair-overlay nil)
+  (sp-navigate-consider-symbols t))
 
 (use-package smartparens-config
   :ensure smartparens)
@@ -445,7 +536,6 @@
   (terraform-format-on-save-mode 1))
 
 (use-package tex
-  :disabled
   :ensure auctex
   :init
   (autoload 'TeX-command "tex-buf" nil nil)
@@ -459,6 +549,10 @@
 (use-package undo-tree
   :bind (("C--" . undo-tree-undo)
          ("C-?" . undo-tree-redo))
+  :custom
+  (undo-tree-auto-save-history nil)
+  (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo-history/")))
+  (undo-tree-mode-lighter "")
   :config
   (global-undo-tree-mode)
   ;; Keep region when undoing in region
@@ -501,10 +595,22 @@
 (use-package web-mode)
 
 (use-package which-key
-  :bind (("C-c k" . which-key-show-top-level)))
+  :bind (("C-c k" . which-key-show-top-level))
+  :diminish
+  :custom
+  (which-key-mode t)
+  (which-key-side-window-max-height 0.5)
+  (which-key-side-window-max-width 0.5))
+
+(use-package winner
+  :ensure nil
+  :custom
+  (winner-mode t))
 
 (use-package ws-butler
-  :diminish ws-butler-mode)
+  :diminish ws-butler-mode
+  :custom
+  (ws-butler-global-mode t))
 
 (use-package xt-mouse
   :ensure nil
@@ -533,7 +639,8 @@
      `(magit-diff-removed-highlight ((t (:background ,zenburn-red-6))))
      `(diff-refine-removed ((t (:background ,zenburn-red-4))))
 
-     `(magit-diff-context-highlight ((t (:background ,zenburn-bg-1)))))))
+     `(magit-diff-context-highlight ((t (:background ,zenburn-bg-1))))))
+  (load-theme 'zenburn t))
 
 ;;; Package configuration ends here
 
