@@ -413,7 +413,8 @@
               paredit-mode-map))
   :bind (("M-(" . paredit-wrap-round))
   :bind (:map paredit-mode-map
-              ("C-M-d" . nil))
+              ("C-M-d")
+              ("M-s"))
   :diminish paredit-mode)
 
 (use-package paren-face
