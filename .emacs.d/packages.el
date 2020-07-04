@@ -22,8 +22,7 @@
 
 ;;; Package configuration:
 
-(use-package ace-jump-mode
-  :bind ("M-j" . ace-jump-mode))
+(use-package ace-jump-mode)
 
 (use-package ace-window
   :bind (("M-o" . ace-window))
@@ -69,10 +68,7 @@
   (add-hook 'c++-mode-hook (lambda () (toggle-truncate-lines 1)))
   (add-hook 'c++-mode-hook (lambda () (set-fill-column 100)))
   (add-hook 'c++-mode-hook #'turn-on-auto-fill)
-  (eval-when-compile (require 'cc-mode))
-  :bind (:map c++-mode-map
-              ("C-c C-c" . print-line-counters)
-              ("M-j" . ace-jump-mode)))
+  (eval-when-compile (require 'cc-mode)))
 
 (use-package cmake-mode)
 
@@ -289,8 +285,7 @@
               ("M-." . find-symbol-at-point)
               ("C-c e" . eval-last-sexp-other-buffer)
               ("C-M-w" . backward-kill-sexp)
-              ("C-M-d" . kill-sexp)
-              ("C-w" . paredit-kill-region)))
+              ("C-M-d" . kill-sexp)))
 
 (use-package magit
   :bind ("C-x m" . magit-status)
