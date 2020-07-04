@@ -499,9 +499,9 @@
 
 (use-package simple
   :ensure nil
-  :init
-  ;; C-x C-n is bound to `set-goal-column' by default
-  (unbind-key "C-x C-n")
+  :bind (;; C-x C-n is bound to `set-goal-column' by default
+         ("C-x C-n")
+         ("M-g" . goto-line))
   :diminish auto-fill-function
   :custom
   (compilation-auto-jump-to-first-error nil)
