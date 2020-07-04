@@ -25,7 +25,9 @@
 (use-package ace-jump-mode)
 
 (use-package ace-window
-  :bind (("M-o" . ace-window))
+  :bind (
+         ;; Jump to window. Mnemonic: "Jump".
+         ("M-j" . ace-window))
   :config
   (setq aw-keys '(?a ?e ?u ?h ?t ?n ?s))
   (setq aw-dispatch-alist
@@ -126,6 +128,10 @@
   :diminish counsel-mode)
 
 (use-package counsel-projectile
+
+  :bind (
+         ;; Grep within project. Mnemonic: "Search".
+         ("M-s" . counsel-projectile-grep))
   :custom
   (counsel-projectile-mode t))
 
@@ -423,6 +429,12 @@
 (use-package php-mode)
 
 (use-package projectile
+  :bind
+  (
+   ;; Find file within project. Mnemonic: "Open file".
+   ("M-o" . projectile-find-file-dwim)
+   ;; Go to corresponding header or source file. Mnemonic: "Header".
+   ("M-h" . projectile-find-other-file))
   :custom
   (projectile-completion-system 'ivy)
   (projectile-global-mode t)
@@ -437,8 +449,7 @@
       (let ((tags-file (projectile-expand-root projectile-tags-file-name)))
         (when (file-regular-p tags-file)
           (with-demoted-errors "Error loading tags-file: %s"
-            (visit-tags-table tags-file t))))))
-  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
+            (visit-tags-table tags-file t)))))))
 
 (use-package protobuf-mode
   ;; Use protobuf-mode for Flatbuffers schema files
