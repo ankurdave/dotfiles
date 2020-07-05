@@ -271,7 +271,9 @@
   :config
   (setq ivy-initial-inputs-alist nil)
   (setq ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
-  :bind (("C-x b" . ivy-switch-buffer))
+  :bind (("C-x b")
+         ;; Mnemonic: "switch buffeR".
+         ("M-r" . ivy-switch-buffer))
   :bind (:map ivy-minibuffer-map
               ("<tab>" . ivy-alt-done)))
 
@@ -414,7 +416,8 @@
   :bind (("M-(" . paredit-wrap-round))
   :bind (:map paredit-mode-map
               ("C-M-d")
-              ("M-s"))
+              ("M-s")
+              ("M-r"))
   :diminish paredit-mode)
 
 (use-package paren-face
