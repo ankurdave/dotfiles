@@ -441,7 +441,7 @@
   :bind
   (
    ;; Find file within project. Mnemonic: "Open file".
-   ("M-o" . projectile-find-file-dwim)
+   ("M-o" . ankurdave--projectile-find-file-dwim)
    ;; Go to corresponding header or source file. Mnemonic: "Header".
    ("M-h" . projectile-find-other-file))
   :custom
@@ -458,7 +458,13 @@
       (let ((tags-file (projectile-expand-root projectile-tags-file-name)))
         (when (file-regular-p tags-file)
           (with-demoted-errors "Error loading tags-file: %s"
-            (visit-tags-table tags-file t)))))))
+            (visit-tags-table tags-file t))))))
+  (defun ankurdave--projectile-find-file-dwim (&optional invalidate-cache)
+    "Wrapper around `projectile-find-file-dwim' that prompts for
+a project if necessary."
+    (interactive "P")
+    (projectile-ensure-project (projectile-project-root))
+    (projectile--find-file-dwim invalidate-cache)))
 
 (use-package protobuf-mode
   ;; Use protobuf-mode for Flatbuffers schema files
