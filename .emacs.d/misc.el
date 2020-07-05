@@ -20,5 +20,10 @@
 (setq auto-window-vscroll nil)
 
 (put 'narrow-to-region 'disabled nil)
-(put 'downcase-region 'disabled nil)
-(put 'upcase-region 'disabled nil)
+
+;; Disable and unbind downcase-region and upcase-region, which can cause
+;; accidental corruption.
+(put 'downcase-region 'disabled t)
+(unbind-key "C-x C-l")
+(put 'upcase-region 'disabled t)
+(unbind-key "C-x C-u")
