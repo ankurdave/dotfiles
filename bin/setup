@@ -88,6 +88,15 @@ if [ -d ~/Library ] && command_exists defaults; then
     hardlink "$dotfiles"/misc/DefaultKeyBinding.dict \
              ~/Library/KeyBindings/DefaultKeyBinding.dict
 
+    # Remap Apple internal keyboard to Dvorak. Regenerate this file as follows:
+    #   git clone github.com:ankurdave/KE-complex_modifications
+    #   cd KE-complex_modifications
+    #   make
+    #   cp public/json/dvorak_for_apple_internal_keyboard.json ~/repos/dotfiles/misc/
+    mkdir -p ~/.config/karabiner/assets/complex_modifications
+    hardlink "$dotfiles"/misc/dvorak_for_apple_internal_keyboard.json \
+             ~/.config/karabiner/assets/complex_modifications/dvorak_for_apple_internal_keyboard.json
+
     mkdir -p ~/Library/Preferences
     hardlink "$dotfiles"/misc/com.googlecode.iterm2.plist \
              ~/Library/Preferences/com.googlecode.iterm2.plist
