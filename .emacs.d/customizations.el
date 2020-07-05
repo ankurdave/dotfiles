@@ -73,6 +73,8 @@
  '(smtpmail-smtp-server "smtp.gmail.com")
  '(smtpmail-smtp-service 465)
  '(smtpmail-stream-type (quote ssl))
+ '(split-height-threshold 100)
+ '(split-width-threshold 200)
  '(tool-bar-mode nil)
  '(transient-mark-mode t)
  '(uniquify-buffer-name-style (quote forward) nil (uniquify))
