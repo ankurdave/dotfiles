@@ -206,6 +206,11 @@
   (add-to-list 'exec-path-from-shell-variables "SCALA_HOME")
   (exec-path-from-shell-initialize))
 
+(use-package expand-region
+  :bind (
+         ;; Mnemonic: "Expand".
+         ("M-e" . er/expand-region)))
+
 (use-package files
   :ensure nil
   :custom
