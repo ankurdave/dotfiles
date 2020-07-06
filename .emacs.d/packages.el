@@ -339,6 +339,16 @@
   :ensure nil
   :bind ("M-z" . zap-up-to-char))
 
+(use-package mwheel
+  :ensure nil
+  :custom
+  (mouse-wheel-scroll-amount
+   '(1
+     ((shift)
+      . 1)
+     ((control))))
+  (mouse-wheel-progressive-speed nil))
+
 (use-package notmuch
   :disabled
   :bind (:map notmuch-search-mode-map

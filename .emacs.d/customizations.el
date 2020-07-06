@@ -48,8 +48,6 @@
  '(message-confirm-send t)
  '(message-fill-column nil)
  '(minibuffer-depth-indicate-mode t)
- '(mouse-wheel-progressive-speed nil)
- '(mouse-wheel-scroll-amount (quote 1))
  '(ns-alternate-modifier (quote meta))
  '(ns-command-modifier (quote meta))
  '(pop-up-windows t)
