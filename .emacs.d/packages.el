@@ -640,8 +640,8 @@ a project if necessary."
 
 (use-package ws-butler
   :diminish ws-butler-mode
-  :custom
-  (ws-butler-global-mode t))
+  :config
+  (ws-butler-global-mode 1))
 
 (use-package xt-mouse
   :ensure nil
