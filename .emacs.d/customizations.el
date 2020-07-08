@@ -20,6 +20,12 @@
  '(ansi-color-for-comint-mode t)
  '(ansi-color-names-vector
    ["#2e3436" "#a40000" "#4e9a06" "#c4a000" "#204a87" "#5c3566" "#729fcf" "#eeeeec"])
+ '(c-default-style
+   (quote
+    ((c++-mode . "google")
+     (java-mode . "java")
+     (awk-mode . "awk")
+     (other . "gnu"))))
  '(compilation-scroll-output (quote first-error))
  '(cursor-type (quote (bar . 2)))
  '(custom-safe-themes
