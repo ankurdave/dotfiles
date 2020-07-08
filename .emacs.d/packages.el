@@ -123,6 +123,7 @@
     (if (string-empty-p ivy-text)
         (counsel-up-directory)
       (ivy-kill-line)))
+  (setq ivy-initial-inputs-alist nil)
   :bind (:map ivy-minibuffer-map
               ("C-l" . ankurdave--counsel-delete-filename-or-up-directory))
   :diminish counsel-mode)
@@ -330,7 +331,8 @@
      magit-insert-untracked-files
      magit-insert-unstaged-changes
      magit-insert-staged-changes
-     magit-insert-stashes)))
+     magit-insert-stashes))
+  (magit-completing-read-function 'ivy-completing-read))
 
 (use-package markdown-mode
   :defer t)
