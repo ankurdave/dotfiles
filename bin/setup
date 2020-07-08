@@ -116,6 +116,7 @@ if [ -d ~/Library ] && command_exists defaults; then
     # (e.g. enable Tab in modal dialogs)
     defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
     # Faster keyboard repeat rate
+    defaults write -g ApplePressAndHoldEnabled -bool false
     defaults write NSGlobalDomain KeyRepeat -int 2
     defaults write NSGlobalDomain InitialKeyRepeat -int 15
     # Finder: show hidden files by default
