@@ -242,7 +242,7 @@
   :mode "\\.plt\\'")
 
 (use-package google-c-style
-  :hook (c-mode-common-hook . google-set-c-style))
+  :hook (c-mode-common . google-set-c-style))
 
 (use-package highlight-symbol
   :init
