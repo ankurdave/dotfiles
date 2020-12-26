@@ -36,3 +36,5 @@
 	hideCampaign = true
 [rebase]
 	autoStash = true
+[merge]
+	conflictStyle = diff3
