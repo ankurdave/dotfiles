@@ -4,6 +4,7 @@ tap 'dmnc/horology'
 tap 'homebrew/bundle'
 tap 'homebrew/core'
 tap 'ankurdave/ankurdave'
+tap 'adoptopenjdk/openjdk'
 
 brew 'aspell', args: ['with-lang-en']
 brew 'automake'
@@ -23,6 +24,7 @@ cask 'iterm2'
 cask 'keepassxc'
 cask 'skim'
 cask 'spectacle'
+cask 'adoptopenjdk11'
 
 # brew 'ammonite-repl'
 # brew 'ankurdave/ankurdave/afew', args: ['HEAD']
