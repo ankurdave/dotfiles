@@ -18,6 +18,7 @@
 .emacs.d/eshell/lastdir
 .emacs.d/history
 .emacs.d/newsticker
+.emacs.d/quelpa
 .emacs.d/site-local.el
 .emacs.d/tramp
 .emacs.d/url

@@ -20,6 +20,11 @@
 
 (setq use-package-always-ensure t)
 
+;; Set up quelpa to allow use-package to fetch packages from GitHub.
+(use-package quelpa-use-package
+  :init (setq quelpa-update-melpa-p nil)
+  :config (quelpa-use-package-activate-advice))
+
 ;;; Package configuration:
 
 (use-package ace-jump-mode)
@@ -59,7 +64,9 @@
 (use-package bazel)
 
 (use-package beancount
-  :ensure nil
+  :quelpa (beancount
+           :fetcher github
+           :repo "beancount/beancount-mode")
   :mode ("\\.beancount\\'" . beancount-mode))
 
 (use-package c++-mode
