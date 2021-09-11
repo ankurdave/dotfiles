@@ -589,12 +589,10 @@ of change will be 23:59 on that day"
   (interactive)
   (save-excursion
     (goto-char (point-min))
-    (re-search-forward "^;;; Entries, sorted by date:")
-    (forward-line)
-    (let ((beg (point))
-          (end (point-max)))
+    (when (re-search-forward "^;;; Entries, sorted by date:")
+      (forward-line)
       (save-restriction
-        (narrow-to-region beg end)
+        (narrow-to-region (point) (point-max))
         (sort-subr nil
                    #'beancount-goto-next-entry
                    #'beancount-goto-entry-end)))))
@@ -603,32 +601,35 @@ of change will be 23:59 on that day"
   (interactive)
   (save-excursion
     (goto-char (point-min))
-    (re-search-forward "^;;; Entries, sorted by date:")
-    (let ((beg (point))
-          (end (point-max))
-          (prev-entry-type nil)
-          (cur-entry-type nil))
+    (when (re-search-forward "^;;; Entries, sorted by date:")
       (save-restriction
-        (narrow-to-region beg end)
-        (while (not (eobp))
-          (beancount-goto-next-entry)
-          ;; Get the current entry type (open, commodity, balance, txn, etc.).
-          (if (looking-at beancount-transaction-regexp)
-              (setq cur-entry-type "txn")
-            (assert (looking-at beancount-timestamped-directive-regexp))
-            (setq cur-entry-type (match-string 2)))
-          (if (or
-               ;; Transactions should always be preceded by an empty line.
-               (string-equal cur-entry-type "txn")
-               ;; Entries other than transactions should be preceded by an empty
-               ;; line if the previous entry was of a different type.
-               (not (string-equal cur-entry-type prev-entry-type)))
-              (unless (looking-back "\n\n") (insert "\n"))
-            ;; Entries other than transactions should not be preceded by an
-            ;; empty line if the previous entry was of the same type.
-            (if (looking-back "\n\n") (delete-char -1)))
-          (beancount-goto-entry-end)
-          ;; Save the current entry type for the next loop iteration.
-          (setq prev-entry-type cur-entry-type))))))
+        (narrow-to-region (point) (point-max))
+        (let ((prev-entry-type nil)
+              (cur-entry-type nil))
+          (while (not (eobp))
+            (beancount-goto-next-entry)
+            ;; Get the current entry type (open, commodity, balance, txn, etc.).
+            (if (looking-at beancount-transaction-regexp)
+                (setq cur-entry-type "txn")
+              (assert (looking-at beancount-timestamped-directive-regexp))
+              (setq cur-entry-type (match-string 2)))
+            (if (or
+                 ;; Transactions should always be preceded by an empty line.
+                 (string-equal cur-entry-type "txn")
+                 ;; Entries other than transactions should be preceded by an empty
+                 ;; line if the previous entry was of a different type.
+                 (not (string-equal cur-entry-type prev-entry-type)))
+                (unless (looking-back "\n\n") (insert "\n"))
+              ;; Entries other than transactions should not be preceded by an
+              ;; empty line if the previous entry was of the same type.
+              (if (looking-back "\n\n") (delete-char -1)))
+            (beancount-goto-entry-end)
+            ;; Save the current entry type for the next loop iteration.
+            (setq prev-entry-type cur-entry-type)))))))
+
+(defun sort-and-format-beancount-entries ()
+  (interactive)
+  (sort-beancount-entries)
+  (format-beancount-entries))
 
 (provide 'utils)
