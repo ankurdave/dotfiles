@@ -555,6 +555,11 @@ a project if necessary."
 ;; Enables counsel-M-x to sort by recently used
 (use-package smex)
 
+(use-package sql-indent
+  :init
+  (add-hook 'sql-mode-hook #'sqlind-minor-mode)
+  :diminish sqlind-minor-mode)
+
 (use-package subword
   :ensure nil
   :commands subword-backward-kill
