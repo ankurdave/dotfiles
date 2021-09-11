@@ -56,7 +56,7 @@
   :custom
   (auto-revert-verbose nil))
 
-(use-package bazel-mode)
+(use-package bazel)
 
 (use-package beancount
   :ensure nil
