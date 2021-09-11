@@ -20,7 +20,7 @@ cask 'coconutbattery'
 cask 'dropbox'
 cask 'emacs'
 cask 'iterm2'
-cask 'keepassx'
+cask 'keepassxc'
 cask 'skim'
 cask 'spectacle'
 
