@@ -95,30 +95,36 @@ files = [
     'Downloads/modet_2022-06-01_14-26.mp4',
 ]
 
-files = ['Downloads/rec_2022-06-01_18-50.mp4']
+# files = ['Downloads/rec_2022-06-01_18-50.mp4']
 
-files = ['Downloads/modet_2022-05-31_10-54.mp4']
+files = [
+    'Downloads/rec_2022-06-02_05-48.mp4',
+    'Downloads/rec_2022-06-02_06-48.mp4',
+    'Downloads/rec_2022-06-02_07-48.mp4',
+]
 
 # files = ["http://192.168.1.176:8080/video"]
 
 for f in files:
     stream = cv2.VideoCapture(f)
-    assert stream.isOpened()
+    if not stream.isOpened():
+        print(f"Could not open {f}")
+        continue
 
     frame_idx = 0
 
     while True:
         start_time = time.time()
         frames = []
-        # Operate on 5-second chunks.
-        for i in range(150):
+        # Operate on 30-second chunks.
+        for i in range(30*30):
             ret, frame = stream.read()
             if not ret: break
             frames.append(frame)
             frame_idx += 1
         if len(frames) == 0: break
 
-        sample_frames = random.sample(frames, min(len(frames), 50))
+        sample_frames = random.sample(frames, min(len(frames), 100))
         false_negative_sample_frames = sample_frames[0:10]
         false_positive_sample_frames = sample_frames[10:]
 
