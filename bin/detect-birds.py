@@ -8,16 +8,14 @@ import torch
 import yolov5
 import time
 import numpy as np
+import random
 
-# camera_ip = "http://192.168.1.176:8080/video"
-camera_ip = "Downloads/modet_2022-06-01_12-20.mp4"
-stream = cv2.VideoCapture(camera_ip)
+# device = 'cuda' if torch.cuda.is_available() else 'cpu'
+# print(f'Using device {device}')
 
 model = yolov5.load('yolov5s.pt')
-model.conf = 0.5
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
-print(f'Using device {device}')
-model.to(device)
+model.conf = 0.6
+# model.to(device)
 
 def score_frame(frame):
     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -26,6 +24,7 @@ def score_frame(frame):
     labels, cord = results.xyxyn[0][:, -1].numpy(), results.xyxyn[0][:, :-1].numpy()
 
     has_bird = False
+    confidence = 0.0
     n = len(labels)
     x_shape, y_shape = frame.shape[1], frame.shape[0]
     for i in range(n):
@@ -47,38 +46,95 @@ def score_frame(frame):
                     (x1, y1), \
                     label_font, 0.9, bgr, 2) #Put a label over box.
         has_bird = has_bird or classes[int(labels[i])] == 'bird'
+        if classes[int(labels[i])] == 'bird':
+            confidence = max(confidence, score)
 
-    return frame, has_bird
+    return frame, has_bird, confidence
 
-assert stream.isOpened()
-x_shape = int(stream.get(cv2.CAP_PROP_FRAME_WIDTH))
-y_shape = int(stream.get(cv2.CAP_PROP_FRAME_HEIGHT))
 out = cv2.VideoWriter("labeled.mp4", cv2.VideoWriter_fourcc(*"mp4v"), 20, \
-                          (x_shape, y_shape))
+                          (1920, 1080))
 
-# cv2.startWindowThread()
-# cv2.namedWindow("preview")
+files = [
+    'Downloads/modet_2022-06-01_13-04.mp4',
+    'Downloads/modet_2022-06-01_13-06.mp4',
+    'Downloads/modet_2022-06-01_13-07.mp4',
+    'Downloads/modet_2022-06-01_13-08.mp4',
+    'Downloads/modet_2022-06-01_13-09.mp4',
+    'Downloads/modet_2022-06-01_13-10.mp4',
+    'Downloads/modet_2022-06-01_13-13.mp4',
+    'Downloads/modet_2022-06-01_13-17.mp4',
+    'Downloads/modet_2022-06-01_13-21.mp4',
+    'Downloads/modet_2022-06-01_13-22.mp4',
+    'Downloads/modet_2022-06-01_13-25.mp4',
+    'Downloads/modet_2022-06-01_13-29.mp4',
+    'Downloads/modet_2022-06-01_13-30.mp4',
+    'Downloads/modet_2022-06-01_13-31.mp4',
+    'Downloads/modet_2022-06-01_13-33.mp4',
+    'Downloads/modet_2022-06-01_13-36.mp4',
+    'Downloads/modet_2022-06-01_13-39.mp4',
+    'Downloads/modet_2022-06-01_13-41.mp4',
+    'Downloads/modet_2022-06-01_13-43.mp4',
+    'Downloads/modet_2022-06-01_13-46.mp4',
+    'Downloads/modet_2022-06-01_13-48.mp4',
+    'Downloads/modet_2022-06-01_13-50.mp4',
+    'Downloads/modet_2022-06-01_13-54.mp4',
+    'Downloads/modet_2022-06-01_14-04.mp4',
+    'Downloads/modet_2022-06-01_14-05.mp4',
+    'Downloads/modet_2022-06-01_14-07.mp4',
+    'Downloads/modet_2022-06-01_14-10.mp4',
+    'Downloads/modet_2022-06-01_14-13.mp4',
+    'Downloads/modet_2022-06-01_14-17.mp4',
+    'Downloads/modet_2022-06-01_14-18.mp4',
+    'Downloads/modet_2022-06-01_14-19.mp4',
+    'Downloads/modet_2022-06-01_14-21.mp4',
+    'Downloads/modet_2022-06-01_14-24.mp4',
+    'Downloads/modet_2022-06-01_14-26.mp4',
+]
 
-detected_bird_frames_ago = 1000
-frame_idx = 0
+files = ['Downloads/modet_2022-06-01_11-42.mp4']
 
-while True:
-    detected_bird_frames_ago += 1
-    frame_idx += 1
+# files = ["http://192.168.1.176:8080/video"]
 
-    start_time = time.time()
-    ret, frame = stream.read()
-    if not ret: break
-    frame, has_bird = score_frame(frame)
-    if has_bird:
-        detected_bird_frames_ago = 0
-    if detected_bird_frames_ago < 150:
-        out.write(frame)
+for f in files:
+    stream = cv2.VideoCapture(f)
+    assert stream.isOpened()
 
-    cv2.imshow('preview', frame)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+    frame_idx = 0
 
-    end_time = time.time()
-    fps = 1/np.round(end_time - start_time, 3)
-    print(f"{frame_idx}: has_bird={has_bird}, fps={fps}")
+    while True:
+        start_time = time.time()
+        frames = []
+        for i in range(30):
+            ret, frame = stream.read()
+            if not ret: break
+            frames.append(frame)
+            frame_idx += 1
+        if len(frames) == 0: break
+
+        sample_frames = random.sample(frames, min(len(frames), 10))
+        false_negative_sample_frames = sample_frames[0:2]
+        false_positive_sample_frames = sample_frames[2:]
+
+        # Check 2 arbitrary frames. If at least one shows a bird, proceed.
+        num_with_bird = 0
+        for frame in false_negative_sample_frames:
+            _, sample_has_bird, _ = score_frame(frame)
+            if sample_has_bird:
+                num_with_bird += 1
+
+        if num_with_bird > 0:
+            # Check 8 more buffered frames to reduce false positives. If at
+            # least half show a bird, proceed.
+            for frame in false_positive_sample_frames:
+                _, sample_has_bird, _ = score_frame(frame)
+                if sample_has_bird:
+                    num_with_bird += 1
+
+        has_bird = num_with_bird >= 5
+        if has_bird:
+            for frame in frames:
+                out.write(frame)
+
+        end_time = time.time()
+        fps = len(frames)/np.round(end_time - start_time, 3)
+        print(f"file={f}, frame={frame_idx:08d}: has_bird={'Y' if has_bird else 'n'}, num_with_bird={num_with_bird}, fps={fps:.1f}")
