@@ -13,7 +13,11 @@ import random
 # device = 'cuda' if torch.cuda.is_available() else 'cpu'
 # print(f'Using device {device}')
 
-model = yolov5.load('yolov5s.pt')
+# Generate the ONNX model as follows:
+# git clone git@github.com:ultralytics/yolov5.git
+# pip install -r requirements.txt coremltools onnx onnx-simplifier onnxruntime openvino-dev tensorflow-cpu
+# python3 export.py --weights yolov5s.pt --include onnx
+model = yolov5.load('repos/yolov5/yolov5m.onnx')
 model.conf = 0.6
 # model.to(device)
 
@@ -91,7 +95,9 @@ files = [
     'Downloads/modet_2022-06-01_14-26.mp4',
 ]
 
-files = ['Downloads/modet_2022-06-01_11-42.mp4']
+files = ['Downloads/rec_2022-06-01_18-50.mp4']
+
+files = ['Downloads/modet_2022-05-31_10-54.mp4']
 
 # files = ["http://192.168.1.176:8080/video"]
 
@@ -104,18 +110,19 @@ for f in files:
     while True:
         start_time = time.time()
         frames = []
-        for i in range(30):
+        # Operate on 5-second chunks.
+        for i in range(150):
             ret, frame = stream.read()
             if not ret: break
             frames.append(frame)
             frame_idx += 1
         if len(frames) == 0: break
 
-        sample_frames = random.sample(frames, min(len(frames), 10))
-        false_negative_sample_frames = sample_frames[0:2]
-        false_positive_sample_frames = sample_frames[2:]
+        sample_frames = random.sample(frames, min(len(frames), 50))
+        false_negative_sample_frames = sample_frames[0:10]
+        false_positive_sample_frames = sample_frames[10:]
 
-        # Check 2 arbitrary frames. If at least one shows a bird, proceed.
+        # Check 10 arbitrary frames. If at least one shows a bird, proceed.
         num_with_bird = 0
         for frame in false_negative_sample_frames:
             _, sample_has_bird, _ = score_frame(frame)
@@ -123,14 +130,14 @@ for f in files:
                 num_with_bird += 1
 
         if num_with_bird > 0:
-            # Check 8 more buffered frames to reduce false positives. If at
-            # least half show a bird, proceed.
+            # Check the remaining sampled frames to reduce false positives. If
+            # at least 10 show a bird, proceed.
             for frame in false_positive_sample_frames:
                 _, sample_has_bird, _ = score_frame(frame)
                 if sample_has_bird:
                     num_with_bird += 1
 
-        has_bird = num_with_bird >= 5
+        has_bird = num_with_bird >= 10
         if has_bird:
             for frame in frames:
                 out.write(frame)
