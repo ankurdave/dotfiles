@@ -1,7 +1,14 @@
 # From https://towardsdatascience.com/implementing-real-time-object-detection-system-using-pytorch-and-opencv-70bac41148f7
 
-# pip3 install opencv-python torch torchvision yolov5
-# brew install ffmpeg
+# UBUNTU:
+# $ sudo apt update
+# $ sudo apt install python3-pip
+# $ sudo apt install ffmpeg
+
+# macOS:
+# $ brew install ffmpeg
+
+# $ pip3 install opencv-python torch torchvision yolov5
 
 import cv2
 import torch
@@ -10,6 +17,7 @@ import time
 import numpy as np
 import random
 import subprocess
+import datetime
 
 # device = 'cuda' if torch.cuda.is_available() else 'cpu'
 # print(f'Using device {device}')
@@ -21,6 +29,8 @@ import subprocess
 model = yolov5.load('repos/yolov5/yolov5s.onnx')
 model.conf = 0.6
 # model.to(device)
+
+target_classes = ['bird', 'cat']
 
 def score_frame(frame):
     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -50,8 +60,8 @@ def score_frame(frame):
                     classes[int(labels[i])] + ' ' + f'{score:.2f}', \
                     (x1, y1), \
                     label_font, 0.9, bgr, 2) #Put a label over box.
-        has_bird = has_bird or classes[int(labels[i])] == 'bird'
-        if classes[int(labels[i])] == 'bird':
+        has_bird = has_bird or classes[int(labels[i])] in target_classes
+        if classes[int(labels[i])] in target_classes:
             confidence = max(confidence, score)
 
     return frame, has_bird, confidence
@@ -62,13 +72,25 @@ on run argv
 end run
 '''
 
+last_bird_time = 0
 def notify(title, text):
-  subprocess.call(['osascript', '-e', NOTIFY_CMD, title, text])
+    cur_time = time.time()
+    global last_bird_time
+    if cur_time >= last_bird_time + 30:
+        subprocess.call(['osascript', '-e', NOTIFY_CMD, title, text])
+    last_bird_time = cur_time
 
-files = ["http://192.168.1.176:8080/shot.jpg"]
+now = datetime.datetime.now().strftime("%Y-%m-%dT%H%M%S")
+output_file = f"live-{now}.mp4"
+print(f"Writing to {output_file}")
+out = cv2.VideoWriter(output_file, cv2.VideoWriter_fourcc(*"mp4v"), 20, \
+                      (1080, 1920))
+
+files = ["http://192.168.1.143:8080/shot.jpg"]
 
 for f in files:
     frame_idx = 0
+    last_seen_frame_idx = -10000
 
     while True:
         frame_idx += 1
@@ -77,7 +99,8 @@ for f in files:
         stream = cv2.VideoCapture(f)
         if not stream.isOpened():
             print(f"Could not open {f}")
-            quit()
+            time.sleep(5)
+            continue
         ret, frame = stream.read()
         stream.release()
         if not ret: break
@@ -85,11 +108,14 @@ for f in files:
         _, has_bird, _ = score_frame(frame)
         if has_bird:
             notify('Bird detected', '')
+            last_seen_frame_idx = frame_idx
+        if frame_idx - last_seen_frame_idx < 30:
+            out.write(frame)
 
         end_time = time.time()
         fps = 1/np.round(end_time - start_time, 3)
         print(f"file={f}, frame={frame_idx:08d}: has_bird={'Y' if has_bird else 'n'}, fps={fps:.1f}")
 
         cv2.imshow('frame', frame)
-        if cv2.waitKey(5000) == ord('q'):
+        if cv2.waitKey(1 if frame_idx - last_seen_frame_idx < 300 else 5000) == ord('q'):
             quit()
