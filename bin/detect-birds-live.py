@@ -5,6 +5,15 @@
 # $ sudo apt install python3-pip
 # $ sudo apt install ffmpeg
 
+# If running Python 3.10, downgrade to Python 3.9 for compatibility with
+# onnxruntime, and use `/home/ubuntu/.local/bin/pip3.9` instead of `pip3`, and
+# `python3.9` instead of `python3`:
+#
+# $ sudo apt install software-properties-common
+# $ sudo add-apt-repository ppa:deadsnakes/ppa
+# $ sudo apt install python3.9 python3.9-dev python3.9-venv
+# $ python3.9 -m pip install --upgrade pip --user
+
 # macOS:
 # $ brew install ffmpeg
 
@@ -24,7 +33,8 @@ import datetime
 
 # Generate the ONNX model as follows:
 # git clone git@github.com:ultralytics/yolov5.git
-# pip install -r requirements.txt coremltools onnx onnx-simplifier onnxruntime openvino-dev tensorflow-cpu
+# cd yolov5
+# pip3 install -r requirements.txt coremltools onnx onnx-simplifier onnxruntime openvino-dev tensorflow-cpu
 # python3 export.py --weights yolov5s.pt --include onnx
 model = yolov5.load('repos/yolov5/yolov5s.onnx')
 model.conf = 0.6
