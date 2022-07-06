@@ -26,7 +26,7 @@ import datetime
 # git clone git@github.com:ultralytics/yolov5.git
 # pip install -r requirements.txt coremltools onnx onnx-simplifier onnxruntime openvino-dev tensorflow-cpu
 # python3 export.py --weights yolov5s.pt --include onnx
-model = yolov5.load('repos/yolov5/yolov5s.onnx')
+model = yolov5.load('repos/yolov5/yolov5n.onnx')
 model.conf = 0.6
 # model.to(device)
 
@@ -66,56 +66,54 @@ def score_frame(frame):
 
     return frame, has_bird, confidence
 
-NOTIFY_CMD = '''
-on run argv
-  display notification (item 2 of argv) with title (item 1 of argv)
-end run
-'''
-
-last_bird_time = 0
-def notify(title, text):
-    cur_time = time.time()
-    global last_bird_time
-    if cur_time >= last_bird_time + 30:
-        subprocess.call(['osascript', '-e', NOTIFY_CMD, title, text])
-    last_bird_time = cur_time
-
 now = datetime.datetime.now().strftime("%Y-%m-%dT%H%M%S")
 output_file = f"live-{now}.mp4"
 print(f"Writing to {output_file}")
 out = cv2.VideoWriter(output_file, cv2.VideoWriter_fourcc(*"mp4v"), 20, \
                       (1080, 1920))
 
-files = ["http://192.168.1.143:8080/shot.jpg"]
+mjpeg = "http://192.168.1.143:8080/video"
+jpeg = "http://192.168.1.143:8080/shot.jpg"
+use_mjpeg = True
 
-for f in files:
-    frame_idx = 0
-    last_seen_frame_idx = -10000
+frame_idx = 0
+last_seen_frame_idx = -10000
 
-    while True:
-        frame_idx += 1
+if use_mjpeg:
+    stream = cv2.VideoCapture(mjpeg)
+    if not stream.isOpened():
+        print(f"Could not open {f}")
+        quit()
 
-        start_time = time.time()
-        stream = cv2.VideoCapture(f)
+while True:
+    frame_idx += 1
+
+    start_time = time.time()
+    if not use_mjpeg:
+        stream = cv2.VideoCapture(jpeg)
         if not stream.isOpened():
             print(f"Could not open {f}")
             time.sleep(5)
             continue
-        ret, frame = stream.read()
-        stream.release()
-        if not ret: break
+    ret, frame = stream.read()
+    if not ret:
+        print(f"Could not read frame from {f}")
+        continue
+    fetch_s = time.time() - start_time
 
-        _, has_bird, _ = score_frame(frame)
-        if has_bird:
-            notify('Bird detected', '')
-            last_seen_frame_idx = frame_idx
-        if frame_idx - last_seen_frame_idx < 30:
-            out.write(frame)
+    start_time = time.time()
+    _, has_bird, _ = score_frame(frame)
+    if has_bird:
+        last_seen_frame_idx = frame_idx
+    infer_s = time.time() - start_time
 
-        end_time = time.time()
-        fps = 1/np.round(end_time - start_time, 3)
-        print(f"file={f}, frame={frame_idx:08d}: has_bird={'Y' if has_bird else 'n'}, fps={fps:.1f}")
+    start_time = time.time()
+    if frame_idx - last_seen_frame_idx < 30:
+        out.write(frame)
+    write_s = time.time() - start_time
 
-        cv2.imshow('frame', frame)
-        if cv2.waitKey(1 if frame_idx - last_seen_frame_idx < 300 else 5000) == ord('q'):
-            quit()
+    print(f"frame={frame_idx:08d}: has_bird={'Y' if has_bird else 'n'}, fetch_s={fetch_s:.2f}, infer_s={infer_s:.2f}, write_s={write_s:.2f}")
+
+    # When no bird, throttle framerate to reduce resource usage.
+    if frame_idx - last_seen_frame_idx >= 300:
+        time.sleep(2)
