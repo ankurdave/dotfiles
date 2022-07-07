@@ -78,9 +78,6 @@ def score_frame(frame):
 
 now = datetime.datetime.now().strftime("%Y-%m-%dT%H%M%S")
 output_file = f"live-{now}.mp4"
-print(f"Writing to {output_file}")
-out = cv2.VideoWriter(output_file, cv2.VideoWriter_fourcc(*"mp4v"), 20, \
-                      (1080, 1920))
 
 mjpeg = "http://192.168.1.143:8080/video"
 jpeg = "http://192.168.1.143:8080/shot.jpg"
@@ -94,6 +91,11 @@ if use_mjpeg:
     if not stream.isOpened():
         print(f"Could not open {f}")
         quit()
+    width = int(stream.get(cv2.CAP_PROP_FRAME_WIDTH))
+    height = int(stream.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    out = cv2.VideoWriter(output_file, cv2.VideoWriter_fourcc(*"mp4v"), 20, \
+                          (width, height))
+    print(f"Writing to {output_file}, {width} x {height}")
 
 while True:
     frame_idx += 1
