@@ -102,18 +102,23 @@ while True:
     fetch_s = time.time() - start_time
 
     start_time = time.time()
-    _, has_bird, _ = score_frame(frame)
-    if has_bird:
-        last_seen_frame_idx = frame_idx
+    # To reduce resource usage, check for bird only every 30 frames.
+    run_inference = frame_idx % 30 == 0
+    if run_inference:
+        _, has_bird, _ = score_frame(frame)
+        if has_bird:
+            last_seen_frame_idx = frame_idx
     infer_s = time.time() - start_time
 
+    # After seeing a bird, record the next 60 frames.
     start_time = time.time()
-    if frame_idx - last_seen_frame_idx < 30:
+    if frame_idx - last_seen_frame_idx < 60:
         out.write(frame)
     write_s = time.time() - start_time
 
-    print(f"frame={frame_idx:08d}: has_bird={'Y' if has_bird else 'n'}, fetch_s={fetch_s:.2f}, infer_s={infer_s:.2f}, write_s={write_s:.2f}")
+    print(f"frame={frame_idx:08d}: has_bird={'?' if not run_inference else ('Y' if has_bird else 'n')}, fetch_s={fetch_s:.2f}, infer_s={infer_s:.2f}, write_s={write_s:.2f}")
 
-    # When no bird, throttle framerate to reduce resource usage.
-    if frame_idx - last_seen_frame_idx >= 300:
-        time.sleep(2)
+    if not use_mjpeg:
+        # When no bird, throttle framerate to reduce resource usage.
+        if frame_idx - last_seen_frame_idx >= 120:
+            time.sleep(2)
