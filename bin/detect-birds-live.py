@@ -10,19 +10,35 @@ import random
 import signal
 import threading
 import time
+import yolov5
 from PIL import Image, ImageOps
 
 # CoreML model downloaded from https://github.com/john-rocky/CoreML-Models#yolov5s
-model = coremltools.models.MLModel('yolov5s.mlmodel')
+model_coreml = coremltools.models.MLModel('yolov5s.mlmodel')
 
-def score_frame(frame_rgb):
+model_onnx = yolov5.load('repos/yolov5/yolov5n.onnx')
+model_onnx.conf = 0.6
+
+def score_frame_coreml(frame_rgb):
     img = Image.fromarray(frame_rgb)
     img = ImageOps.fit(img, (640, 640), Image.Resampling.BILINEAR)
-    results = model.predict({"image": img})
+    results = model_coreml.predict({"image": img})
     confidence = results['confidence']
     bird_confidences = confidence[:, 14] # class 14 = bird
     bird_confidence = np.amax(bird_confidences, initial=0.0)
     return bird_confidence >= 0.6
+
+def score_frame_onnx(frame_rgb):
+    results = model_onnx(frame_rgb)
+    labels, cord = results.xyxyn[0][:, -1].numpy(), results.xyxyn[0][:, :-1].numpy()
+    has_bird = False
+    n = len(labels)
+    for i in range(n):
+        row = cord[i]
+        classes = model.names
+        if classes[int(labels[i])] in ['bird']:
+            return True
+    return False
 
 in_filename = "foo"
 
@@ -47,7 +63,7 @@ def sigint_handler(sig, frame):
     default_sigint_handler()
 signal.signal(signal.SIGINT, sigint_handler)
 
-max_queue_size = 10
+max_queue_size = 50
 detect_queue = queue.Queue(maxsize=max_queue_size)
 def detector():
     chunk = []
@@ -102,11 +118,11 @@ def detector():
         frames = packet.decode()
         if len(frames) == 0: continue
         # Only run inference on a subset of frames to save energy.
-        if packet_idx % 3 != 0: continue
+        if packet_idx % 10 != 0: continue
         for frame in frames:
             frame_arr = frame.to_ndarray(format='rgb24')
             assert frame_arr.shape == (height, width, 3), frame_arr.shape
-            has_bird = score_frame(frame_arr)
+            has_bird = score_frame_coreml(frame_arr)
             if has_bird:
                 packet_has_bird = True
                 should_write_chunk = True
