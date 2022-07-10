@@ -35,7 +35,7 @@ def score_frame_onnx(frame_rgb):
     n = len(labels)
     for i in range(n):
         row = cord[i]
-        classes = model.names
+        classes = model_onnx.names
         if classes[int(labels[i])] in ['bird']:
             return True
     return False
