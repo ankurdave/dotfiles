@@ -153,4 +153,6 @@ if [ -d ~/Library ] && command_exists defaults; then
     # Other prefs
     defaults write com.apple.finder CreateDesktop false
     defaults write -app Skim SKAutoReloadFileUpdate -boolean true
+
+    git lfs install
 fi
