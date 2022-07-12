@@ -83,11 +83,9 @@ def detector():
         if packet.is_keyframe:
             # Flush the previous chunk to the output if necessary.
             if should_write_chunk:
-                # Default to 1/25 s per frame.
+                # Use a hardcoded 1/25 s per frame.
+                # TODO: support variable framerates.
                 ts_delta_per_frame = 3600
-                if len(chunk) > 1:
-                    ts_delta_per_frame = chunk[1].pts - chunk[0].pts
-                    assert ts_delta_per_frame > 0
                 for packet2 in chunk:
                     packet2.stream = out_stream
                     last_written_frame_dts += ts_delta_per_frame
@@ -102,27 +100,27 @@ def detector():
 
         chunk.append(packet)
 
+        # We need to decode every frame after a keyframe, even if we don't want
+        # to run detection on it. Otherwise we will get incorrect results for
+        # subsequent detections.
+        frames = packet.decode()
+        if len(frames) == 0: continue
+
         if should_write_chunk:
-            print(f"packet pts={packet.pts}: skipping detection, bird already detected. qsize={qsize}")
             continue
 
         if (qsize > random.randint(0, max_queue_size - 1) and not packet.is_keyframe) or should_write_chunk is False:
             print(f"packet pts={packet.pts}: skipping detection, need to catch up. qsize={qsize}")
-            should_write_chunk = False
             continue
 
         start_time = time.time()
         packet_has_bird = False
-        # We need to decode every frame after a keyframe, even if we don't want
-        # to run detection on it. Otherwise we will get incorrect results.
-        frames = packet.decode()
-        if len(frames) == 0: continue
         # Only run inference on a subset of frames to save energy.
         if packet_idx % 10 != 0: continue
         for frame in frames:
             frame_arr = frame.to_ndarray(format='rgb24')
             assert frame_arr.shape == (height, width, 3), frame_arr.shape
-            has_bird = score_frame_coreml(frame_arr)
+            has_bird = score_frame_onnx(frame_arr)
             if has_bird:
                 packet_has_bird = True
                 should_write_chunk = True
