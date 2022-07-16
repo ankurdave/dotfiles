@@ -8,12 +8,14 @@ import colorsys
 import cv2
 import datetime
 import numpy as np
+import os
 import queue
 import random
 import signal
 import sys
 import threading
 import time
+import uuid
 import yolov5
 from PIL import Image, ImageOps
 
@@ -103,13 +105,13 @@ class DetectorAndWriterThread(threading.Thread):
 
         self.reader_supports_backpressure = reader_supports_backpressure
 
-    def enqueue(self, packet):
+    def enqueue(self, packet_and_frames):
         try:
-            self.detect_queue.put(packet, block=self.reader_supports_backpressure)
+            self.detect_queue.put(packet_and_frames, block=self.reader_supports_backpressure)
         except queue.Full:
-            print(f"Dropping packet {packet}, detect queue is full")
+            print(f"Dropping packet {packet_and_frames}, detect queue is full")
 
-    def get_frame_to_display(self):
+    def get_frame_to_display_and_original_frame(self):
         return self.display_queue.get()
 
     def stop(self):
@@ -118,34 +120,47 @@ class DetectorAndWriterThread(threading.Thread):
     def run(self):
         packet_idx = 0
         should_write_chunk = False
+        last_frame_start_time = None
+        last_frame_avg_s = None
         while True:
-            packet = self.detect_queue.get()
-            packet_idx += 1
-            if packet is None:
+            elem = self.detect_queue.get()
+            if elem is None:
                 self.display_queue.put(None)
                 return
+
+            start_time = time.time()
+            if last_frame_start_time is not None:
+                last_frame_s = start_time - last_frame_start_time
+                # Update the EWMA.
+                if last_frame_avg_s is None:
+                    last_frame_avg_s = last_frame_s
+                else:
+                    last_frame_avg_s = 0.5 * last_frame_s + 0.5 * last_frame_avg_s
+            last_frame_start_time = start_time
+
+            if last_frame_avg_s is not None and packet_idx % 100 == 0:
+                print(f'{last_frame_avg_s * 1000:.0f} ms, {1/last_frame_avg_s:.0f} FPS')
+
+            packet_idx += 1
+            packet, frames = elem
+
             qsize = self.detect_queue.qsize()
             if packet.is_keyframe:
                 self.chunked_writer.flush(should_write_chunk)
                 should_write_chunk = False
 
             self.chunked_writer.append(packet)
-
-            # We need to decode every frame after a keyframe, even if we don't want
-            # to run detection on it. Otherwise we will get incorrect results for
-            # subsequent detections.
-            frames = packet.decode()
             if len(frames) == 0: continue
 
+            # When the queue starts to fill up, skip inference on some frames to catch up.
             if (not self.reader_supports_backpressure
                 and (qsize > random.randint(0, max_queue_size - 1) and not packet.is_keyframe)):
-                print(f"packet pts={packet.pts}: skipping detection, need to catch up. qsize={qsize}")
                 continue
+
+            # TODO: Consider only running inference on a subset of frames to save energy.
 
             start_time = time.time()
             packet_has_bird = False
-            # Only run inference on a subset of frames to save energy.
-            if packet_idx % 10 != 0: continue
             for frame in frames:
                 frame_arr = frame.to_ndarray(format='rgb24')
                 has_bird = self.__score_frame_onnx(frame_arr)
@@ -205,7 +220,7 @@ class DetectorAndWriterThread(threading.Thread):
                                             font_scale, fps_color_bgr, fps_background_color_bgr,
                                             thickness, align='right')
 
-        self.display_queue.put(frame_bgr)
+        self.display_queue.put((frame_bgr, frame_rgb))
 
         return len(objects) > 0
 
@@ -259,7 +274,8 @@ class FrameDecoderThread(threading.Thread):
             if packet.dts is None:
                 continue
 
-            detector_and_writer_thread.enqueue(packet)
+            frames = packet.decode()
+            detector_and_writer_thread.enqueue((packet, frames))
 
         detector_and_writer_thread.stop()
 
@@ -271,6 +287,8 @@ if __name__ == '__main__':
     in_file = sys.argv[1]
     should_write = sys.argv[2] == '--write'
     is_live = sys.argv[3] == '--live'
+    screenshot_dir = sys.argv[4]
+    os.makedirs(screenshot_dir, exist_ok=True)
 
     max_queue_size = 50
 
@@ -300,12 +318,18 @@ if __name__ == '__main__':
 
     try:
         while True:
-            frame_bgr = detector_and_writer_thread.get_frame_to_display()
-            if frame_bgr is None:
+            elem = detector_and_writer_thread.get_frame_to_display_and_original_frame()
+            if elem is None:
                 quit()
+            frame_bgr, orig_frame_rgb = elem
             cv2.imshow('frame', frame_bgr)
-            if cv2.waitKey(1) == ord('q'):
+            key = cv2.waitKey(1)
+            if key == ord('q'):
                 quit()
+            elif key == ord('s'):
+                screenshot_path = os.path.join(screenshot_dir, f"shot-{now}-{uuid.uuid4()}.jpg")
+                cv2.imwrite(screenshot_path, cv2.cvtColor(orig_frame_rgb, cv2.COLOR_RGB2BGR))
+                print(f"Saved frame to {screenshot_path}")
 
     finally:
         for thread in threads:
