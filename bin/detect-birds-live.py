@@ -3,6 +3,7 @@
 
 import av
 import collections
+import colorsys
 # import coremltools
 import cv2
 import datetime
@@ -62,9 +63,19 @@ class ChunkedVideoWriter(object):
         # Start a new chunk.
         self.chunk = []
 
+class NullVideoWriter(object):
+    def __init__(self):
+        pass
+
+    def append(self, packet):
+        pass
+
+    def flush(self, write_current_chunk_to_output):
+        pass
+
 
 class DetectorAndWriterThread(threading.Thread):
-    def __init__(self, output_file, max_queue_size, out_stream_template):
+    def __init__(self, output_file, max_queue_size, out_stream_template, reader_supports_backpressure):
         super(DetectorAndWriterThread, self).__init__(name='DetectorAndWriterThread')
 
         # CoreML model downloaded from https://github.com/john-rocky/CoreML-Models#yolov5s
@@ -78,13 +89,23 @@ class DetectorAndWriterThread(threading.Thread):
 
         self.detect_queue = queue.Queue(maxsize=max_queue_size)
 
-        self.chunked_writer = ChunkedVideoWriter(output_file, out_stream_template)
+        if output_file:
+            self.chunked_writer = ChunkedVideoWriter(output_file, out_stream_template)
+        else:
+            self.chunked_writer = NullVideoWriter()
 
         self.display_queue = BoundedBlockingQueue(max_queue_size=1)
 
+        def hsv_to_bgr(h, s, v):
+            return 255 * np.array(colorsys.hsv_to_rgb(h, s, v)[::-1])
+        self.prediction_colors_bgr = [hsv_to_bgr(h, 0.5, 0.8)
+                                      for h in np.linspace(0, 1, len(self.model.names))]
+
+        self.reader_supports_backpressure = reader_supports_backpressure
+
     def enqueue(self, packet):
         try:
-            self.detect_queue.put_nowait(packet)
+            self.detect_queue.put(packet, block=self.reader_supports_backpressure)
         except queue.Full:
             print(f"Dropping packet {packet}, detect queue is full")
 
@@ -92,7 +113,7 @@ class DetectorAndWriterThread(threading.Thread):
         return self.display_queue.get()
 
     def stop(self):
-        self.detect_queue.put_nowait(None)
+        self.detect_queue.put(None)
 
     def run(self):
         packet_idx = 0
@@ -116,7 +137,8 @@ class DetectorAndWriterThread(threading.Thread):
             frames = packet.decode()
             if len(frames) == 0: continue
 
-            if qsize > random.randint(0, max_queue_size - 1) and not packet.is_keyframe:
+            if (not self.reader_supports_backpressure
+                and (qsize > random.randint(0, max_queue_size - 1) and not packet.is_keyframe)):
                 print(f"packet pts={packet.pts}: skipping detection, need to catch up. qsize={qsize}")
                 continue
 
@@ -133,6 +155,7 @@ class DetectorAndWriterThread(threading.Thread):
                     break
             infer_s = time.time() - start_time
             print(f"packet pts={packet.pts}: has_bird={'Y' if packet_has_bird else 'n'}, infer_s={infer_s:.2f}. qsize={qsize}")
+        self.display_queue.put(None)
 
     # def __score_frame_coreml(self, frame_rgb):
     #     img = Image.fromarray(frame_rgb)
@@ -146,29 +169,78 @@ class DetectorAndWriterThread(threading.Thread):
     def __score_frame_onnx(self, frame_rgb):
         start_time = time.time()
         results = self.model(frame_rgb)
+        infer_ms = (time.time() - start_time) * 1000
+
         labels, cord = results.xyxyn[0][:, -1].numpy(), results.xyxyn[0][:, :-1].numpy()
         objects = [(self.model.names[int(labels[i])], cord[i][4]) for i in range(len(labels))]
         if len(objects) > 0:
-            print(f"{objects}, {time.time() - start_time:.2f}")
+            print(f"{objects}, {infer_ms:.0f}")
 
         # Show the predictions as labeled boxes.
         frame_bgr = cv2.cvtColor(frame_rgb, cv2.COLOR_RGB2BGR)
         height, width, _ = frame_bgr.shape
+        font_scale = 1.5
+        thickness = 3
         for i in range(len(labels)):
             class_name = self.model.names[int(labels[i])]
             prediction = cord[i]
             x1, y1 = int(prediction[0] * width), int(prediction[1] * height)
             x2, y2 = int(prediction[2] * width), int(prediction[3] * height)
             score = prediction[4]
-            box_color_bgr = (0, 0, 255)
-            cv2.rectangle(frame_bgr, (x1, y1), (x2, y2), box_color_bgr, 2)
-            cv2.putText(frame_bgr,
-                        f"{class_name} {score:.2f}",
-                        (x1, y1),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.9, box_color_bgr, 2)
+            prediction_color_bgr = self.prediction_colors_bgr[int(labels[i])]
+            prediction_weight = int(np.interp(score, [self.model_onnx.conf, 1.0], [1, 20]))
+            cv2.rectangle(frame_bgr, (x1, y1), (x2, y2), (0, 0, 0), thickness=prediction_weight)
+            self.__put_text_with_background(frame_bgr, f"{class_name} {score:.2f}",
+                                            x1, y1 - prediction_weight // 2,
+                                            font_scale, (0, 0, 0), prediction_color_bgr, thickness)
+        fps_color_bgr = (255, 255, 255)
+        fps_background_color_bgr = (0, 0, 0)
+        (infer_ms_text_w, infer_ms_text_h) = \
+            self.__put_text_with_background(frame_bgr, f"{infer_ms:.0f} ms", width, height,
+                                            font_scale, fps_color_bgr, fps_background_color_bgr,
+                                            thickness, align='right')
+        (fps_ms_text_w, fps_ms_text_h) = \
+            self.__put_text_with_background(frame_bgr, f"{1000/infer_ms:.0f} FPS",
+                                            width, height - infer_ms_text_h,
+                                            font_scale, fps_color_bgr, fps_background_color_bgr,
+                                            thickness, align='right')
+
         self.display_queue.put(frame_bgr)
 
         return len(objects) > 0
+
+    def __put_text_with_background(self, frame_bgr, text_str, x, y, font_scale,
+                                   text_color_bgr, background_color_bgr, thickness, padding=5,
+                                   align='left'):
+        (text_w, text_h), _ = cv2.getTextSize(
+            text=text_str,
+            fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+            fontScale=font_scale,
+            thickness=thickness,
+        )
+        if align == 'left':
+            text_origin = (x + padding, y - padding)
+            rect_origin = (x + text_w + 2 * padding, y - text_h - 2 * padding)
+        elif align == 'right':
+            text_origin = (x - text_w - padding, y - padding)
+            rect_origin = (x - text_w - 2 * padding, y - text_h - 2 * padding)
+
+        cv2.rectangle(frame_bgr,
+                      (x, y),
+                      rect_origin,
+                      background_color_bgr,
+                      thickness=-1)
+        cv2.putText(
+            img=frame_bgr,
+            text=text_str,
+            org=text_origin,
+            fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+            fontScale=font_scale,
+            color=text_color_bgr,
+            thickness=thickness,
+        )
+
+        return (text_w + 2 * padding, text_h + 2 * padding)
 
 
 class FrameDecoderThread(threading.Thread):
@@ -189,12 +261,16 @@ class FrameDecoderThread(threading.Thread):
 
             detector_and_writer_thread.enqueue(packet)
 
+        detector_and_writer_thread.stop()
+
     def stop(self):
         self.should_stop.set()
 
 
 if __name__ == '__main__':
     in_file = sys.argv[1]
+    should_write = sys.argv[2] == '--write'
+    is_live = sys.argv[3] == '--live'
 
     max_queue_size = 50
 
@@ -205,9 +281,10 @@ if __name__ == '__main__':
 
     now = datetime.datetime.now().strftime("%Y-%m-%dT%H%M%S")
     detector_and_writer_thread = DetectorAndWriterThread(
-        f"live-{now}.mp4",
+        f"live-{now}.mp4" if should_write else None,
         max_queue_size,
-        frame_decoder_thread.in_stream
+        frame_decoder_thread.in_stream,
+        reader_supports_backpressure=not is_live,
     )
     threads.append(detector_and_writer_thread)
 
