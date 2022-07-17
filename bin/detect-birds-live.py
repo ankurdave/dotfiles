@@ -24,6 +24,7 @@ import argparse
 import av
 import collections
 import colorsys
+import csv
 import cv2
 import datetime
 import inspect
@@ -133,7 +134,9 @@ class FrameDecoderThread(threading.Thread, Producer):
         Producer.__init__(self)
 
         self.container = av.open(
-            args.input_file if args.input_file is not None else args.input_stream
+            os.path.expanduser(args.input_file)
+            if args.input_file is not None
+            else args.input_stream
         )
         self.in_stream = self.container.streams.video[0]
 
@@ -217,13 +220,30 @@ class DetectorAndWriterThread(threading.Thread, Consumer, Producer):
         Consumer.__init__(self, max_queue_size=args.max_detect_queue_size)
         Producer.__init__(self)
 
-        self.model = yolov5.load(args.model_file)
+        self.model = yolov5.load(os.path.expanduser(args.model_file))
         if args.confidence_threshold is not None:
             self.model.conf = args.confidence_threshold
 
+        global start_time
+        if args.prediction_dir is not None:
+            os.makedirs(os.path.expanduser(args.prediction_dir), exist_ok=True)
+            prediction_file_path = os.path.join(
+                os.path.expanduser(args.prediction_dir),
+                f"predictions-{start_time}.csv"
+            )
+            print(f"Writing predictions to {prediction_file_path}")
+            self.prediction_writer = csv.writer(open(prediction_file_path, 'x'))
+            header_row = ['Timestamp'] + self.model.names
+            self.prediction_writer.writerow(header_row)
+        else:
+            self.prediction_writer = None
+
         if args.output_dir is not None:
-            global start_time
-            output_file = os.path.join(args.output_dir, f"live-{start_time}.mp4")
+            output_file = os.path.join(
+                os.path.expanduser(args.output_dir),
+                f"live-{start_time}.mp4"
+            )
+            print(f"Writing output video to {output_file}")
             self.chunked_writer = ChunkedVideoWriter(output_file, out_stream_template)
         else:
             self.chunked_writer = NullVideoWriter()
@@ -273,7 +293,7 @@ class DetectorAndWriterThread(threading.Thread, Consumer, Producer):
                 packet_has_bird = False
                 for frame in frames:
                     frame_arr = frame.to_ndarray(format='rgb24')
-                    has_bird = self.__score_frame(frame_arr)
+                    has_bird = self.__score_frame(frame_arr, frame.pts)
                     if has_bird:
                         packet_has_bird = True
                         should_write_chunk = True
@@ -282,7 +302,7 @@ class DetectorAndWriterThread(threading.Thread, Consumer, Producer):
             for t in self.subscribers:
                 t.enqueue(None, blocking=False)
 
-    def __score_frame(self, frame_rgb):
+    def __score_frame(self, frame_rgb, frame_pts):
         start_time = time.time()
         results = self.model(frame_rgb)
         infer_ms = (time.time() - start_time) * 1000
@@ -326,6 +346,15 @@ class DetectorAndWriterThread(threading.Thread, Consumer, Producer):
             objects = [(self.model.names[int(labels[i])], f'{cord[i][4]:.2f}') for i in range(len(labels))]
             print(f"{infer_ms:.0f} ms, {1000/infer_ms:.0f} FPS, {self.input_queue.qsize()} qsz: {objects}")
 
+        if self.prediction_writer is not None and len(labels) > 0:
+            scores_by_class = [0.0 for i in range(len(self.model.names))]
+            for i in range(len(labels)):
+                prediction = cord[i]
+                score = prediction[4]
+                scores_by_class[int(labels[i])] += score
+            prediction_row = [frame_pts] + scores_by_class
+            self.prediction_writer.writerow(prediction_row)
+
         return len(labels) > 0
 
     def __put_text_with_background(self, frame_bgr, text_str, x, y, font_scale,
@@ -367,7 +396,7 @@ class DisplayMainThread(Consumer):
         Consumer.__init__(self, max_queue_size=1)
         self.args = args
 
-        os.makedirs(args.screenshot_dir, exist_ok=True)
+        os.makedirs(os.path.expanduser(args.screenshot_dir), exist_ok=True)
 
     def start(self):
         frame_bgr, orig_frame_rgb = None, None
@@ -393,7 +422,7 @@ class DisplayMainThread(Consumer):
                 elif key == ord('s'):
                     global start_time
                     screenshot_path = os.path.join(
-                        self.args.screenshot_dir,
+                        os.path.expanduser(self.args.screenshot_dir),
                         f"shot-{start_time}-{uuid.uuid4()}.jpg",
                     )
                     cv2.imwrite(screenshot_path, cv2.cvtColor(orig_frame_rgb, cv2.COLOR_RGB2BGR))
@@ -424,6 +453,8 @@ if __name__ == '__main__':
     parser.add_argument('--max_detect_queue_size', type=int, default=50,
                         help='max number of frames that can be buffered waiting for detection')
 
+    parser.add_argument('--prediction_dir', type=str, help='where to log predictions')
+
     parser.add_argument('--output_dir', type=str, help='output video directory')
 
     parser.add_argument('--screenshot_dir', type=str, default='.', help='screenshot image directory')
@@ -433,6 +464,9 @@ if __name__ == '__main__':
     parser.add_argument('--quiet', action='store_true',
                         help='do not print inference results to stdout')
     args = parser.parse_args()
+
+    global start_time
+    start_time = datetime.datetime.now().strftime("%Y-%m-%dT%H%M%S")
 
     threads = []
 
@@ -461,9 +495,6 @@ if __name__ == '__main__':
             terminate_threads()
             default_sigint_handler()
     signal.signal(signal.SIGINT, stop_threads_on_sigint)
-
-    global start_time
-    start_time = datetime.datetime.now().strftime("%Y-%m-%dT%H%M%S")
 
     # `display_main_thread` runs synchronously in the main thread, so we must
     # start it last to avoid a deadlock.
