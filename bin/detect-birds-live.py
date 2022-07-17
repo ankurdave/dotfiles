@@ -132,7 +132,9 @@ class FrameDecoderThread(threading.Thread, Producer):
         threading.Thread.__init__(self, name='FrameDecoderThread')
         Producer.__init__(self)
 
-        self.container = av.open(args.input_file)
+        self.container = av.open(
+            args.input_file if args.input_file is not None else args.input_stream
+        )
         self.in_stream = self.container.streams.video[0]
 
         self.args = args
@@ -157,9 +159,11 @@ class FrameDecoderThread(threading.Thread, Producer):
 
                 frames = packet.decode()
                 for t in self.subscribers:
+                    # If the input comes from a file, we can use blocking to implement backpressure
+                    # in case the subscribers cannot keep up.
                     t.enqueue(
                         (packet, frames),
-                        blocking=self.args.input_supports_backpressure,
+                        blocking=self.args.input_file is not None,
                     )
         finally:
             for t in self.subscribers:
@@ -254,13 +258,12 @@ class DetectorAndWriterThread(threading.Thread, Consumer, Producer):
                 self.chunked_writer.append(packet)
                 if len(frames) == 0: continue
 
-                # When the queue starts to fill up, skip inference on some
+                # If the input is a stream and the queue starts to fill up, skip inference on some
                 # frames to catch up.
                 #
-                # This is not necessary if the input supports backpressure. In
-                # that case we can let the queue fill up, which will slow down
-                # the rate of input.
-                if (not args.input_supports_backpressure
+                # This is not necessary if the input is a file. In that case we can let the queue
+                # fill up, which will slow down the rate at which we read the input file.
+                if (self.args.input_stream is not None
                     and (qsize > random.randint(0, args.max_detect_queue_size - 1)
                          and not packet.is_keyframe)):
                     continue
@@ -409,9 +412,9 @@ if __name__ == '__main__':
         results on screen, and write matching frames to a file.
         """
     ))
-    parser.add_argument('--input_file', type=str, help='input video stream', required=True)
-    parser.add_argument('--input_supports_backpressure', action='store_true',
-                        help='if we can rate-limit decoding in case inference cannot keep up')
+    input_group = parser.add_mutually_exclusive_group(required=True)
+    input_group.add_argument('--input_file', type=str, help='input video file')
+    input_group.add_argument('--input_stream', type=str, help='input video stream')
 
     parser.add_argument('--model_file', type=str, help='model for inference', required=True)
     parser.add_argument('--confidence_threshold', type=float, default=0.6,
