@@ -38,33 +38,104 @@ import time
 import uuid
 import yolov5
 
+interrupt = threading.Event()
+def terminate_threads():
+    print('Terminating threads...')
+    global interrupt
+    interrupt.set()
+
 class BoundedBlockingQueue(object):
     def __init__(self, max_queue_size):
-        self.has_new_item = threading.Condition()
-        # Guarded by `self.has_new_item`.
+        self.lock = threading.Lock()
+        self.has_new_item = threading.Condition(self.lock)
+        self.has_free_space = threading.Condition(self.lock)
+        # Guarded by `self.lock`.
         self.deque = collections.deque(maxlen=max_queue_size)
 
+    def qsize(self):
+        with self.lock:
+            return len(self.deque)
+
     def put(self, elem):
-        with self.has_new_item:
+        with self.lock:
+            self.has_free_space.wait_for(lambda: len(self.deque) < self.deque.maxlen)
             self.deque.append(elem)
             self.has_new_item.notify()
 
+    def put_nowait(self, elem):
+        with self.lock:
+            self.deque.append(elem)
+            self.has_new_item.notify()
+
+    def put_at_front(self, elem):
+        with self.lock:
+            self.deque.appendleft(elem)
+            self.has_new_item.notify()
+
     def get(self):
-        with self.has_new_item:
+        with self.lock:
             self.has_new_item.wait_for(lambda: len(self.deque) > 0)
-            return self.deque.popleft()
+            elem = self.deque.popleft()
+            self.has_free_space.notify()
+            return elem
 
     def get_nowait(self):
-        with self.has_new_item:
+        with self.lock:
             if len(self.deque) > 0:
-                return self.deque.popleft()
+                elem = self.deque.popleft()
+                self.has_free_space.notify()
+                return elem
             else:
-                return None
+                raise queue.Empty
 
     def peek(self):
-        with self.has_new_item:
+        with self.lock:
             self.has_new_item.wait_for(lambda: len(self.deque) > 0)
             return self.deque[-1]
+
+
+class FrameDecoderThread(threading.Thread):
+    def __init__(self, args):
+        super(FrameDecoderThread, self).__init__(name='FrameDecoderThread')
+
+        self.container = av.open(args.input_file)
+        self.in_stream = self.container.streams.video[0]
+
+        self.args = args
+
+        self.subscribed_threads = []
+
+        self.shutting_down = threading.Event()
+
+    def add_subscriber(self, subscriber_thread):
+        self.subscribed_threads.append(subscriber_thread)
+
+    # Signals that the decoder thread should exit early, even if there is more
+    # input remaining.
+    def shutdown(self):
+        print('Shutting down gracefully...')
+        self.shutting_down.set()
+
+    def run(self):
+        global interrupt
+        try:
+            for packet in self.container.demux(self.in_stream):
+                if interrupt.is_set(): return
+                if self.shutting_down.is_set(): return
+
+                # We need to skip the "flushing" packets that `demux` generates.
+                if packet.dts is None:
+                    continue
+
+                frames = packet.decode()
+                for t in self.subscribed_threads:
+                    t.enqueue(
+                        (packet, frames),
+                        blocking=self.args.input_supports_backpressure,
+                    )
+        finally:
+            for t in self.subscribed_threads:
+                t.enqueue(None, blocking=False)
 
 
 class ChunkedVideoWriter(object):
@@ -109,62 +180,63 @@ class NullVideoWriter(object):
 
 
 class DetectorAndWriterThread(threading.Thread):
-    def __init__(self, model_file, confidence_threshold, output_file, max_queue_size,
-                 out_stream_template, reader_supports_backpressure, quiet, headless,
-                 infer_every_frames):
+    def __init__(self, out_stream_template, args):
         super(DetectorAndWriterThread, self).__init__(name='DetectorAndWriterThread')
 
-        # From https://github.com/ankurdave/bird-models.
-        self.model = yolov5.load(model_file)
-        if confidence_threshold is not None:
-            self.model.conf = confidence_threshold
+        self.model = yolov5.load(args.model_file)
+        if args.confidence_threshold is not None:
+            self.model.conf = args.confidence_threshold
 
-        self.detect_queue = queue.Queue(maxsize=max_queue_size)
+        self.input_queue = BoundedBlockingQueue(max_queue_size=args.max_detect_queue_size)
 
-        if output_file:
+        if args.output_dir is not None:
+            global start_time
+            output_file = os.path.join(args.output_dir, f"live-{start_time}.mp4")
             self.chunked_writer = ChunkedVideoWriter(output_file, out_stream_template)
         else:
             self.chunked_writer = NullVideoWriter()
-
-        self.display_queue = BoundedBlockingQueue(max_queue_size=1)
 
         def hsv_to_bgr(h, s, v):
             return 255 * np.array(colorsys.hsv_to_rgb(h, s, v)[::-1])
         self.prediction_colors_bgr = [hsv_to_bgr(h, 0.5, 0.8)
                                       for h in np.linspace(0, 1, len(self.model.names))]
 
-        self.reader_supports_backpressure = reader_supports_backpressure
+        self.args = args
 
-        self.quiet = quiet
-        self.headless = headless
-        self.infer_every_frames = infer_every_frames
+        self.subscribed_threads = []
 
-    def enqueue(self, packet_and_frames):
-        try:
-            self.detect_queue.put(packet_and_frames, block=self.reader_supports_backpressure)
-        except queue.Full:
-            print(f"warn: Dropping packet {packet_and_frames}, detect queue is full")
+    def add_subscriber(self, subscriber_thread):
+        self.subscribed_threads.append(subscriber_thread)
 
-    def get_frame_to_display_and_original_frame(self):
-        return self.display_queue.get_nowait()
-
-    def stop(self):
-        self.detect_queue.put(None)
+    # Adds `packet_and_frames` as input to the detector. If `packet_and_frames`
+    # is None, shuts down the detector thread.
+    #
+    # If the input queue is full and `blocking` is true, blocks until space is
+    # available in the queue. If the input queue is false and `blocking` is
+    # false, drops the oldest input frame, enqueues the new input, and returns
+    # immediately.
+    def enqueue(self, packet_and_frames, blocking):
+        if blocking:
+            self.input_queue.put(packet_and_frames)
+        else:
+            self.input_queue.put_nowait(packet_and_frames)
 
     def run(self):
+        global interrupt
         packet_idx = 0
         should_write_chunk = False
         try:
             while True:
-                elem = self.detect_queue.get()
+                if interrupt.is_set(): return
+
+                elem = self.input_queue.get()
                 if elem is None:
-                    self.display_queue.put((None, None))
                     return
 
                 packet_idx += 1
                 packet, frames = elem
 
-                qsize = self.detect_queue.qsize()
+                qsize = self.input_queue.qsize()
                 if packet.is_keyframe:
                     self.chunked_writer.flush(should_write_chunk)
                     should_write_chunk = False
@@ -172,12 +244,18 @@ class DetectorAndWriterThread(threading.Thread):
                 self.chunked_writer.append(packet)
                 if len(frames) == 0: continue
 
-                # When the queue starts to fill up, skip inference on some frames to catch up.
-                if (not self.reader_supports_backpressure
-                    and (qsize > random.randint(0, max_queue_size - 1) and not packet.is_keyframe)):
+                # When the queue starts to fill up, skip inference on some
+                # frames to catch up.
+                #
+                # This is not necessary if the input supports backpressure. In
+                # that case we can let the queue fill up, which will slow down
+                # the rate of input.
+                if (not args.input_supports_backpressure
+                    and (qsize > random.randint(0, args.max_detect_queue_size - 1)
+                         and not packet.is_keyframe)):
                     continue
 
-                if packet_idx % self.infer_every_frames != 0: continue
+                if packet_idx % self.args.infer_every_frames != 0: continue
 
                 packet_has_bird = False
                 for frame in frames:
@@ -188,7 +266,8 @@ class DetectorAndWriterThread(threading.Thread):
                         should_write_chunk = True
                         break
         finally:
-            self.display_queue.put((None, None))
+            for t in self.subscribed_threads:
+                t.enqueue(None, blocking=False)
 
     def __score_frame(self, frame_rgb):
         start_time = time.time()
@@ -197,7 +276,7 @@ class DetectorAndWriterThread(threading.Thread):
 
         labels, cord = results.xyxyn[0][:, -1].numpy(), results.xyxyn[0][:, :-1].numpy()
 
-        if not self.headless:
+        if not self.args.headless:
             # Show the predictions as labeled boxes.
             frame_bgr = cv2.cvtColor(frame_rgb, cv2.COLOR_RGB2BGR)
             height, width, _ = frame_bgr.shape
@@ -227,11 +306,12 @@ class DetectorAndWriterThread(threading.Thread):
                                                 font_scale, fps_color_bgr, fps_background_color_bgr,
                                                 thickness, align='right')
 
-            self.display_queue.put((frame_bgr, frame_rgb))
+            for t in self.subscribed_threads:
+                t.enqueue((frame_bgr, frame_rgb), blocking=False)
 
-        if not self.quiet and len(labels) > 0:
+        if not self.args.quiet and len(labels) > 0:
             objects = [(self.model.names[int(labels[i])], f'{cord[i][4]:.2f}') for i in range(len(labels))]
-            print(f"{infer_ms:.0f} ms, {1000/infer_ms:.0f} FPS, {self.detect_queue.qsize()} qsz: {objects}")
+            print(f"{infer_ms:.0f} ms, {1000/infer_ms:.0f} FPS, {self.input_queue.qsize()} qsz: {objects}")
 
         return len(labels) > 0
 
@@ -269,30 +349,59 @@ class DetectorAndWriterThread(threading.Thread):
         return (text_w + 2 * padding, text_h + 2 * padding)
 
 
-class FrameDecoderThread(threading.Thread):
-    def __init__(self, in_filename):
-        super(FrameDecoderThread, self).__init__(name='FrameDecoderThread')
+class DisplayMainThread(object):
+    def __init__(self, args):
+        self.input_queue = BoundedBlockingQueue(max_queue_size=1)
+        self.args = args
 
-        self.container = av.open(in_filename)
-        self.in_stream = self.container.streams.video[0]
-        self.should_stop = threading.Event()
+        os.makedirs(args.screenshot_dir, exist_ok=True)
 
-    def run(self):
+    # Displays `frame` on screen. If `frame` is None, shuts down the display
+    # thread.
+    #
+    # If the input queue is full and `blocking` is true, blocks until space is
+    # available in the queue. If the input queue is false and `blocking` is
+    # false, drops the oldest input frame, enqueues the new input, and returns
+    # immediately.
+    def enqueue(self, frame, blocking):
+        # The display thread always displays the latest frame. If it can't
+        # display frames fast enough, it always drops them.
+        self.input_queue.put_nowait(frame)
+
+    def start(self):
+        frame_bgr, orig_frame_rgb = None, None
         try:
-            for packet in self.container.demux(self.in_stream):
-                if self.should_stop.is_set(): return
-
-                # We need to skip the "flushing" packets that `demux` generates.
-                if packet.dts is None:
-                    continue
-
-                frames = packet.decode()
-                detector_and_writer_thread.enqueue((packet, frames))
+            while True:
+                if frame_bgr is None:
+                    # We haven't received the first frame yet. Block while we wait for it.
+                    elem = self.input_queue.get()
+                else:
+                    try:
+                        elem = self.input_queue.get_nowait()
+                    except queue.Empty:
+                        # No new element. Keep showing the previous one.
+                        pass
+                if elem is None:
+                    return
+                frame_bgr, orig_frame_rgb = elem
+                cv2.imshow('frame', frame_bgr)
+                key = cv2.waitKey(16)
+                if key == ord('q'):
+                    frame_decoder_thread.shutdown()
+                    return
+                elif key == ord('s'):
+                    global start_time
+                    screenshot_path = os.path.join(
+                        self.args.screenshot_dir,
+                        f"shot-{start_time}-{uuid.uuid4()}.jpg",
+                    )
+                    cv2.imwrite(screenshot_path, cv2.cvtColor(orig_frame_rgb, cv2.COLOR_RGB2BGR))
+                    print(f"Saved frame to {screenshot_path}")
         finally:
-            detector_and_writer_thread.stop()
+            cv2.destroyAllWindows()
 
-    def stop(self):
-        self.should_stop.set()
+    def join(self):
+        pass
 
 
 if __name__ == '__main__':
@@ -307,10 +416,12 @@ if __name__ == '__main__':
                         help='if we can rate-limit decoding in case inference cannot keep up')
 
     parser.add_argument('--model_file', type=str, help='model for inference', required=True)
-    parser.add_argument('--confidence_threshold', type=float,
+    parser.add_argument('--confidence_threshold', type=float, default=0.6,
                         help='inference confidence threshold [0.0, 1.0]')
     parser.add_argument('--infer_every_frames', type=int, default=1,
                         help='run inference every N frames to save energy')
+    parser.add_argument('--max_detect_queue_size', type=int, default=50,
+                        help='max number of frames that can be buffered waiting for detection')
 
     parser.add_argument('--output_dir', type=str, help='output video directory')
 
@@ -322,68 +433,41 @@ if __name__ == '__main__':
                         help='do not print inference results to stdout')
     args = parser.parse_args()
 
-    max_queue_size = 50
-
     threads = []
 
-    frame_decoder_thread = FrameDecoderThread(args.input_file)
+    frame_decoder_thread = FrameDecoderThread(args)
     threads.append(frame_decoder_thread)
 
-    now = datetime.datetime.now().strftime("%Y-%m-%dT%H%M%S")
     detector_and_writer_thread = DetectorAndWriterThread(
-        args.model_file,
-        args.confidence_threshold,
-        os.path.join(args.output_dir, f"live-{now}.mp4") if args.output_dir is not None else None,
-        max_queue_size,
         frame_decoder_thread.in_stream,
-        reader_supports_backpressure=args.input_supports_backpressure,
-        quiet=args.quiet,
-        headless=args.headless,
-        infer_every_frames=args.infer_every_frames,
+        args
     )
+    frame_decoder_thread.add_subscriber(detector_and_writer_thread)
     threads.append(detector_and_writer_thread)
 
+    display_main_thread = DisplayMainThread(args)
+    detector_and_writer_thread.add_subscriber(display_main_thread)
+    threads.append(display_main_thread)
+
+    sigint_count = 0
     default_sigint_handler = signal.getsignal(signal.SIGINT)
     def stop_threads_on_sigint(sig, frame):
-        for thread in threads:
-            thread.stop()
-        default_sigint_handler()
+        global sigint_count
+        sigint_count += 1
+        if sigint_count == 1:
+            frame_decoder_thread.shutdown()
+        else:
+            terminate_threads()
+            default_sigint_handler()
     signal.signal(signal.SIGINT, stop_threads_on_sigint)
 
+    global start_time
+    start_time = datetime.datetime.now().strftime("%Y-%m-%dT%H%M%S")
+
+    # `display_main_thread` runs synchronously in the main thread, so we must
+    # start it last to avoid a deadlock.
     for thread in threads:
         thread.start()
 
-    try:
-        if args.headless:
-            while True:
-                time.sleep(1)
-        else:
-            os.makedirs(args.screenshot_dir, exist_ok=True)
-
-            frame_bgr, orig_frame_rgb = None, None
-            while True:
-                elem = detector_and_writer_thread.get_frame_to_display_and_original_frame()
-                if elem is None:
-                    # No new element. Keep showing the previous one.
-                    pass
-                elif elem[0] is None and elem[1] is None:
-                    quit()
-                else:
-                    frame_bgr, orig_frame_rgb = elem
-                if frame_bgr is None:
-                    time.sleep(0.1)
-                else:
-                    cv2.imshow('frame', frame_bgr)
-                    key = cv2.waitKey(16)
-                    if key == ord('q'):
-                        quit()
-                    elif key == ord('s'):
-                        screenshot_path = os.path.join(args.screenshot_dir, f"shot-{now}-{uuid.uuid4()}.jpg")
-                        cv2.imwrite(screenshot_path, cv2.cvtColor(orig_frame_rgb, cv2.COLOR_RGB2BGR))
-                        print(f"Saved frame to {screenshot_path}")
-
-    finally:
-        for thread in threads:
-            thread.stop()
-        for thread in threads:
-            thread.join()
+    for thread in threads:
+        thread.join()
