@@ -38,12 +38,6 @@ import time
 import uuid
 import yolov5
 
-interrupt = threading.Event()
-def terminate_threads():
-    print('Terminating threads...')
-    global interrupt
-    interrupt.set()
-
 class BoundedBlockingQueue(object):
     def __init__(self, max_queue_size):
         self.lock = threading.Lock()
@@ -94,25 +88,59 @@ class BoundedBlockingQueue(object):
             return self.deque[-1]
 
 
-class FrameDecoderThread(threading.Thread):
+class Producer(object):
+    """Base class for threads that produce output that can be subscribed to by Consumers. """
+    def __init__(self):
+        super(Producer, self).__init__()
+
+        self.subscribers = []
+
+    def add_subscriber(self, subscriber):
+        self.subscribers.append(subscriber)
+
+
+class Consumer(object):
+    """Base class for threads that consume output from a Producer. """
+    def __init__(self, max_queue_size):
+        super(Consumer, self).__init__()
+
+        self.input_queue = BoundedBlockingQueue(max_queue_size=max_queue_size)
+
+    def enqueue(self, elem, blocking):
+        """Adds `elem` as input to this thread. If `input` is None, shuts down this thread.
+
+        If the input queue is full and `blocking` is true, blocks until space is available in the
+        queue. If the input queue is false and `blocking` is false, drops the oldest input frame,
+        enqueues the new input, and returns immediately.
+
+        """
+        if blocking:
+            self.input_queue.put(elem)
+        else:
+            self.input_queue.put_nowait(elem)
+
+
+interrupt = threading.Event()
+def terminate_threads():
+    print('Terminating threads...')
+    global interrupt
+    interrupt.set()
+
+
+class FrameDecoderThread(threading.Thread, Producer):
     def __init__(self, args):
-        super(FrameDecoderThread, self).__init__(name='FrameDecoderThread')
+        threading.Thread.__init__(self, name='FrameDecoderThread')
+        Producer.__init__(self)
 
         self.container = av.open(args.input_file)
         self.in_stream = self.container.streams.video[0]
 
         self.args = args
 
-        self.subscribed_threads = []
-
         self.shutting_down = threading.Event()
 
-    def add_subscriber(self, subscriber_thread):
-        self.subscribed_threads.append(subscriber_thread)
-
-    # Signals that the decoder thread should exit early, even if there is more
-    # input remaining.
     def shutdown(self):
+        """Ends decoding early, even if there is more input remaining."""
         print('Shutting down gracefully...')
         self.shutting_down.set()
 
@@ -128,13 +156,13 @@ class FrameDecoderThread(threading.Thread):
                     continue
 
                 frames = packet.decode()
-                for t in self.subscribed_threads:
+                for t in self.subscribers:
                     t.enqueue(
                         (packet, frames),
                         blocking=self.args.input_supports_backpressure,
                     )
         finally:
-            for t in self.subscribed_threads:
+            for t in self.subscribers:
                 t.enqueue(None, blocking=False)
 
 
@@ -179,15 +207,15 @@ class NullVideoWriter(object):
         pass
 
 
-class DetectorAndWriterThread(threading.Thread):
+class DetectorAndWriterThread(threading.Thread, Consumer, Producer):
     def __init__(self, out_stream_template, args):
-        super(DetectorAndWriterThread, self).__init__(name='DetectorAndWriterThread')
+        threading.Thread.__init__(self, name='DetectorAndWriterThread')
+        Consumer.__init__(self, max_queue_size=args.max_detect_queue_size)
+        Producer.__init__(self)
 
         self.model = yolov5.load(args.model_file)
         if args.confidence_threshold is not None:
             self.model.conf = args.confidence_threshold
-
-        self.input_queue = BoundedBlockingQueue(max_queue_size=args.max_detect_queue_size)
 
         if args.output_dir is not None:
             global start_time
@@ -202,24 +230,6 @@ class DetectorAndWriterThread(threading.Thread):
                                       for h in np.linspace(0, 1, len(self.model.names))]
 
         self.args = args
-
-        self.subscribed_threads = []
-
-    def add_subscriber(self, subscriber_thread):
-        self.subscribed_threads.append(subscriber_thread)
-
-    # Adds `packet_and_frames` as input to the detector. If `packet_and_frames`
-    # is None, shuts down the detector thread.
-    #
-    # If the input queue is full and `blocking` is true, blocks until space is
-    # available in the queue. If the input queue is false and `blocking` is
-    # false, drops the oldest input frame, enqueues the new input, and returns
-    # immediately.
-    def enqueue(self, packet_and_frames, blocking):
-        if blocking:
-            self.input_queue.put(packet_and_frames)
-        else:
-            self.input_queue.put_nowait(packet_and_frames)
 
     def run(self):
         global interrupt
@@ -266,7 +276,7 @@ class DetectorAndWriterThread(threading.Thread):
                         should_write_chunk = True
                         break
         finally:
-            for t in self.subscribed_threads:
+            for t in self.subscribers:
                 t.enqueue(None, blocking=False)
 
     def __score_frame(self, frame_rgb):
@@ -306,7 +316,7 @@ class DetectorAndWriterThread(threading.Thread):
                                                 font_scale, fps_color_bgr, fps_background_color_bgr,
                                                 thickness, align='right')
 
-            for t in self.subscribed_threads:
+            for t in self.subscribers:
                 t.enqueue((frame_bgr, frame_rgb), blocking=False)
 
         if not self.args.quiet and len(labels) > 0:
@@ -349,24 +359,12 @@ class DetectorAndWriterThread(threading.Thread):
         return (text_w + 2 * padding, text_h + 2 * padding)
 
 
-class DisplayMainThread(object):
+class DisplayMainThread(Consumer):
     def __init__(self, args):
-        self.input_queue = BoundedBlockingQueue(max_queue_size=1)
+        Consumer.__init__(self, max_queue_size=1)
         self.args = args
 
         os.makedirs(args.screenshot_dir, exist_ok=True)
-
-    # Displays `frame` on screen. If `frame` is None, shuts down the display
-    # thread.
-    #
-    # If the input queue is full and `blocking` is true, blocks until space is
-    # available in the queue. If the input queue is false and `blocking` is
-    # false, drops the oldest input frame, enqueues the new input, and returns
-    # immediately.
-    def enqueue(self, frame, blocking):
-        # The display thread always displays the latest frame. If it can't
-        # display frames fast enough, it always drops them.
-        self.input_queue.put_nowait(frame)
 
     def start(self):
         frame_bgr, orig_frame_rgb = None, None
