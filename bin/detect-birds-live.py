@@ -191,7 +191,9 @@ class ChunkedVideoWriter(object):
         if write_current_chunk_to_output:
             # Use a hardcoded 1/25 s per frame.
             # TODO: support variable framerates.
-            ts_delta_per_frame = 3600
+            ts_delta_per_frame = int(1 / (25 * self.out_stream.time_base)
+                                     if self.out_stream.time_base is not None
+                                     else 3600)
             for packet2 in self.chunk:
                 packet2.stream = self.out_stream
                 self.last_written_frame_dts += ts_delta_per_frame
@@ -355,7 +357,12 @@ class DetectorAndWriterThread(threading.Thread, Consumer, Producer):
             prediction_row = [frame_pts] + scores_by_class
             self.prediction_writer.writerow(prediction_row)
 
-        return len(labels) > 0
+        matching_labels = list(
+            filter(
+                lambda label: self.model.names[int(label)] not in self.args.ignore_classes,
+                labels)
+            )
+        return len(matching_labels) > 0
 
     def __put_text_with_background(self, frame_bgr, text_str, x, y, font_scale,
                                    text_color_bgr, background_color_bgr, thickness, padding=5,
@@ -452,6 +459,8 @@ if __name__ == '__main__':
                         help='run inference every N frames to save energy')
     parser.add_argument('--max_detect_queue_size', type=int, default=50,
                         help='max number of frames that can be buffered waiting for detection')
+    parser.add_argument('--ignore_classes', action='append', default=[],
+                        help='ignore a class (can be specified multiple times)')
 
     parser.add_argument('--prediction_dir', type=str, help='where to log predictions')
 
