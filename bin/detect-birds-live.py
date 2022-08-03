@@ -189,13 +189,13 @@ class ChunkedVideoWriter(object):
 
     def flush(self, write_current_chunk_to_output):
         if write_current_chunk_to_output:
-            # Use a hardcoded 1/25 s per frame.
-            # TODO: support variable framerates.
-            ts_delta_per_frame = int(1 / (25 * self.out_stream.time_base)
-                                     if self.out_stream.time_base is not None
-                                     else 3600)
             for packet2 in self.chunk:
                 packet2.stream = self.out_stream
+                # Use a hardcoded 1/25 s per frame.
+                # TODO: support variable framerates.
+                ts_delta_per_frame = int(1 / (25 * packet2.time_base)
+                                         if packet2.time_base is not None
+                                         else 3600)
                 self.last_written_frame_dts += ts_delta_per_frame
                 self.last_written_frame_pts += ts_delta_per_frame
                 packet2.dts = self.last_written_frame_dts
