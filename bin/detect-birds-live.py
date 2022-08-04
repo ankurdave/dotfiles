@@ -346,7 +346,8 @@ class DetectorAndWriterThread(threading.Thread, Consumer, Producer):
 
         if not self.args.quiet and len(labels) > 0:
             objects = [(self.model.names[int(labels[i])], f'{cord[i][4]:.2f}') for i in range(len(labels))]
-            print(f"{infer_ms:.0f} ms, {1000/infer_ms:.0f} FPS, {self.input_queue.qsize()} qsz: {objects}")
+            now = datetime.datetime.now().strftime("%Y-%m-%dT%H%M%S")
+            print(f"{now}: {infer_ms:.0f} ms, {1000/infer_ms:.0f} FPS, {self.input_queue.qsize()} qsz: {objects}")
 
         if self.prediction_writer is not None and len(labels) > 0:
             scores_by_class = [0.0 for i in range(len(self.model.names))]
