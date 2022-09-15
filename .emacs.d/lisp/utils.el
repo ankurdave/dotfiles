@@ -611,8 +611,9 @@ of change will be 23:59 on that day"
             ;; Get the current entry type (open, commodity, balance, txn, etc.).
             (if (looking-at beancount-transaction-regexp)
                 (setq cur-entry-type "txn")
-              (assert (looking-at beancount-timestamped-directive-regexp))
-              (setq cur-entry-type (match-string 2)))
+              (cl-assert (looking-at (concat beancount-date-regexp "\\s-+\\([[:alpha:]]*\\)"))
+                         nil "Invalid entry at line %s." (line-number-at-pos))
+              (setq cur-entry-type (match-string 1)))
             (if (or
                  ;; Transactions should always be preceded by an empty line.
                  (string-equal cur-entry-type "txn")
