@@ -12,7 +12,7 @@
 
 # Create virtualenv:
 # $ python3 -m venv ~/venv-birds
-# $ source ~/venv-python3.9/bin/activate
+# $ source ~/venv-birds/bin/activate
 # $ python -m pip install --upgrade pip
 
 # Install requirements:
@@ -32,6 +32,7 @@ import numpy as np
 import os
 import queue
 import random
+import shutil
 import signal
 import sys
 import threading
@@ -174,7 +175,7 @@ class FrameDecoderThread(threading.Thread, Producer):
 
 
 class ChunkedVideoWriter(object):
-    def __init__(self, output_file, out_stream_template):
+    def __init__(self, output_file, out_stream_template, max_frames_per_file):
         self.chunk = []
 
         self.last_written_frame_dts = 0
@@ -183,6 +184,8 @@ class ChunkedVideoWriter(object):
         self.output = av.open(output_file, "w")
         self.out_stream = self.output.add_stream(template=out_stream_template)
         print(f"Writing to {self.output}")
+
+        self.max_frames_per_file = max_frames_per_file
 
     def append(self, packet):
         self.chunk.append(packet)
@@ -204,6 +207,15 @@ class ChunkedVideoWriter(object):
         # Start a new chunk.
         self.chunk = []
 
+    def has_more_capacity(self):
+        return self.out_stream.frames < self.max_frames_per_file
+
+    def close(self):
+        self.output.close()
+        self.chunk = None
+        self.output = None
+        self.out_stream = None
+
 
 class NullVideoWriter(object):
     def __init__(self):
@@ -215,6 +227,9 @@ class NullVideoWriter(object):
     def flush(self, write_current_chunk_to_output):
         pass
 
+    def close(self):
+        pass
+
 
 class DetectorAndWriterThread(threading.Thread, Consumer, Producer):
     def __init__(self, out_stream_template, args):
@@ -222,15 +237,48 @@ class DetectorAndWriterThread(threading.Thread, Consumer, Producer):
         Consumer.__init__(self, max_queue_size=args.max_detect_queue_size)
         Producer.__init__(self)
 
-        self.model = yolov5.load(os.path.expanduser(args.model_file))
-        if args.confidence_threshold is not None:
-            self.model.conf = args.confidence_threshold
+        self.model = None
+        if args.model_file is not None:
+            self.model = yolov5.load(os.path.expanduser(args.model_file))
+            if args.confidence_threshold is not None:
+                self.model.conf = args.confidence_threshold
 
-        global start_time
-        if args.prediction_dir is not None:
-            os.makedirs(os.path.expanduser(args.prediction_dir), exist_ok=True)
+            def hsv_to_bgr(h, s, v):
+                return 255 * np.array(colorsys.hsv_to_rgb(h, s, v)[::-1])
+            self.prediction_colors_bgr = [hsv_to_bgr(h, 0.5, 0.8)
+                                          for h in np.linspace(0, 1, len(self.model.names))]
+
+        self.out_stream_template = out_stream_template
+        self.args = args
+
+    def __initialize_chunked_writer_if_necessary(self):
+        if self.chunked_writer is not None:
+            if self.chunked_writer.has_more_capacity():
+                return
+            else:
+                print(f"Closing previous file")
+                self.chunked_writer.close()
+                self.chunked_writer = None
+
+                self.__clean_up_old_files_if_necessary()
+
+        start_time = datetime.datetime.now().strftime("%Y-%m-%dT%H%M%S")
+
+        if self.args.output_dir is not None:
+            output_file = os.path.join(
+                os.path.expanduser(self.args.output_dir),
+                f"live-{start_time}.mp4"
+            )
+            print(f"Writing output video to {output_file}")
+            self.chunked_writer = ChunkedVideoWriter(
+                output_file, self.out_stream_template, self.args.max_frames_per_file)
+        else:
+            self.chunked_writer = NullVideoWriter()
+
+        if self.args.prediction_dir is not None:
+            os.makedirs(os.path.expanduser(self.args.prediction_dir), exist_ok=True)
             prediction_file_path = os.path.join(
-                os.path.expanduser(args.prediction_dir),
+                os.path.expanduser(self.args.prediction_dir),
                 f"predictions-{start_time}.csv"
             )
             print(f"Writing predictions to {prediction_file_path}")
@@ -240,27 +288,36 @@ class DetectorAndWriterThread(threading.Thread, Consumer, Producer):
         else:
             self.prediction_writer = None
 
-        if args.output_dir is not None:
-            output_file = os.path.join(
-                os.path.expanduser(args.output_dir),
-                f"live-{start_time}.mp4"
-            )
-            print(f"Writing output video to {output_file}")
-            self.chunked_writer = ChunkedVideoWriter(output_file, out_stream_template)
-        else:
-            self.chunked_writer = NullVideoWriter()
+    def __clean_up_old_files_if_necessary(self):
+        if self.args.target_available_bytes is None:
+            return
 
-        def hsv_to_bgr(h, s, v):
-            return 255 * np.array(colorsys.hsv_to_rgb(h, s, v)[::-1])
-        self.prediction_colors_bgr = [hsv_to_bgr(h, 0.5, 0.8)
-                                      for h in np.linspace(0, 1, len(self.model.names))]
+        available_bytes = self.__available_bytes()
+        candidates = None
+        while available_bytes < self.args.target_available_bytes:
+            print(f"Not enough space (have {available_bytes} vs target {self.args.target_available_bytes})")
+            if candidates is None:
+                candidates = sorted([f.path
+                                     for f in os.scandir(self.args.output_dir)
+                                     if f.name.endswith('.mp4') and f.is_file()], reverse=True)
+            if len(candidates) <= 1:
+                print(f"No old files to delete")
+                return
+            deletion_target = candidates.pop()
+            print(f"Deleting {deletion_target} to free up space")
+            os.remove(deletion_target)
+            available_bytes = self.__available_bytes()
 
-        self.args = args
+    def __available_bytes(self):
+        total, used, free = shutil.disk_usage(self.args.output_dir)
+        return free
 
     def run(self):
         global interrupt
+        self.chunked_writer = None
         packet_idx = 0
         should_write_chunk = False
+        self.__initialize_chunked_writer_if_necessary()
         try:
             while True:
                 if interrupt.is_set(): return
@@ -276,6 +333,11 @@ class DetectorAndWriterThread(threading.Thread, Consumer, Producer):
                 if packet.is_keyframe:
                     self.chunked_writer.flush(should_write_chunk)
                     should_write_chunk = False
+
+                    # If the output file has grown too large, start a new one.
+                    # This is only safe to do once we have seen all frames
+                    # associated with the previous keyframe.
+                    self.__initialize_chunked_writer_if_necessary()
 
                 self.chunked_writer.append(packet)
                 if len(frames) == 0: continue
@@ -294,8 +356,7 @@ class DetectorAndWriterThread(threading.Thread, Consumer, Producer):
 
                 packet_has_bird = False
                 for frame in frames:
-                    frame_arr = frame.to_ndarray(format='rgb24')
-                    has_bird = self.__score_frame(frame_arr, frame.pts)
+                    has_bird = self.__score_frame(frame, frame.pts)
                     if has_bird:
                         packet_has_bird = True
                         should_write_chunk = True
@@ -304,8 +365,12 @@ class DetectorAndWriterThread(threading.Thread, Consumer, Producer):
             for t in self.subscribers:
                 t.enqueue(None, blocking=False)
 
-    def __score_frame(self, frame_rgb, frame_pts):
+    def __score_frame(self, frame, frame_pts):
+        if self.model is None:
+            return True
+
         start_time = time.time()
+        frame_rgb = frame.to_ndarray(format='rgb24')
         results = self.model(frame_rgb)
         infer_ms = (time.time() - start_time) * 1000
 
@@ -453,7 +518,13 @@ if __name__ == '__main__':
     input_group.add_argument('--input_file', type=str, help='input video file')
     input_group.add_argument('--input_stream', type=str, help='input video stream')
 
-    parser.add_argument('--model_file', type=str, help='model for inference', required=True)
+    parser.add_argument('--model_file', type=str,
+                        help=inspect.cleandoc(
+                            """
+                            If inference is desired, the model for inference. If
+                            not specified, all frames will be written.
+                            """
+                        ))
     parser.add_argument('--confidence_threshold', type=float, default=0.6,
                         help='inference confidence threshold [0.0, 1.0]')
     parser.add_argument('--infer_every_frames', type=int, default=1,
@@ -466,6 +537,11 @@ if __name__ == '__main__':
     parser.add_argument('--prediction_dir', type=str, help='where to log predictions')
 
     parser.add_argument('--output_dir', type=str, help='output video directory')
+    parser.add_argument('--max_frames_per_file', type=int, default=60 * 60 * 25,
+                        help='max number of frames per file before a new file will be opened')
+    parser.add_argument('--target_available_bytes', type=int, required=False,
+                        help='if specified, old files will be deleted to reach the target ' +
+                        'amount of free space. The latest file will always be retained.')
 
     parser.add_argument('--screenshot_dir', type=str, default='.', help='screenshot image directory')
 
@@ -474,9 +550,6 @@ if __name__ == '__main__':
     parser.add_argument('--quiet', action='store_true',
                         help='do not print inference results to stdout')
     args = parser.parse_args()
-
-    global start_time
-    start_time = datetime.datetime.now().strftime("%Y-%m-%dT%H%M%S")
 
     threads = []
 
