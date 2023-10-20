@@ -241,14 +241,6 @@
   :custom
   (blink-cursor-mode nil))
 
-(use-package git-commit
-  :custom
-  (global-git-commit-mode t))
-
-(use-package gitconfig-mode)
-
-(use-package gitignore-mode)
-
 (use-package gnuplot-mode
   :mode "\\.plt\\'")
 
