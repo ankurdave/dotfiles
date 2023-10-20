@@ -67,11 +67,7 @@
   :quelpa (beancount
            :fetcher github
            :repo "beancount/beancount-mode")
-  :mode ("\\.beancount\\'" . beancount-mode)
-  :config
-  (defun beancount-sort-and-format-before-save ()
-    (add-hook 'before-save-hook #'sort-and-format-beancount-entries nil t))
-  (add-hook 'beancount-mode-hook #'beancount-sort-and-format-before-save))
+  :mode ("\\.beancount\\'" . beancount-mode))
 
 (use-package c++-mode
   :ensure cc-mode
