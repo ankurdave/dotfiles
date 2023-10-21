@@ -149,8 +149,6 @@
 
 (use-package dash)
 
-(use-package dash-functional)
-
 (use-package diminish)
 
 (use-package dired
