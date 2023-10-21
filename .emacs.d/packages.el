@@ -27,10 +27,27 @@
 
 ;;; Package configuration:
 
+(use-package ace-jump-mode)
+
+(use-package ace-window
+  :bind (
+         ;; Jump to window. Mnemonic: "Jump".
+         ("M-j" . ace-window))
+  :config
+  (setq aw-keys '(?a ?e ?u ?h ?t ?n ?s))
+  (setq aw-dispatch-alist
+        '((?o aw-flip-window)))
+  (setq aw-dispatch-always t))
+
 (use-package adaptive-wrap
   :init
   (add-hook 'html-mode-hook #'adaptive-wrap-prefix-mode)
   (add-hook 'LaTeX-mode-hook #'adaptive-wrap-prefix-mode))
+
+(use-package auto-compile
+  :custom
+  (auto-compile-on-load-mode t)
+  (auto-compile-on-save-mode t))
 
 (use-package auto-package-update
   :custom
@@ -64,6 +81,11 @@
 
 (use-package cmake-mode)
 
+(use-package color-identifiers-mode
+  :init
+  (add-hook 'emacs-lisp-mode-hook #'color-identifiers-mode)
+  :diminish color-identifiers-mode)
+
 (use-package comint
   :ensure nil
   :init
@@ -77,6 +99,14 @@
 (use-package compat
   :load-path "lisp/"
   :ensure nil)
+
+(use-package compile
+  :ensure nil
+  :init
+  (defun bury-successful-compilation-buffer (buf str)
+    (if (null (string-match ".*exited abnormally.*" str))
+        (bury-buffer buf)))
+  (add-hook 'compilation-finish-functions #'bury-successful-compilation-buffer))
 
 (use-package conf-mode
   :ensure nil
@@ -167,11 +197,30 @@
   (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)
   :diminish eldoc-mode)
 
+(use-package em-smart
+  :ensure nil
+  :after esh-mode
+  :commands eshell-smart-initialize
+  :config
+  (eshell-smart-initialize)
+  :defer t)
+
+(use-package esh-mode
+  :ensure nil
+  :bind (:map eshell-mode-map
+              ("<up>" . previous-line)
+              ("<down>" . next-line)))
+
 (use-package exec-path-from-shell
   :if (memq window-system '(mac ns))
   :config
   (add-to-list 'exec-path-from-shell-variables "SCALA_HOME")
   (exec-path-from-shell-initialize))
+
+(use-package expand-region
+  :bind (
+         ;; Mnemonic: "Expand".
+         ("M-e" . er/expand-region)))
 
 (use-package files
   :ensure nil
@@ -242,6 +291,10 @@
   ;; Highlight the full line of the current selection, not just the text portion.
   (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line))
 
+(use-package lisp-extra-font-lock
+  :config
+  (lisp-extra-font-lock-global-mode 1))
+
 (use-package lisp-mode
   :ensure nil
   :bind (:map emacs-lisp-mode-map
@@ -299,6 +352,62 @@
      ((control))))
   (mouse-wheel-progressive-speed nil))
 
+(use-package notmuch
+  :disabled
+  :bind (:map notmuch-search-mode-map
+              ("I" . notmuch-search-mark-read)
+              ("g" . notmuch-refresh-this-buffer))
+  :bind (:map notmuch-show-mode-map
+              ("d" . notmuch-mark-deleted)
+              ("o" . goto-address-at-point)
+              ("v" . notmuch-view-html)
+              ("g" . notmuch-refresh-this-buffer))
+  :bind (:map notmuch-hello-mode-map
+              ("g" . notmuch-refresh-this-buffer))
+  :bind (:map notmuch-tree-mode-map
+              ("n" . notmuch-tree-next-matching-message-and-mark-read)
+              ("g" . notmuch-refresh-this-buffer))
+  :custom
+  (notmuch-fcc-dirs nil)
+  (notmuch-hello-thousands-separator ",")
+  (notmuch-search-line-faces
+   '(("unread" :weight bold)
+     ("flagged" :foreground "#8CD0D3")))
+  (notmuch-search-oldest-first nil)
+  (notmuch-show-all-tags-list t)
+  (notmuch-show-indent-messages-width 1)
+  (notmuch-show-indent-multipart nil)
+  (notmuch-show-logo nil)
+  (notmuch-show-part-button-default-action (quote notmuch-show-interactively-view-part))
+  (notmuch-unread-search-term
+   "(tag:inbox OR tag:is-reply OR tag:graphx OR tag:notifications) AND is:unread")
+
+  :config
+  (setq notmuch-saved-searches
+        '((:name "Unread" :query "is:unread AND tag:inbox" :search-type tree)
+          (:name "Personal" :query "tag:inbox AND NOT tag:notifications AND NOT tag:spark-lists AND NOT tag:berkeley-lists AND NOT tag:amplab-lists AND date:3months..")
+          (:name "Inbox" :query "(tag:inbox OR tag:is-reply) AND date:3months..")
+          (:name "Sent" :query "tag:sent AND date:3months..")
+          (:name "Archive" :query "NOT (tag:inbox OR tag:sent) AND date:3months..")))
+  (setq notmuch-search-result-format
+   `(("date" . "%12s ")
+     ("count" . "%-7s ")
+     ("authors" . "%-20s ")
+     ("tags" . "%-20.20s ")
+     ("subject" . "%s")))
+  (setq notmuch-tag-formats
+        '(("inbox")
+          ("notifications" "notif")
+          ("lists")
+          ("berkeley-lists" "berk")
+          ("amplab-lists" "amp")
+          ("spark-lists" "spark")
+          ("attachment" "attach")
+          ("lists/.*" (substring tag 6 (s-index-of "." tag)))
+          ("unread" (propertize tag 'face '(:foreground "#CC9393")))
+          ("flagged"
+           (propertize tag 'face '(:foreground "blue"))))))
+
 (use-package org
   :ensure nil
   :bind (:map org-mode-map
@@ -314,6 +423,20 @@
 (use-package org-indent
   :ensure nil
   :diminish org-indent-mode)
+
+(use-package paredit
+  :init
+  (add-hook 'emacs-lisp-mode-hook #'paredit-mode)
+  :config
+  (with-eval-after-load 'utils
+    (bind-key "C-w" (make-backward-kill-word-fn paredit-backward-kill-word)
+              paredit-mode-map))
+  :bind (("M-(" . paredit-wrap-round))
+  :bind (:map paredit-mode-map
+              ("C-M-d")
+              ("M-s")
+              ("M-r"))
+  :diminish paredit-mode)
 
 (use-package paren-face
   :custom
@@ -413,6 +536,23 @@ a project if necessary."
   (column-number-mode t)
   (shift-select-mode nil))
 
+(use-package smartparens
+  :init
+  (add-hook 'html-mode-hook #'turn-on-smartparens-mode)
+  (add-hook 'html-mode-hook #'turn-on-show-smartparens-mode)
+  (add-hook 'scala-mode-hook #'turn-on-smartparens-mode)
+  :bind (:map smartparens-mode-map
+              ("<M-up>" . sp-splice-sexp-killing-backward)
+              ("C-M-w"))
+  :diminish smartparens-mode
+  :custom
+  (sp-base-key-bindings 'sp)
+  (sp-highlight-pair-overlay nil)
+  (sp-navigate-consider-symbols t))
+
+(use-package smartparens-config
+  :ensure smartparens)
+
 ;; Enables counsel-M-x to sort by recently used
 (use-package smex)
 
@@ -421,9 +561,29 @@ a project if necessary."
   (add-hook 'sql-mode-hook #'sqlind-minor-mode)
   :diminish sqlind-minor-mode)
 
+(use-package subword
+  :ensure nil
+  :commands subword-backward-kill
+  :config
+  (with-eval-after-load 'utils
+    (bind-key "C-w" (make-backward-kill-word-fn subword-backward-kill (1))
+              subword-mode-map))
+  :defer t)
+
 (use-package terraform-mode
   :config
   (terraform-format-on-save-mode 1))
+
+(use-package tex
+  :ensure auctex
+  :init
+  (autoload 'TeX-command "tex-buf" nil nil)
+  (defun LaTeX-compile ()
+    (TeX-command "LaTeX" 'TeX-master-file -1))
+  (defun LaTeX-compile-after-save ()
+    (add-hook 'after-save-hook #'LaTeX-compile nil t))
+  (add-hook 'LaTeX-mode-hook #'LaTeX-compile-after-save)
+  :defer t)
 
 (use-package undo-tree
   :bind (("C--" . undo-tree-undo)
@@ -471,6 +631,8 @@ a project if necessary."
          ("C-c s" . my-profiler-stop))
   :demand)
 
+(use-package web-mode)
+
 (use-package which-key
   :bind (("C-c k" . which-key-show-top-level))
   :diminish
@@ -478,6 +640,11 @@ a project if necessary."
   (which-key-mode t)
   (which-key-side-window-max-height 0.5)
   (which-key-side-window-max-width 0.5))
+
+(use-package winner
+  :ensure nil
+  :custom
+  (winner-mode t))
 
 (use-package ws-butler
   :diminish ws-butler-mode
