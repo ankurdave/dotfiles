@@ -276,8 +276,7 @@
      magit-insert-bisect-log
      magit-insert-untracked-files
      magit-insert-unstaged-changes
-     magit-insert-staged-changes
-     magit-insert-stashes))
+     magit-insert-staged-changes))
   (magit-completing-read-function 'ivy-completing-read))
 
 (use-package markdown-mode
