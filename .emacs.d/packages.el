@@ -140,7 +140,10 @@
 (use-package dumb-jump
   :custom
   (dumb-jump-selector 'ivy)
-  :bind (("M-." . dumb-jump-go)))
+  :config
+  ;; Use M-. to call `xref-find-definitions'.
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+  (setq xref-show-definitions-function #'xref-show-definitions-completing-read))
 
 (use-package edit-server
   :custom
