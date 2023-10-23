@@ -19,6 +19,7 @@
 [core]
 	pager = less -+$LESS -FRX
 	excludesfile = ~/.gitignore_global
+	attributesfile = ~/.gitattributes
 [rerere]
 	enabled = 1
 	autoupdate = true
