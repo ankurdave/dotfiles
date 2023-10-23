@@ -19,6 +19,7 @@
   (package-install 'use-package))
 
 (setq use-package-always-ensure t)
+(setq use-package-compute-statistics t)
 
 ;; Set up quelpa to allow use-package to fetch packages from GitHub.
 (use-package quelpa-use-package
@@ -26,8 +27,6 @@
   :config (quelpa-use-package-activate-advice))
 
 ;;; Package configuration:
-
-(use-package ace-jump-mode)
 
 (use-package ace-window
   :bind (
@@ -52,8 +51,9 @@
 (use-package auto-package-update
   :custom
   (auto-package-update-interval 1)
-  :config
-  (auto-package-update-maybe))
+  (auto-package-update-prompt-before-update t)
+  :init
+  (add-hook 'after-init-hook #'auto-package-update-maybe))
 
 (use-package autorevert
   :diminish auto-revert-mode
@@ -61,7 +61,8 @@
   :custom
   (auto-revert-verbose nil))
 
-(use-package bazel)
+(use-package bazel
+  :defer t)
 
 (use-package beancount
   :quelpa (beancount
@@ -69,25 +70,23 @@
            :repo "beancount/beancount-mode")
   :mode ("\\.beancount\\'" . beancount-mode))
 
-(use-package c++-mode
-  :ensure cc-mode
-  :mode "\\.h\\'"
-  :mode "\\.ino\\'"
+(use-package cc-mode
+  :mode ("\\.ino\\'" . c++-mode)
   :init
   (add-hook 'c++-mode-hook (lambda () (toggle-truncate-lines 1)))
   (add-hook 'c++-mode-hook (lambda () (set-fill-column 100)))
-  (add-hook 'c++-mode-hook #'turn-on-auto-fill)
-  (eval-when-compile (require 'cc-mode)))
+  (add-hook 'c++-mode-hook #'turn-on-auto-fill))
 
-(use-package cmake-mode)
+(use-package cmake-mode
+  :defer t)
 
 (use-package color-identifiers-mode
-  :init
-  (add-hook 'emacs-lisp-mode-hook #'color-identifiers-mode)
+  :hook (emacs-lisp-mode-hook . color-identifiers-mode)
   :diminish color-identifiers-mode)
 
 (use-package comint
   :ensure nil
+  :defer t
   :init
   (defun make-my-shell-output-read-only (text)
     "Add to comint-output-filter-functions to make stdout read only in my shells."
@@ -102,6 +101,7 @@
 
 (use-package compile
   :ensure nil
+  :defer t
   :init
   (defun bury-successful-compilation-buffer (buf str)
     (if (null (string-match ".*exited abnormally.*" str))
@@ -136,16 +136,17 @@
   :diminish counsel-mode)
 
 (use-package counsel-projectile
-
   :bind (
          ;; Grep within project. Mnemonic: "Search".
          ("M-s" . counsel-projectile-grep))
   :custom
   (counsel-projectile-mode t))
 
-(use-package csv-mode)
+(use-package csv-mode
+  :defer t)
 
-(use-package cuda-mode)
+(use-package cuda-mode
+  :defer t)
 
 (use-package dash)
 
@@ -156,7 +157,8 @@
   :init
   (add-hook 'dired-mode-hook (lambda () (toggle-truncate-lines 1))))
 
-(use-package dockerfile-mode)
+(use-package dockerfile-mode
+  :defer t)
 
 (use-package dtrt-indent
   :config
@@ -195,6 +197,11 @@
   (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)
   :diminish eldoc-mode)
 
+(use-package elec-pair
+  :ensure nil
+  :custom
+  (electric-pair-mode t))
+
 (use-package em-smart
   :ensure nil
   :after esh-mode
@@ -208,12 +215,6 @@
   :bind (:map eshell-mode-map
               ("<up>" . previous-line)
               ("<down>" . next-line)))
-
-(use-package exec-path-from-shell
-  :if (memq window-system '(mac ns))
-  :config
-  (add-to-list 'exec-path-from-shell-variables "SCALA_HOME")
-  (exec-path-from-shell-initialize))
 
 (use-package expand-region
   :bind (
@@ -234,6 +235,8 @@
 
 (use-package frame
   :ensure nil
+  :init
+  (add-to-list 'initial-frame-alist '(fullscreen . maximized))
   :bind ("M-`" . other-frame)
   :custom
   (blink-cursor-mode nil))
@@ -420,7 +423,8 @@
 
 (use-package org-indent
   :ensure nil
-  :diminish org-indent-mode)
+  :diminish org-indent-mode
+  :defer t)
 
 (use-package paredit
   :init
@@ -446,7 +450,8 @@
        'zenburn
        `(parenthesis ((t (:foreground ,zenburn-fg-1))))))))
 
-(use-package php-mode)
+(use-package php-mode
+  :defer t)
 
 (use-package projectile
   :bind
@@ -534,29 +539,11 @@ a project if necessary."
   (column-number-mode t)
   (shift-select-mode nil))
 
-(use-package smartparens
-  :init
-  (add-hook 'html-mode-hook #'turn-on-smartparens-mode)
-  (add-hook 'html-mode-hook #'turn-on-show-smartparens-mode)
-  (add-hook 'scala-mode-hook #'turn-on-smartparens-mode)
-  :bind (:map smartparens-mode-map
-              ("<M-up>" . sp-splice-sexp-killing-backward)
-              ("C-M-w"))
-  :diminish smartparens-mode
-  :custom
-  (sp-base-key-bindings 'sp)
-  (sp-highlight-pair-overlay nil)
-  (sp-navigate-consider-symbols t))
-
-(use-package smartparens-config
-  :ensure smartparens)
-
 ;; Enables counsel-M-x to sort by recently used
 (use-package smex)
 
 (use-package sql-indent
-  :init
-  (add-hook 'sql-mode-hook #'sqlind-minor-mode)
+  :hook (sql-mode-hook . sqlind-minor-mode)
   :diminish sqlind-minor-mode)
 
 (use-package subword
@@ -570,7 +557,8 @@ a project if necessary."
 
 (use-package terraform-mode
   :config
-  (terraform-format-on-save-mode 1))
+  (terraform-format-on-save-mode 1)
+  :defer t)
 
 (use-package tex
   :ensure auctex
@@ -592,18 +580,6 @@ a project if necessary."
   (undo-tree-mode-lighter "")
   :config
   (global-undo-tree-mode)
-  ;; Keep region when undoing in region
-  ;; from https://github.com/magnars/.emacs.d/blob/de3b35fa41ced10c273f86d2d50d2232eb7e4a6b/my-misc.el#L4
-  (defadvice undo-tree-undo (around keep-region activate)
-    (if (use-region-p)
-        (let ((m (set-marker (make-marker) (mark)))
-              (p (set-marker (make-marker) (point))))
-          ad-do-it
-          (goto-char p)
-          (set-mark m)
-          (set-marker p nil)
-          (set-marker m nil))
-      ad-do-it))
   :demand)
 
 (use-package utils
@@ -629,7 +605,8 @@ a project if necessary."
          ("C-c s" . my-profiler-stop))
   :demand)
 
-(use-package web-mode)
+(use-package web-mode
+  :defer t)
 
 (use-package which-key
   :bind (("C-c k" . which-key-show-top-level))
@@ -638,11 +615,6 @@ a project if necessary."
   (which-key-mode t)
   (which-key-side-window-max-height 0.5)
   (which-key-side-window-max-width 0.5))
-
-(use-package winner
-  :ensure nil
-  :custom
-  (winner-mode t))
 
 (use-package ws-butler
   :diminish ws-butler-mode
