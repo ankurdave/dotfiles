@@ -1,25 +1,12 @@
 ;;; `use-package' setup:
 
-(require 'package)
-(setq package-enable-at-startup nil)
-(add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/"))
-;; (add-to-list 'package-archives
-;;              '("org" . "https://orgmode.org/elpa/"))
-;; Do not save the value of package-selected-packages to customizations.el
-;; because it interferes with version control.
-(defun package--save-selected-packages (&optional value)
-  "Set `package-selected-packages' to VALUE, but do not save it."
-  (when value
-    (setq package-selected-packages value)))
-(package-initialize)
-
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
 
 (setq use-package-always-ensure t)
 (setq use-package-compute-statistics t)
+;; (add-hook 'after-init-hook #'use-package-report)
 
 ;; Set up quelpa to allow use-package to fetch packages from GitHub.
 (use-package quelpa-use-package
