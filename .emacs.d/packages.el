@@ -6,10 +6,18 @@
 
 (setq use-package-always-ensure t)
 (setq use-package-compute-statistics t)
+(if init-file-debug
+    (setq use-package-verbose t
+          use-package-expand-minimally nil
+          use-package-compute-statistics t
+          debug-on-error t)
+  (setq use-package-verbose nil
+        use-package-expand-minimally t))
 ;; (add-hook 'after-init-hook #'use-package-report)
 
 ;; Set up quelpa to allow use-package to fetch packages from GitHub.
 (use-package quelpa-use-package
+  :ensure t
   :init (setq quelpa-update-melpa-p nil)
   :config (quelpa-use-package-activate-advice))
 
@@ -26,16 +34,19 @@
   (setq aw-dispatch-always t))
 
 (use-package adaptive-wrap
+  :ensure t
   :init
   (add-hook 'html-mode-hook #'adaptive-wrap-prefix-mode)
   (add-hook 'LaTeX-mode-hook #'adaptive-wrap-prefix-mode))
 
 (use-package auto-compile
+  :ensure t
   :custom
   (auto-compile-on-load-mode t)
   (auto-compile-on-save-mode t))
 
 (use-package auto-package-update
+  :ensure t
   :custom
   (auto-package-update-interval 1)
   (auto-package-update-prompt-before-update t)
