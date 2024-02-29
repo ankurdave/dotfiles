@@ -269,6 +269,7 @@
   (add-hook 'scala-mode-hook #'highlight-symbol-mode)
   (add-hook 'c++-mode-hook #'highlight-symbol-mode)
   (add-hook 'java-mode-hook #'highlight-symbol-mode)
+  (add-hook 'python-mode-hook #'highlight-symbol-mode)
   :diminish highlight-symbol-mode
   :custom
   (highlight-symbol-idle-delay 1.5)
