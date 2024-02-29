@@ -119,6 +119,16 @@
       (setq-local indent-line-function #'indent-ssh-config-line)))
   (add-hook 'conf-space-mode-hook #'ssh-config-setup-indent))
 
+(use-package copilot
+  :quelpa (copilot
+           :fetcher github
+           :repo "zerolfx/copilot.el"
+           :branch "main"
+           :files ("dist" "*.el"))
+  :config
+  ;; (add-hook 'prog-mode-hook 'copilot-mode)
+  (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion))
+
 (use-package counsel
   :custom
   (counsel-mode t)
