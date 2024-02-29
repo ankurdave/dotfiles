@@ -569,6 +569,17 @@ a project if necessary."
   (add-hook 'LaTeX-mode-hook #'LaTeX-compile-after-save)
   :defer t)
 
+(use-package treesit
+  :ensure nil
+  :config
+  (setq treesit-language-source-alist
+        '((cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+          (c "https://github.com/tree-sitter/tree-sitter-c")))
+  (dolist (lang treesit-language-source-alist)
+    (unless (treesit-language-available-p (car lang))
+      (treesit-install-language-grammar (car lang))))
+  (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode)))
+
 (use-package undo-tree
   :bind (("C--" . undo-tree-undo)
          ("C-?" . undo-tree-redo))
