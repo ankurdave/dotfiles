@@ -81,8 +81,8 @@ symlink "$dotfiles"/misc/ipython_kernel_config.py ~/.ipython/profile_default/ipy
 
 # OS X setup
 if [ -d ~/Library ] && command_exists defaults; then
-    brew bundle install --global --verbose
-    pip install --upgrade -r "$dotfiles"/misc/pip-global-requirements.txt
+    # brew bundle install --global --verbose
+    # pip install --upgrade -r "$dotfiles"/misc/pip-global-requirements.txt
 
     mkdir -p ~/Library/KeyBindings
     hardlink "$dotfiles"/misc/DefaultKeyBinding.dict \
@@ -102,14 +102,14 @@ if [ -d ~/Library ] && command_exists defaults; then
              ~/Library/Preferences/com.googlecode.iterm2.plist
 
     # Launch agents
-    find "$dotfiles"/misc -mindepth 1 -maxdepth 1 \
-         -name 'com.ankurdave.*.plist' | while read file; do
-        hardlink "$file" ~/Library/LaunchAgents/"$(basename "$file")"
-    done
+    # find "$dotfiles"/misc -mindepth 1 -maxdepth 1 \
+    #      -name 'com.ankurdave.*.plist' | while read file; do
+    #     hardlink "$file" ~/Library/LaunchAgents/"$(basename "$file")"
+    # done
 
     ## From https://github.com/mathiasbynens/dotfiles/blob/master/.macos:
     # Disable the sound effects on boot
-    sudo nvram SystemAudioVolume=" "
+    # sudo nvram SystemAudioVolume=" "
     # Disable Resume system-wide
     defaults write com.apple.systempreferences NSQuitAlwaysKeepsWindows -bool false
     # Enable full keyboard access for all controls
