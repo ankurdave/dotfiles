@@ -37,3 +37,4 @@
 .emacs.d/projectile.cache
 .emacs.d/transient
 .env
+.emacs.d/tree-sitter
