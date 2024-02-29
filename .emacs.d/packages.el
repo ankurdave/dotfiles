@@ -66,7 +66,15 @@
   :quelpa (beancount
            :fetcher github
            :repo "beancount/beancount-mode")
-  :mode ("\\.beancount\\'" . beancount-mode))
+  :mode ("\\.beancount\\'" . beancount-mode)
+  :bind (("C-c >" . beancount-goto-next-transaction)
+         ("C-c <" . beancount-goto-previous-transaction))
+  :config
+  (defun beancount-check ()
+  "Run `beancount-check-program'."
+  (interactive)
+  (let ((compilation-read-command nil))
+    (beancount--run beancount-check-program "main.beancount"))))
 
 (use-package cc-mode
   :mode ("\\.ino\\'" . c++-mode)
