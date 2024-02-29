@@ -559,7 +559,7 @@ a project if necessary."
   :defer t)
 
 (use-package tex
-  :ensure auctex
+  :ensure nil
   :init
   (autoload 'TeX-command "tex-buf" nil nil)
   (defun LaTeX-compile ()
