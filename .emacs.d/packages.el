@@ -268,6 +268,7 @@
   (add-hook 'emacs-lisp-mode-hook #'highlight-symbol-mode)
   (add-hook 'scala-mode-hook #'highlight-symbol-mode)
   (add-hook 'c++-mode-hook #'highlight-symbol-mode)
+  (add-hook 'c++-ts-mode-hook #'highlight-symbol-mode)
   (add-hook 'java-mode-hook #'highlight-symbol-mode)
   (add-hook 'python-mode-hook #'highlight-symbol-mode)
   :diminish highlight-symbol-mode
@@ -597,7 +598,31 @@ a project if necessary."
   (dolist (lang treesit-language-source-alist)
     (unless (treesit-language-available-p (car lang))
       (treesit-install-language-grammar (car lang))))
-  (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode)))
+  (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
+  (add-hook 'c++-ts-mode-hook (lambda () (toggle-truncate-lines 1)))
+  (add-hook 'c++-ts-mode-hook (lambda () (set-fill-column 100)))
+  (add-hook 'c++-ts-mode-hook #'turn-on-auto-fill)
+  ;; Google C/C++ style for tree-sitter. Source:
+  ;; https://www.reddit.com/r/emacs/comments/16zhgrd/weekly_tips_tricks_c_thread/k48j8f5/
+  (defun google-c-style-ts-indent-style ()
+    "Override the built-in BSD indentation style with some additional
+rules to match Google C++ style"
+    `(
+      ;; align function arguments to the start of the first one, offset if standalone
+      ((match nil "argument_list" nil 1 1) parent-bol c-ts-mode-indent-offset)
+      ((parent-is "argument_list") (nth-sibling 1) 0)
+      ;; same for parameters
+      ((match nil "parameter_list" nil 1 1) parent-bol c-ts-mode-indent-offset)
+      ((parent-is "parameter_list") (nth-sibling 1) 0)
+      ;; indent inside case blocks
+      ((parent-is "case_statement") standalone-parent c-ts-mode-indent-offset)
+      ;; do not indent preprocessor statements
+      ((node-is "preproc") column-0 0)
+      ;; Don't indent inside namespaces
+      ((n-p-gp nil nil "namespace_definition") grand-parent 0)
+      ;; append to bsd style
+      ,@(alist-get 'bsd (c-ts-mode--indent-styles 'cpp))))
+  (setq c-ts-mode-indent-style #'google-c-style-ts-indent-style))
 
 (use-package undo-tree
   :bind (("C--" . undo-tree-undo)
