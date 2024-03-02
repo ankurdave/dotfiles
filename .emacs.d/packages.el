@@ -609,8 +609,8 @@ a project if necessary."
         (setq last node
               node (treesit-node-child-by-field-name node "left")))
       last))
-  (defun ankurdave--c-ts-mode--deepest-binary-expression-operator (_n parent &rest _)
-    "Anchor to the operator of the deepest binary expression within
+  (defun ankurdave--c-ts-mode--deepest-binary-expression-left-shift-operator (_n parent &rest _)
+    "Anchor to the `<<' operator of the deepest binary expression within
 PARENT."
     (save-excursion
       (treesit-node-start
@@ -619,7 +619,9 @@ PARENT."
          parent
          (lambda (node)
            (and node
-                (string-match-p "binary_expression" (treesit-node-type node)))))
+                (string-match-p "binary_expression" (treesit-node-type node))
+                (string-match-p "<<" (treesit-node-string
+                                      (treesit-node-child-by-field-name node "operator"))))))
         "operator"))))
   (defun ankurdave--set-treesit-node-as-region (node)
     "For debugging treesit indentation."
@@ -630,6 +632,11 @@ PARENT."
     "For debugging treesit indentation."
     (interactive)
     (set-treesit-node-as-region (treesit-node-parent (treesit-node-at (point)))))
+  (defun ankurdave--c-ts-mode--parent-operator-is-left-shift (node parent bol &rest _)
+    (and
+     (string-match-p "binary_expression" (treesit-node-type parent))
+     (string-match-p "<<" (treesit-node-string
+                           (treesit-node-child-by-field-name parent "operator")))))
   ;; Google C/C++ style for tree-sitter. Source:
   ;; https://www.reddit.com/r/emacs/comments/16zhgrd/weekly_tips_tricks_c_thread/k48j8f5/
   (defun google-c-style-ts-indent-style ()
@@ -654,7 +661,8 @@ rules to match Google C++ style"
       ;;             << world" << "foo" << "bar";
       ;;
       ;; would be aligned so the operators line up.
-      ((parent-is "binary_expression") ankurdave--c-ts-mode--deepest-binary-expression-operator 0)
+      (ankurdave--c-ts-mode--parent-operator-is-left-shift
+       ankurdave--c-ts-mode--deepest-binary-expression-left-shift-operator 0)
       ;; append to bsd style
       ,@(alist-get 'bsd (c-ts-mode--indent-styles 'cpp))))
   (setq c-ts-mode-indent-style #'google-c-style-ts-indent-style))
