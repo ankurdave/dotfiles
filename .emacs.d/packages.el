@@ -652,18 +652,43 @@ PARENT."
     (and
      (string-match-p "binary_expression" (treesit-node-type parent))
      (string-match-p "<<" (treesit-node-string
-                           (treesit-node-child-by-field-name parent "operator")))))
+                           (treesit-node-child-by-field-name parent "operator")))
+     (not (equal
+           (treesit-node-start node)
+           (ankurdave--c-ts-mode--deepest-binary-expression-left-shift-operator node parent)))))
+  (defun ankurdave--c-ts-mode--parent-is-standalone-binary-expression (node parent bol &rest _)
+    (and
+     (string-match-p "binary_expression" (treesit-node-type parent))
+     (save-excursion
+       (goto-char (treesit-node-start parent))
+       (looking-back (rx bol (* whitespace))
+                     (line-beginning-position)))))
   ;; Uncomment when debugging indent styles.
   ;; (setq treesit--indent-verbose t)
   (defun google-c-style-ts-indent-style ()
     "Google C/C++ style for tree-sitter."
     `(
-      ;; align function arguments to the start of the first one, offset if standalone
+      ;; Similar to BSD style, but use `standalone-parent' instead of
+      ;; `parent-bol'. This handles cases like the third line below:
+      ;;
+      ;;   int main(
+      ;;       int a) {
+      ;;   }
+      ((node-is "}") standalone-parent 0)
+      ((node-is "labeled_statement") standalone-parent c-ts-mode-indent-offset)
+
+      ;; Align function arguments and parameters to the start of the first one, offset if
+      ;; standalone. For example:
+      ;;
+      ;;   int foo(int a,
+      ;;           int b) {}
+      ;;   int foo(
+      ;;       int a, int b) {}
       ((match nil "argument_list" nil 1 1) parent-bol ,(* c-ts-mode-indent-offset 2))
       ((parent-is "argument_list") (nth-sibling 1) 0)
-      ;; same for parameters
       ((match nil "parameter_list" nil 1 1) parent-bol ,(* c-ts-mode-indent-offset 2))
       ((parent-is "parameter_list") (nth-sibling 1) 0)
+
       ;; The ":" in field initializer lists should be offset. For example:
       ;;
       ;;   Foo::Foo(int bar)
@@ -676,38 +701,68 @@ PARENT."
       ;;       baz_(baz) {}
       ((match nil "field_initializer_list" nil 1 1) standalone-parent ,(* c-ts-mode-indent-offset 2))
       ((parent-is "field_initializer_list") (nth-sibling 1) 0)
-      ;; indent inside case blocks
+
+      ;; Class/struct members should be indented one step. Access specifiers
+      ;; should be indented half a step. For example:
+      ((and (node-is "access_specifier")
+            (parent-is "field_declaration_list"))
+       standalone-parent ,(/ c-ts-mode-indent-offset 2))
+      ((parent-is "field_declaration_list") standalone-parent c-ts-mode-indent-offset)
+
+      ;; Indent inside case blocks. For example:
+      ;;
+      ;;  switch (a) {
+      ;;    case 0:
+      ;;      123;
+      ;;    case 1: {
+      ;;      456;
+      ;;    }
+      ;;    default:
+      ;;  }
       ((parent-is "case_statement") standalone-parent c-ts-mode-indent-offset)
-      ;; do not indent preprocessor statements
+
+      ;; Do not indent preprocessor statements.
       ((node-is "preproc") column-0 0)
-      ;; Don't indent inside namespaces
+
+      ;; Don't indent inside namespaces.
       ((n-p-gp nil nil "namespace_definition") grand-parent 0)
-      ;; For example, indents the second line as follows:
+
+      ;; Offset line continuations. For example, indent the second line as follows:
+      ;;
       ;;   int64_t foo =
       ;;       bar - baz;
       ((parent-is "init_declarator") parent-bol ,(* c-ts-mode-indent-offset 2))
-      ;; Align operators to the first operator in the sequence. For example,
-      ;; indents the second line as follows:
+
+      ;; For the left-shift operator as used with iostreams, line up the operators.
       ;;
       ;;   LOG(INFO) << "hello"
-      ;;             << world" << "foo" << "bar";
+      ;;             << "world" << "foo" << "bar";
       (ankurdave--c-ts-mode--parent-operator-is-left-shift
        ankurdave--c-ts-mode--deepest-binary-expression-left-shift-operator 0)
-      ;; BSD style, but use `standalone-parent' instead of `parent-bol'. This
-      ;; handles cases like the third line below:
-      ;;   int main(
-      ;;       int a) {
-      ;;   }
-      ((node-is "}") standalone-parent 0)
-      ((node-is "labeled_statement") standalone-parent c-ts-mode-indent-offset)
+
+      ;; Offset children of standalone binary expressions. For example:
+      ;;   DCHECK(foo ||
+      ;;          bar)
+      ;;       << "Failed";
+      (ankurdave--c-ts-mode--parent-is-standalone-binary-expression
+       parent ,(* c-ts-mode-indent-offset 2))
+
+      ;; Align non-standalone binary expressions to their parent. For example:
+      ;;
+      ;;   foo + (bar *
+      ;;          baz);
+      ;;   abc = b + c
+      ;;         + d + e;
+      ((parent-is "binary_expression") parent 0)
+
       ((parent-is "labeled_statement") standalone-parent c-ts-mode-indent-offset)
       ((parent-is "compound_statement") standalone-parent c-ts-mode-indent-offset)
       ((parent-is "if_statement") standalone-parent 0)
       ((parent-is "for_statement") standalone-parent 0)
       ((parent-is "while_statement") standalone-parent 0)
       ((parent-is "switch_statement") standalone-parent 0)
-      ((parent-is "case_statement") standalone-parent 0)
       ((parent-is "do_statement") standalone-parent 0)
+
       ;; For example, indents the third line as follows:
       ;;   void foo(
       ;;       int bar) {
