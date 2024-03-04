@@ -681,14 +681,6 @@ PARENT."
       ;;             << world" << "foo" << "bar";
       (ankurdave--c-ts-mode--parent-operator-is-left-shift
        ankurdave--c-ts-mode--deepest-binary-expression-left-shift-operator 0)
-      ;; For example, indents the third line as follows:
-      ;;   void foo(
-      ;;       int bar) {
-      ;;     baz();
-      ;;   }
-      ((or (match nil "compound_statement" nil 1 1)
-           (match null "compound_statement"))
-       standalone-parent c-ts-mode-indent-offset)
       ;; BSD style, but use `standalone-parent' instead of `parent-bol'. This
       ;; handles cases like the third line below:
       ;;   int main(
@@ -704,6 +696,14 @@ PARENT."
       ((parent-is "switch_statement") standalone-parent 0)
       ((parent-is "case_statement") standalone-parent 0)
       ((parent-is "do_statement") standalone-parent 0)
+      ;; For example, indents the third line as follows:
+      ;;   void foo(
+      ;;       int bar) {
+      ;;     baz();
+      ;;   }
+      ((or (match nil "compound_statement" nil 1 1)
+           (match null "compound_statement"))
+       standalone-parent c-ts-mode-indent-offset)
       ,@(alist-get 'common (c-ts-mode--indent-styles 'cpp))))
   (setq c-ts-mode-indent-style #'google-c-style-ts-indent-style))
 
