@@ -631,23 +631,38 @@ PARENT."
   (defun ankurdave--highlight-treesit-node-parent ()
     "For debugging treesit indentation."
     (interactive)
-    (set-treesit-node-as-region (treesit-node-parent (treesit-node-at (point)))))
+    (ankurdave--set-treesit-node-as-region (treesit-node-parent (treesit-node-at (point)))))
+  (defun ankurdave--highlight-treesit-node-standalone-parent ()
+    "For debugging treesit indentation."
+    (interactive)
+    (let ((standalone-parent
+           ((lambda (_n parent &rest _)
+              (save-excursion
+                (catch 'term
+                  (while parent
+                    (goto-char (treesit-node-start parent))
+                    (when (looking-back (rx bol (* whitespace))
+                                        (line-beginning-position))
+                      (throw 'term parent))
+                    (setq parent (treesit-node-parent parent))))))
+            nil
+            (treesit-node-parent (treesit-node-at (point))))))
+      (ankurdave--set-treesit-node-as-region standalone-parent)))
   (defun ankurdave--c-ts-mode--parent-operator-is-left-shift (node parent bol &rest _)
     (and
      (string-match-p "binary_expression" (treesit-node-type parent))
      (string-match-p "<<" (treesit-node-string
                            (treesit-node-child-by-field-name parent "operator")))))
-  ;; Google C/C++ style for tree-sitter. Source:
-  ;; https://www.reddit.com/r/emacs/comments/16zhgrd/weekly_tips_tricks_c_thread/k48j8f5/
+  ;; Uncomment when debugging indent styles.
+  ;; (setq treesit--indent-verbose t)
   (defun google-c-style-ts-indent-style ()
-    "Override the built-in BSD indentation style with some additional
-rules to match Google C++ style"
+    "Google C/C++ style for tree-sitter."
     `(
       ;; align function arguments to the start of the first one, offset if standalone
-      ((match nil "argument_list" nil 1 1) parent-bol c-ts-mode-indent-offset)
+      ((match nil "argument_list" nil 1 1) parent-bol ,(* c-ts-mode-indent-offset 2))
       ((parent-is "argument_list") (nth-sibling 1) 0)
       ;; same for parameters
-      ((match nil "parameter_list" nil 1 1) parent-bol c-ts-mode-indent-offset)
+      ((match nil "parameter_list" nil 1 1) parent-bol ,(* c-ts-mode-indent-offset 2))
       ((parent-is "parameter_list") (nth-sibling 1) 0)
       ;; indent inside case blocks
       ((parent-is "case_statement") standalone-parent c-ts-mode-indent-offset)
@@ -655,16 +670,41 @@ rules to match Google C++ style"
       ((node-is "preproc") column-0 0)
       ;; Don't indent inside namespaces
       ((n-p-gp nil nil "namespace_definition") grand-parent 0)
-      ;; Align operators to the first operator in the sequence. For example, the second line in:
+      ;; For example, indents the second line as follows:
+      ;;   int64_t foo =
+      ;;       bar - baz;
+      ((parent-is "init_declarator") parent-bol ,(* c-ts-mode-indent-offset 2))
+      ;; Align operators to the first operator in the sequence. For example,
+      ;; indents the second line as follows:
       ;;
       ;;   LOG(INFO) << "hello"
       ;;             << world" << "foo" << "bar";
-      ;;
-      ;; would be aligned so the operators line up.
       (ankurdave--c-ts-mode--parent-operator-is-left-shift
        ankurdave--c-ts-mode--deepest-binary-expression-left-shift-operator 0)
-      ;; append to bsd style
-      ,@(alist-get 'bsd (c-ts-mode--indent-styles 'cpp))))
+      ;; For example, indents the third line as follows:
+      ;;   void foo(
+      ;;       int bar) {
+      ;;     baz();
+      ;;   }
+      ((or (match nil "compound_statement" nil 1 1)
+           (match null "compound_statement"))
+       standalone-parent c-ts-mode-indent-offset)
+      ;; BSD style, but use `standalone-parent' instead of `parent-bol'. This
+      ;; handles cases like the third line below:
+      ;;   int main(
+      ;;       int a) {
+      ;;   }
+      ((node-is "}") standalone-parent 0)
+      ((node-is "labeled_statement") standalone-parent c-ts-mode-indent-offset)
+      ((parent-is "labeled_statement") standalone-parent c-ts-mode-indent-offset)
+      ((parent-is "compound_statement") standalone-parent c-ts-mode-indent-offset)
+      ((parent-is "if_statement") standalone-parent 0)
+      ((parent-is "for_statement") standalone-parent 0)
+      ((parent-is "while_statement") standalone-parent 0)
+      ((parent-is "switch_statement") standalone-parent 0)
+      ((parent-is "case_statement") standalone-parent 0)
+      ((parent-is "do_statement") standalone-parent 0)
+      ,@(alist-get 'common (c-ts-mode--indent-styles 'cpp))))
   (setq c-ts-mode-indent-style #'google-c-style-ts-indent-style))
 
 (use-package undo-tree
