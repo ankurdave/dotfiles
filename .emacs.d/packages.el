@@ -664,6 +664,18 @@ PARENT."
       ;; same for parameters
       ((match nil "parameter_list" nil 1 1) parent-bol ,(* c-ts-mode-indent-offset 2))
       ((parent-is "parameter_list") (nth-sibling 1) 0)
+      ;; The ":" in field initializer lists should be offset. For example:
+      ;;
+      ;;   Foo::Foo(int bar)
+      ;;       : bar_(bar) {}
+      ((node-is "field_initializer_list") standalone-parent ,(* c-ts-mode-indent-offset 2))
+      ;; Field initializers should line up, or should be offset if standalone. For example:
+      ;;
+      ;;   Foo::Foo(int bar, int baz) :
+      ;;       bar_(bar),
+      ;;       baz_(baz) {}
+      ((match nil "field_initializer_list" nil 1 1) standalone-parent ,(* c-ts-mode-indent-offset 2))
+      ((parent-is "field_initializer_list") (nth-sibling 1) 0)
       ;; indent inside case blocks
       ((parent-is "case_statement") standalone-parent c-ts-mode-indent-offset)
       ;; do not indent preprocessor statements
