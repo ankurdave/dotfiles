@@ -1,4 +1,4 @@
-;;; `use-package' setup:
+;;; `use-package' setup: -*- lexical-binding: t -*-
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -666,7 +666,10 @@ PARENT."
   ;; Uncomment when debugging indent styles.
   ;; (setq treesit--indent-verbose t)
   (defun google-c-style-ts-indent-style ()
-    "Google C/C++ style for tree-sitter."
+    "Google C/C++ style for tree-sitter.
+
+See `treesit-simple-indent-rules' and
+`treesit-simple-indent-presets' for details on the syntax."
     `(
       ;; Similar to BSD style, but use `standalone-parent' instead of
       ;; `parent-bol'. This handles cases like the third line below:
