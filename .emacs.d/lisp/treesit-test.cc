@@ -3,6 +3,11 @@ int foo(int a,
 int foo(
     int a, int b) {}
 
+// Make sure indentation works properly when starting a new line inside a parameter list. The
+// indentation should be the same as if there were already another parameter.
+int foo(int a,
+        ) {}
+
 int main(
     int a) {
   LOG(INFO) << "foo"

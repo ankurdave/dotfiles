@@ -687,9 +687,13 @@ See `treesit-simple-indent-rules' and
       ;;           int b) {}
       ;;   int foo(
       ;;       int a, int b) {}
-      ((match nil "argument_list" nil 1 1) parent-bol ,(* c-ts-mode-indent-offset 2))
+      ((and (match nil "argument_list" nil 1 1)
+            (not (node-is ")")))
+       parent-bol ,(* c-ts-mode-indent-offset 2))
       ((parent-is "argument_list") (nth-sibling 1) 0)
-      ((match nil "parameter_list" nil 1 1) parent-bol ,(* c-ts-mode-indent-offset 2))
+      ((and (match nil "parameter_list" nil 1 1)
+            (not (node-is ")")))
+       parent-bol ,(* c-ts-mode-indent-offset 2))
       ((parent-is "parameter_list") (nth-sibling 1) 0)
 
       ;; The ":" in field initializer lists should be offset. For example:
