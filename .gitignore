@@ -38,3 +38,4 @@
 .emacs.d/transient
 .env
 .emacs.d/tree-sitter
+.emacs.d/eln-cache
