@@ -101,6 +101,11 @@
       (put-text-property comint-last-output-start output-end 'read-only t)))
   (add-hook 'comint-output-filter-functions #'make-my-shell-output-read-only))
 
+(use-package comp
+  :ensure nil
+  :config
+  (setq native-comp-async-report-warnings-errors nil))
+
 (use-package compat
   :load-path "lisp/"
   :ensure nil)
