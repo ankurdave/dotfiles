@@ -674,7 +674,11 @@ PARENT."
     "Google C/C++ style for tree-sitter.
 
 See `treesit-simple-indent-rules' and
-`treesit-simple-indent-presets' for details on the syntax."
+`treesit-simple-indent-presets' for details on the syntax.
+
+Make sure to test against `.emacs.d/lisp/treesit-test.cc' when
+modifying.
+"
     `(
       ;; Similar to BSD style, but use `standalone-parent' instead of
       ;; `parent-bol'. This handles cases like the third line below:
