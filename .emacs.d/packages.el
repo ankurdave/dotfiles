@@ -743,7 +743,11 @@ See `treesit-simple-indent-rules' and
       ;;
       ;;   int64_t foo =
       ;;       bar - baz;
+      ;;   foo =
+      ;;       bar - baz;
       ((parent-is "init_declarator") parent-bol ,(* c-ts-mode-indent-offset 2))
+      ((parent-is "assignment_expression") parent-bol ,(* c-ts-mode-indent-offset 2))
+      ((parent-is "conditional_expression") parent 0)
 
       ;; For the left-shift operator as used with iostreams, line up the operators.
       ;;
@@ -769,11 +773,11 @@ See `treesit-simple-indent-rules' and
 
       ((parent-is "labeled_statement") standalone-parent c-ts-mode-indent-offset)
       ((parent-is "compound_statement") standalone-parent c-ts-mode-indent-offset)
-      ((parent-is "if_statement") standalone-parent 0)
-      ((parent-is "for_statement") standalone-parent 0)
-      ((parent-is "while_statement") standalone-parent 0)
-      ((parent-is "switch_statement") standalone-parent 0)
-      ((parent-is "do_statement") standalone-parent 0)
+      ((parent-is "if_statement") standalone-parent c-ts-mode-indent-offset)
+      ((parent-is "for_statement") standalone-parent c-ts-mode-indent-offset)
+      ((parent-is "while_statement") standalone-parent c-ts-mode-indent-offset)
+      ((parent-is "switch_statement") standalone-parent c-ts-mode-indent-offset)
+      ((parent-is "do_statement") standalone-parent c-ts-mode-indent-offset)
 
       ;; For example, indents the third line as follows:
       ;;   void foo(

@@ -12,6 +12,8 @@ int main(
     int a) {
   LOG(INFO) << "foo"
             << "bar";
+  abc =
+      b + c;
   abc = b + c
         + d + e;
   abcdefg + h + i
@@ -20,6 +22,9 @@ int main(
   foo + (bar *
          baz);
 
+  abc = foo ?
+        bar : baz;
+
   DCHECK(foo ||
          bar)
       << "Failed";
@@ -27,6 +32,29 @@ int main(
   // Test empty block.
   if (abc) {
   }
+
+  // Test statements with and without braces.
+  if (abc)
+    return foo;
+  if (abc) {
+    return foo;
+  }
+
+  for (int i = 0; i < 10; ++i)
+    return foo;
+  for (int i = 0; i < 10; ++i) {
+    return foo;
+  }
+
+  while (abc)
+    return foo;
+  while (abc) {
+    return foo;
+  }
+
+  do {
+    foo();
+  } while (abc);
 
   switch (a) {
     case 0:
