@@ -12,4 +12,4 @@ in case that file does not provide any feature."
 (when (not (fboundp 'second))
   (defalias 'second #'cadr))
 
-(provide 'compat)
+(provide 'ankurdave-compat)

@@ -106,7 +106,7 @@
   :config
   (setq native-comp-async-report-warnings-errors nil))
 
-(use-package compat
+(use-package ankurdave-compat
   :load-path "lisp/"
   :ensure nil)
 
@@ -164,9 +164,6 @@
   (counsel-projectile-mode t))
 
 (use-package csv-mode
-  :defer t)
-
-(use-package cuda-mode
   :defer t)
 
 (use-package dash)
@@ -236,11 +233,6 @@
   :bind (:map eshell-mode-map
               ("<up>" . previous-line)
               ("<down>" . next-line)))
-
-(use-package expand-region
-  :bind (
-         ;; Mnemonic: "Expand".
-         ("M-e" . er/expand-region)))
 
 (use-package files
   :ensure nil
